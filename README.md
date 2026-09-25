@@ -72,6 +72,8 @@ eas submit --platform android
 3. Commit and push to `main`. That publishes the data: `DATA_URL` in `app.config.ts` points installed apps at the raw copy of the file on `main`, <https://raw.githubusercontent.com/Nemesis-Counter/hero-counters/main/src/data/heroes.json>. On launch the app downloads it and keeps it only if it passes validation and has a higher revision than the data it already has. GitHub caches the file for about five minutes, so allow that long before checking.
 4. Optional: `npm run preview` rebuilds the web preview at `preview/dist/hero-counters.html`.
 
+The scheduled data refreshes don't push to `main` themselves. They push a `claude/data-revision-<N>` branch, and `.github/workflows/publish-data.yml` checks it: only the data files changed, `heroes.json` matches what the script builds, the revision goes up, and the branch builds on the current `main`. If it passes, the workflow moves `main` forward and deletes the branch. A branch that fails a check stays put, and the reason shows under the repo's **Actions** tab.
+
 The data URL is built into every copy of the app, so keep this repository public and keep the file at `src/data/heroes.json` on `main`. Renaming the repo or branch, moving the file or making the repo private would cut installed apps off from updates until they get a store update.
 
 Keep the tiers and counters as your own analysis. The app is ad-supported, and some stat sites (Counterwatch, for one) only allow personal, non-commercial use of their numbers, so don't copy win, pick or ban rates into the data file.

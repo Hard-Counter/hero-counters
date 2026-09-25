@@ -1,0 +1,66 @@
+# Publishes a hero data revision to main, which is what installed apps read.
+#
+# The scheduled data refreshes push their work to claude/data-revision-<N>
+# branches (scheduled Claude tasks can always push branches with the claude/
+# prefix). This workflow checks that the branch changes only the hero data,
+# builds on the current main, raises the revision, and that src/data/heroes.json
+# is exactly what scripts/build-data.mjs produces. It then fast-forwards main and
+# deletes the branch. A branch that fails a check stays put for a manual look.
+name: Publish data revision
+
+on:
+  push:
+    branches:
+      - 'claude/data-revision-*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-data
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Builds on the current main
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor origin/main HEAD || { echo "::error::This branch doesn't build on the current main. Rebase it onto main."; exit 1; }
+
+      - name: Changes only the hero data
+        run: |
+          changed=$(git diff --name-only origin/main HEAD)
+          echo "Changed files:"; echo "$changed"
+          others=$(printf '%s\n' "$changed" | grep -v -x -e 'scripts/build-data.mjs' -e 'src/data/heroes.json' -e '' || true)
+          if [ -n "$others" ]; then
+            echo "::error::This branch changes more than the hero data, so it needs a manual review:"
+            echo "$others"
+            exit 1
+          fi
+
+      - name: heroes.json matches the data script
+        run: |
+          node scripts/build-data.mjs
+          git diff --exit-code -- src/data/heroes.json
+
+      - name: Revision goes up
+        run: |
+          old=$(git show origin/main:src/data/heroes.json | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).revision))")
+          new=$(node -e "console.log(require('./src/data/heroes.json').revision)")
+          echo "main has revision $old, this branch has $new"
+          [ "$new" -gt "$old" ] || { echo "::error::Revision $new isn't higher than main's $old, so installed apps would ignore it."; exit 1; }
+
+      - name: Publish to main
+        run: |
+          git push origin HEAD:main
+          git push origin --delete "$GITHUB_REF_NAME"
