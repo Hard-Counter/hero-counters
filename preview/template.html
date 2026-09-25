@@ -1,0 +1,1138 @@
+<title>Hero Counters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600;700&display=swap">
+<style>
+  /* Dark-first palette; light tokens follow. */
+  :root {
+    color-scheme: dark;
+    --bg: #0e1218;
+    --bg-deep: #090c11;
+    --surface: #161c25;
+    --surface-2: #1f2733;
+    --line: #2a3441;
+    --ink: #edf1f6;
+    --ink-2: #a2adbd;
+    --ink-3: #6f7b8e;
+    --accent: #f2b63d;
+    --on-accent: #1b1303;
+    --enemy: #ff5465;
+    --vanguard: #6aa6ff;
+    --duelist: #ff8c4d;
+    --strategist: #3ed39b;
+    --t-s: #ff7f7f;
+    --t-a: #ffbf7f;
+    --t-b: #ffdf7f;
+    --t-c: #ffff7f;
+    --t-d: #bfff7f;
+    --t-f: #c9bfff;
+    --tier-ink: #17120a;
+    --ban-high: #ff5465;
+    --ban-med: #f2a33d;
+    --conf-data: #3ed39b;
+    --conf-kit: #6aa6ff;
+    --conf-consensus: #c69cff;
+    --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+    --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --bg: #f2f4f7;
+      --bg-deep: #e3e7ed;
+      --surface: #ffffff;
+      --surface-2: #e8ecf1;
+      --line: #d3dae3;
+      --ink: #0e131a;
+      --ink-2: #455064;
+      --ink-3: #6e798c;
+      --accent: #a06d00;
+      --on-accent: #ffffff;
+      --enemy: #d63447;
+      --vanguard: #2e6bd9;
+      --duelist: #cc5418;
+      --strategist: #0c8f63;
+      --ban-high: #d63447;
+      --ban-med: #b36b00;
+      --conf-data: #0c8a60;
+      --conf-kit: #2e6bd9;
+      --conf-consensus: #7c4dd8;
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f2f4f7;
+    --bg-deep: #e3e7ed;
+    --surface: #ffffff;
+    --surface-2: #e8ecf1;
+    --line: #d3dae3;
+    --ink: #0e131a;
+    --ink-2: #455064;
+    --ink-3: #6e798c;
+    --accent: #a06d00;
+    --on-accent: #ffffff;
+    --enemy: #d63447;
+    --vanguard: #2e6bd9;
+    --duelist: #cc5418;
+    --strategist: #0c8f63;
+    --ban-high: #d63447;
+    --ban-med: #b36b00;
+    --conf-data: #0c8a60;
+    --conf-kit: #2e6bd9;
+    --conf-consensus: #7c4dd8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg-deep);
+    color: var(--ink);
+    font: 400 15px/1.45 var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  h1, h2, p { margin: 0; }
+
+  .ic { display: inline-flex; width: 1em; height: 1em; flex: none; }
+  .ic svg { width: 100%; height: 100%; display: block; }
+  .ic.vanguard { color: var(--vanguard); }
+  .ic.duelist { color: var(--duelist); }
+  .ic.strategist { color: var(--strategist); }
+
+  /* App shell */
+  .shell {
+    position: relative;
+    height: 100%;
+    max-width: 480px;
+    margin-inline: auto;
+    padding-inline: 16px;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg);
+    overflow: hidden;
+  }
+  @media (min-width: 520px) { .shell { border-inline: 1px solid var(--line); } }
+
+  .top { display: flex; align-items: center; gap: 10px; padding-block: 14px 10px; }
+  .mark { display: inline-flex; gap: 3px; height: 26px; padding-left: 3px; }
+  .mark i { width: 6px; transform: skewX(-14deg); border-radius: 1px; }
+  .mark .m-v { background: var(--vanguard); }
+  .mark .m-d { background: var(--duelist); }
+  .mark .m-s { background: var(--strategist); }
+  .brand { flex: 1; min-width: 0; }
+  .name { font: 800 22px/1 var(--font-display); letter-spacing: .03em; text-transform: uppercase; white-space: nowrap; }
+  .meta { margin-top: 3px; font-size: 12px; color: var(--ink-3); letter-spacing: .02em; }
+  .seg { display: inline-flex; padding: 2px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
+  .seg button { padding: 6px 10px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+
+  .brackets {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    margin-inline: -16px;
+    padding: 2px 16px 10px;
+    scrollbar-width: none;
+  }
+  .brackets::-webkit-scrollbar { display: none; }
+  .bracket {
+    flex: none;
+    padding: 8px 13px;
+    font: 700 12.5px/1 var(--font-display);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    background: var(--surface);
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  }
+  .bracket[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+  .bracket:focus-visible { outline: none; box-shadow: inset 0 -3px 0 var(--accent); }
+
+  .view {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    margin-inline: -16px;
+    padding: 2px 16px 28px;
+    overscroll-behavior: contain;
+  }
+
+  .eyebrow {
+    margin: 22px 0 8px;
+    font: 700 12.5px/1.2 var(--font-display);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .label {
+    display: block;
+    margin-bottom: 6px;
+    font: 700 11.5px/1.2 var(--font-display);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; padding-block: 6px 12px; }
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .filter[aria-pressed="true"] { background: var(--surface-2); border-color: var(--ink-3); color: var(--ink); }
+
+  /* Tier list */
+  .tier-row {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 10px;
+    padding-block: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .tier-row:first-child { border-top: 0; padding-top: 2px; }
+  .tier {
+    --s: 32px;
+    width: var(--s);
+    height: var(--s);
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    font: 800 calc(var(--s) * .62)/1 var(--font-display);
+    color: var(--tier-ink);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .07);
+  }
+  .t-s { background: var(--t-s); }
+  .t-a { background: var(--t-a); }
+  .t-b { background: var(--t-b); }
+  .t-c { background: var(--t-c); }
+  .t-d { background: var(--t-d); }
+  .t-f { background: var(--t-f); }
+  .tier-heroes { display: flex; flex-wrap: wrap; gap: 6px; align-content: flex-start; }
+
+  .hero-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 36px;
+    max-width: 100%;
+    padding: 4px 11px 4px 4px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.15;
+    text-align: left;
+  }
+  .hero-chip:hover { border-color: var(--ink-3); }
+  .hero-chip.selected { border-color: var(--enemy); background: color-mix(in srgb, var(--enemy) 12%, var(--surface)); }
+  .hero-chip[disabled] { opacity: .4; cursor: not-allowed; }
+  .hc-name { min-width: 0; overflow-wrap: anywhere; }
+  .hc-variant { display: inline-flex; margin-left: 4px; font-size: 11px; vertical-align: -1px; }
+  .new {
+    padding: 3px 5px;
+    border-radius: 3px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font: 700 10.5px/1 var(--font-display);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .ban { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--ban-high); }
+  .ban.inline { display: inline-block; vertical-align: 1px; margin-right: 3px; }
+
+  .av {
+    --s: 28px;
+    --c: var(--vanguard);
+    width: var(--s);
+    height: var(--s);
+    flex: none;
+    display: grid;
+    place-items: center;
+    border-radius: calc(var(--s) * .26);
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 17%, transparent);
+    box-shadow: inset 0 -2px 0 var(--c);
+    font: 800 calc(var(--s) * .44)/1 var(--font-display);
+    letter-spacing: .04em;
+  }
+  .av.duelist { --c: var(--duelist); }
+  .av.strategist { --c: var(--strategist); }
+
+  .foot { margin-top: 16px; font-size: 12.5px; color: var(--ink-3); }
+
+  /* Tags */
+  .conf {
+    --c: var(--conf-data);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+    color: var(--c);
+    font: 700 10.5px/1.2 var(--font-display);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .conf::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
+  .conf.kit { --c: var(--conf-kit); }
+  .conf.consensus { --c: var(--conf-consensus); }
+  .role-tag {
+    --c: var(--vanguard);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px 3px 8px;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 14%, transparent);
+    clip-path: polygon(5px 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
+    font: 700 11.5px/1.2 var(--font-display);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .role-tag.duelist { --c: var(--duelist); }
+  .role-tag.strategist { --c: var(--strategist); }
+
+  /* Draft */
+  .role-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .role-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-2);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .role-btn .ic { font-size: 15px; }
+  .role-btn.vanguard .ic { color: var(--vanguard); }
+  .role-btn.duelist .ic { color: var(--duelist); }
+  .role-btn.strategist .ic { color: var(--strategist); }
+  .role-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-2); color: var(--ink); box-shadow: inset 0 -3px 0 var(--accent); }
+  .row-between { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .link { padding: 4px 0; color: var(--accent); font-size: 14px; font-weight: 600; }
+  .slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .slot {
+    position: relative;
+    min-height: 84px;
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .slot.filled {
+    background: color-mix(in srgb, var(--enemy) 9%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--enemy) 42%, var(--line));
+  }
+  .slot.empty { border: 1.5px dashed var(--line); color: var(--ink-3); }
+  .slot.empty .ic { font-size: 18px; }
+  .slot-name { line-height: 1.15; overflow-wrap: anywhere; }
+  .slot-x { position: absolute; top: 7px; right: 7px; font-size: 11px; color: var(--ink-3); }
+  .example-note { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
+  .empty { margin-top: 18px; padding: 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+  .empty p { margin-bottom: 12px; color: var(--ink-2); }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 9px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .picks { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .pick {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px 10px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-align: left;
+  }
+  .pick.top { border-color: var(--accent); }
+  .pick-n { width: 16px; font: 800 20px/1 var(--font-display); color: var(--ink-3); text-align: center; }
+  .pick.top .pick-n { color: var(--accent); }
+  .pick-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .pick-name { font-size: 15.5px; font-weight: 700; }
+  .pick-why { font-size: 13px; color: var(--ink-2); }
+  .matchups { display: grid; gap: 6px; }
+  .mu {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-align: left;
+  }
+  .mu-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 14px; font-weight: 600; }
+  .mu-enemy, .mu-counter { display: inline-flex; align-items: center; gap: 6px; }
+  .mu-enemy { color: var(--ink-2); }
+  .mu-counter { font-weight: 700; }
+  .mu-arrow { font-size: 15px; color: var(--ink-3); }
+  .mu-why { font-size: 13.5px; color: var(--ink-2); }
+  .mu-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .mu-note { font-size: 12.5px; color: var(--ink-3); }
+  .mu-note.warn { color: var(--ban-med); }
+
+  /* Overlays */
+  .sheet {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    padding-inline: 16px;
+    background: var(--bg);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .sheet:not([hidden]) { animation: rise .18s ease-out; }
+    @keyframes rise { from { transform: translateY(14px); opacity: .6; } to { transform: none; opacity: 1; } }
+  }
+  .sheet-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-inline: -16px;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet-body { flex: 1; min-height: 0; overflow-y: auto; margin-inline: -16px; padding: 4px 16px 28px; }
+  .dh-title { flex: 1; min-width: 0; }
+  .dh-name { margin-bottom: 5px; font: 800 26px/1.02 var(--font-display); letter-spacing: .02em; text-transform: uppercase; text-wrap: balance; }
+  .dh-role { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .icon-btn { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--surface-2); font-size: 18px; }
+  .tier-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .tier-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 4px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-2);
+    font-size: 11.5px;
+    text-align: center;
+  }
+  .tier-cell.current { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); color: var(--ink); }
+  .notes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13.5px; color: var(--ink-2); }
+  .notes li { display: flex; gap: 8px; }
+  .notes li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: .5em; border-radius: 50%; background: var(--ink-3); }
+  .notes .ban-high::before { background: var(--ban-high); }
+  .notes .ban-medium::before { background: var(--ban-med); }
+  .cc {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-align: left;
+  }
+  .cc + .cc { margin-top: 6px; }
+  .cc.mine { border-color: var(--accent); }
+  .cc-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .mine-tag { font: 700 11px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+  .cc-main { display: flex; align-items: center; gap: 10px; }
+  .cc-name { flex: 1; min-width: 0; font-size: 16px; font-weight: 700; }
+  .cc-why { font-size: 14px; }
+  .cc-note, .cc-alt { font-size: 12.5px; color: var(--ink-3); }
+  .cc-note.warn { color: var(--ban-med); }
+
+  .search {
+    flex: 1;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-3);
+  }
+  .search:focus-within { border-color: var(--accent); }
+  .search input { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; color: var(--ink); font: 500 15px var(--font-body); outline: none; }
+  .picker-count { margin-bottom: 8px; font-size: 12.5px; color: var(--ink-3); }
+  .picker-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .picker-grid .hero-chip { width: 100%; }
+  #picker .filters { padding-top: 10px; }
+
+  /* Comps */
+  .lede { margin-top: 6px; font-size: 14px; color: var(--ink-2); }
+  .comp { margin-top: 14px; padding: 14px; display: grid; gap: 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+  .comp-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .comp-name { font: 800 22px/1.05 var(--font-display); letter-spacing: .02em; text-transform: uppercase; text-wrap: balance; }
+  .comp-split { font: 700 13px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+  .comp-sum { font-size: 14px; color: var(--ink-2); }
+  .comp-best { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .comp-best .label { margin: 0 4px 0 0; }
+  .mini { padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--ink-2); font-size: 12px; font-weight: 600; }
+  .lineup { display: grid; gap: 8px; }
+  .lineup-row { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 8px; align-items: center; }
+  .lineup-role { display: grid; place-items: center; font-size: 16px; }
+  .lineup-slots { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .join { font-size: 12px; font-weight: 600; color: var(--ink-3); }
+  .flex-slot { padding: 8px 10px; border-radius: 10px; border: 1.5px dashed var(--line); color: var(--ink-3); font-size: 13px; }
+  .teamups ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 13.5px; color: var(--ink-2); }
+  .teamups strong { color: var(--ink); font-weight: 700; }
+  .tu-note { color: var(--ink-3); }
+  .beat { padding: 12px; border-radius: 10px; background: var(--surface-2); }
+  .beat .hero-chip { background: var(--surface); }
+  .beat-name { margin-bottom: 8px; font-weight: 700; }
+  .beat-why { margin-top: 8px; font-size: 13.5px; color: var(--ink-2); }
+  .evidence { font-size: 12px; color: var(--ink-3); }
+
+  /* About */
+  .season-card { margin-top: 8px; padding: 14px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface); }
+  .season-card h2 { margin-bottom: 4px; font: 800 22px/1.05 var(--font-display); letter-spacing: .02em; text-transform: uppercase; text-wrap: balance; }
+  .season-card p { font-size: 13.5px; color: var(--ink-2); }
+  .facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .fact { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--ink-3); }
+  .fact b { font: 700 18px/1.1 var(--font-display); letter-spacing: .02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .bullets { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); max-width: 65ch; }
+  .legend { display: grid; gap: 10px; }
+  .legend-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 13.5px; color: var(--ink-2); }
+  .legend-row .conf { justify-self: start; }
+  .disclaimer { margin-top: 22px; padding: 12px; border-radius: 10px; border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-3); }
+  .disclaimer p + p { margin-top: 8px; }
+
+  /* Ad slot and tabs */
+  .ad {
+    display: grid;
+    place-items: center;
+    height: 50px;
+    margin-inline: -16px;
+    border-top: 1px dashed var(--line);
+    background: var(--surface);
+    color: var(--ink-3);
+    font: 700 11px/1 var(--font-display);
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-inline: -16px;
+    padding: 4px 8px 6px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 0 4px;
+    color: var(--ink-3);
+    font: 700 12px/1 var(--font-display);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .tab .ic { font-size: 21px; }
+  .tab[aria-current="page"] { color: var(--accent); }
+  .tab[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 28px;
+    height: 3px;
+    background: var(--accent);
+    transform: translateX(-50%) skewX(-20deg);
+  }
+</style>
+
+<div class="shell" id="app">
+  <header class="top">
+    <span class="mark" aria-hidden="true"><i class="m-v"></i><i class="m-d"></i><i class="m-s"></i></span>
+    <div class="brand">
+      <div class="name">Hero Counters</div>
+      <div class="meta" id="meta"></div>
+    </div>
+    <div class="seg" id="platform" role="group" aria-label="Platform"></div>
+  </header>
+  <nav class="brackets" id="brackets" aria-label="Rank bracket"></nav>
+  <main class="view" id="view"></main>
+  <div class="ad" aria-hidden="true">Ad banner · shows in the phone app</div>
+  <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  <section class="sheet" id="detail" hidden aria-labelledby="detail-title"></section>
+  <section class="sheet" id="picker" hidden aria-label="Add enemy heroes"></section>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  /*__BUNDLE__*/
+
+  const IDX = indexHeroes(DATA);
+  const EXAMPLE_TEAM = ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'];
+  const TABS = [['tiers', 'Tiers'], ['draft', 'Draft'], ['comps', 'Comps'], ['about', 'About']];
+
+  const store = {
+    get(key, fallback) {
+      try { return localStorage.getItem('hc.' + key) ?? fallback; } catch { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem('hc.' + key, value); } catch { /* storage unavailable */ }
+    },
+  };
+  const oneOf = (value, allowed, fallback) => (allowed.includes(value) ? value : fallback);
+
+  const state = {
+    tab: oneOf(store.get('tab', 'tiers'), TABS.map((t) => t[0]), 'tiers'),
+    platform: oneOf(store.get('platform', 'pc'), ['pc', 'console'], 'pc'),
+    bracket: oneOf(store.get('bracket', 'plat_diamond'), DATA.brackets.map((b) => b.id), 'plat_diamond'),
+    role: oneOf(store.get('role', 'duelist'), ROLES, 'duelist'),
+    roleFilter: 'all',
+    enemies: [],
+    example: false,
+    detail: null,
+    query: '',
+    pickerRole: 'all',
+  };
+
+  const ICON = {
+    vanguard: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l8 3v6c0 5.2-3.4 9.4-8 11-4.6-1.6-8-5.8-8-11V5l8-3z"/></svg>',
+    duelist: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.5l5.5 10.5L12 22.5 6.5 12z"/></svg>',
+    strategist: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M9.25 3h5.5v6.25H21v5.5h-6.25V21h-5.5v-6.25H3v-5.5h6.25z"/></svg>',
+    tiers: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="3.4" rx="1.2"/><rect x="3" y="10.3" width="13" height="3.4" rx="1.2"/><rect x="3" y="16.6" width="8" height="3.4" rx="1.2"/></svg>',
+    draft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="7.5"/><path d="M12 1.8v4M12 18.2v4M1.8 12h4M18.2 12h4"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/></svg>',
+    comps: '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="8.5" r="2.6"/><circle cx="12" cy="6.5" r="2.8"/><circle cx="18.5" cy="8.5" r="2.6"/><path d="M1.5 18.5c.4-2.9 1.9-4.6 4-4.6s3.6 1.7 4 4.6zM7.8 17c.5-3.2 2.1-5 4.2-5s3.7 1.8 4.2 5zM14.5 18.5c.4-2.9 1.9-4.6 4-4.6s3.6 1.7 4 4.6z"/></svg>',
+    about: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 11v6" stroke-linecap="round"/><circle cx="12" cy="7.6" r="1.2" fill="currentColor" stroke="none"/></svg>',
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
+    arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
+  };
+
+  // Tiny element builder. `html` is used only for the trusted icon strings above.
+  function h(tag, props, ...kids) {
+    const el = document.createElement(tag);
+    if (props) {
+      for (const [key, value] of Object.entries(props)) {
+        if (value == null || value === false) continue;
+        if (key === 'class') el.className = value;
+        else if (key === 'style') el.style.cssText = value;
+        else if (key === 'html') el.innerHTML = value;
+        else if (key.startsWith('on')) el.addEventListener(key.slice(2).toLowerCase(), value);
+        else el.setAttribute(key, value === true ? '' : value);
+      }
+    }
+    for (const kid of kids.flat(Infinity)) {
+      if (kid == null || kid === false) continue;
+      el.append(kid instanceof Node ? kid : document.createTextNode(String(kid)));
+    }
+    return el;
+  }
+  const $ = (id) => document.getElementById(id);
+  const icon = (name, cls = '') => h('span', { class: `ic ${cls}`, 'aria-hidden': 'true', html: ICON[name] });
+  const eyebrow = (text) => h('h2', { class: 'eyebrow' }, text);
+  const bracketById = (id) => DATA.brackets.find((b) => b.id === id) || DATA.brackets[0];
+  const platformName = () => (state.platform === 'pc' ? 'PC' : 'Console');
+  const names = (heroes) => heroes.map((x) => x.name).join(', ');
+
+  const avatar = (hero, size = 28) =>
+    h('span', { class: `av ${hero.role}`, style: `--s:${size}px`, 'aria-hidden': 'true' }, hero.abbr);
+  const tierChip = (tier, size = 32) =>
+    h('span', { class: `tier t-${tier.toLowerCase()}`, style: `--s:${size}px`, 'aria-label': `${tier} tier` }, tier);
+  const confTag = (c) => h('span', { class: `conf ${c}` }, CONFIDENCE_LABEL[c]);
+  const roleTag = (role) => h('span', { class: `role-tag ${role}` }, icon(role), ROLE_LABEL[role]);
+
+  function heroChip(hero, onClick, opts = {}) {
+    const label = [hero.name, hero.variant ? ROLE_LABEL[hero.role] : null, hero.banRisk === 'high' ? 'often banned' : null]
+      .filter(Boolean)
+      .join(', ');
+    return h(
+      'button',
+      {
+        type: 'button',
+        class: 'hero-chip' + (opts.selected ? ' selected' : ''),
+        onClick,
+        disabled: opts.disabled || null,
+        'aria-pressed': opts.pressable ? String(!!opts.selected) : null,
+        'aria-label': label,
+      },
+      avatar(hero, 26),
+      h('span', { class: 'hc-name' }, hero.name, hero.variant ? h('span', { class: 'hc-variant' }, icon(hero.role, hero.role)) : null),
+      hero.isNew ? h('span', { class: 'new' }, 'New') : null,
+      hero.banRisk === 'high' ? h('span', { class: 'ban' }) : null,
+    );
+  }
+
+  function set(patch) {
+    const tabChanged = 'tab' in patch && patch.tab !== state.tab;
+    Object.assign(state, patch);
+    for (const key of ['tab', 'platform', 'bracket', 'role']) if (key in patch) store.set(key, state[key]);
+    renderHeader();
+    renderTabs();
+    renderView(tabChanged);
+  }
+
+  function renderHeader() {
+    const showControls = state.tab === 'tiers' || state.tab === 'draft';
+    const seg = $('platform');
+    seg.hidden = !showControls;
+    seg.replaceChildren(
+      ...[['pc', 'PC'], ['console', 'Console']].map(([value, label]) =>
+        h('button', { type: 'button', 'aria-pressed': String(state.platform === value), onClick: () => set({ platform: value }) }, label),
+      ),
+    );
+    const strip = $('brackets');
+    strip.hidden = !showControls;
+    strip.replaceChildren(
+      ...DATA.brackets.map((b) =>
+        h('button', { type: 'button', class: 'bracket', 'aria-pressed': String(state.bracket === b.id), onClick: () => set({ bracket: b.id }) }, b.short),
+      ),
+    );
+  }
+
+  function renderTabs() {
+    $('tabs').replaceChildren(
+      ...TABS.map(([id, label]) =>
+        h('button', { type: 'button', class: 'tab', 'aria-current': state.tab === id ? 'page' : null, onClick: () => set({ tab: id }) }, icon(id), h('span', null, label)),
+      ),
+    );
+  }
+
+  function renderView(resetScroll) {
+    const view = $('view');
+    const top = view.scrollTop;
+    const build = { tiers: tiersView, draft: draftView, comps: compsView, about: aboutView }[state.tab];
+    view.replaceChildren(build());
+    view.scrollTop = resetScroll ? 0 : top;
+  }
+
+  function roleFilters(current, onPick) {
+    return h(
+      'div',
+      { class: 'filters', role: 'group', 'aria-label': 'Filter by role' },
+      [['all', 'All'], ...ROLES.map((r) => [r, ROLE_LABEL[r]])].map(([value, label]) =>
+        h('button', { type: 'button', class: 'filter', 'aria-pressed': String(current === value), onClick: () => onPick(value) }, value === 'all' ? null : icon(value, value), label),
+      ),
+    );
+  }
+
+  // ---- Tiers ----
+  function tiersView() {
+    const list = h('div', { class: 'tier-list' });
+    for (const tier of TIERS) {
+      const heroes = sortHeroes(
+        DATA.heroes.filter((x) => (state.roleFilter === 'all' || x.role === state.roleFilter) && tierFor(x, state.bracket, state.platform) === tier),
+        state.bracket,
+        state.platform,
+      );
+      if (!heroes.length) continue;
+      list.append(
+        h('section', { class: 'tier-row', 'aria-label': `${tier} tier` }, tierChip(tier, 44), h('div', { class: 'tier-heroes' }, heroes.map((x) => heroChip(x, () => openDetail(x.id))))),
+      );
+    }
+    return h(
+      'div',
+      null,
+      roleFilters(state.roleFilter, (value) => set({ roleFilter: value })),
+      list,
+      h('p', { class: 'foot' }, `${bracketById(state.bracket).label} on ${platformName()}. `, h('span', { class: 'ban inline' }), 'Often banned at Gold III and above. Tap any hero for counters.'),
+    );
+  }
+
+  // ---- Draft ----
+  function pickReason(p) {
+    if (p.beats.length) return 'Counters ' + names(p.beats);
+    if (p.edges.length) return 'Slight edge against ' + names(p.edges);
+    return 'Strong pick at this rank';
+  }
+
+  function draftView() {
+    const wrap = h('div', null);
+    wrap.append(eyebrow('Your role'));
+    wrap.append(
+      h(
+        'div',
+        { class: 'role-seg', role: 'group', 'aria-label': 'Your role' },
+        ROLES.map((r) => h('button', { type: 'button', class: `role-btn ${r}`, 'aria-pressed': String(state.role === r), onClick: () => set({ role: r }) }, icon(r), ROLE_LABEL[r])),
+      ),
+    );
+    wrap.append(
+      h(
+        'div',
+        { class: 'row-between' },
+        eyebrow(`Enemy team · ${state.enemies.length}/6`),
+        state.enemies.length ? h('button', { type: 'button', class: 'link', onClick: () => set({ enemies: [], example: false }) }, 'Clear') : null,
+      ),
+    );
+    const slots = h('div', { class: 'slots' });
+    for (let i = 0; i < 6; i++) {
+      const hero = IDX[state.enemies[i]];
+      slots.append(
+        hero
+          ? h(
+              'button',
+              { type: 'button', class: 'slot filled', 'aria-label': `Remove ${hero.name}`, onClick: () => set({ enemies: state.enemies.filter((e) => e !== hero.id) }) },
+              avatar(hero, 30),
+              h('span', { class: 'slot-name' }, hero.name),
+              icon('close', 'slot-x'),
+            )
+          : h('button', { type: 'button', class: 'slot empty', 'aria-label': 'Add an enemy hero', onClick: openPicker }, icon('plus'), 'Add'),
+      );
+    }
+    wrap.append(slots);
+
+    if (!state.enemies.length) {
+      wrap.append(
+        h(
+          'div',
+          { class: 'empty' },
+          h('p', null, 'Add the enemy heroes you see in hero select. You get the three best picks for your role and a counter for each enemy.'),
+          h('button', { type: 'button', class: 'btn', onClick: () => set({ enemies: EXAMPLE_TEAM.slice(), example: true }) }, 'Try an example team'),
+        ),
+      );
+      return wrap;
+    }
+    if (state.example) wrap.append(h('p', { class: 'example-note' }, 'Example team. Tap a hero to remove it, or Clear to start your own.'));
+
+    const { picks, matchups } = draft(DATA, IDX, state.role, state.enemies, state.bracket, state.platform);
+    wrap.append(eyebrow(`Best ${ROLE_LABEL[state.role]} picks`));
+    wrap.append(
+      h(
+        'ol',
+        { class: 'picks' },
+        picks.map((p, i) =>
+          h(
+            'li',
+            null,
+            h(
+              'button',
+              { type: 'button', class: 'pick' + (i === 0 ? ' top' : ''), onClick: () => openDetail(p.hero.id) },
+              h('span', { class: 'pick-n' }, String(i + 1)),
+              avatar(p.hero, 36),
+              h('span', { class: 'pick-body' }, h('span', { class: 'pick-name' }, p.hero.name), h('span', { class: 'pick-why' }, pickReason(p))),
+              tierChip(p.tier, 30),
+            ),
+          ),
+        ),
+      ),
+    );
+    wrap.append(eyebrow('Your counter to each enemy'));
+    wrap.append(
+      h(
+        'div',
+        { class: 'matchups' },
+        matchups.map((m) =>
+          h(
+            'button',
+            { type: 'button', class: 'mu', onClick: () => openDetail(m.counter.id) },
+            h(
+              'span',
+              { class: 'mu-head' },
+              h('span', { class: 'mu-enemy' }, avatar(m.enemy, 24), m.enemy.name),
+              icon('arrow', 'mu-arrow'),
+              h('span', { class: 'mu-counter' }, avatar(m.counter, 24), m.counter.name),
+            ),
+            h('span', { class: 'mu-why' }, m.pick.reason),
+            h('span', { class: 'mu-foot' }, confTag(m.pick.confidence), m.pick.note ? h('span', { class: 'mu-note' + (m.pick.weak ? ' warn' : '') }, m.pick.note) : null),
+          ),
+        ),
+      ),
+    );
+    return wrap;
+  }
+
+  // ---- Enemy picker ----
+  function openPicker() {
+    state.query = '';
+    state.pickerRole = 'all';
+    const input = h('input', {
+      id: 'picker-search',
+      type: 'search',
+      placeholder: 'Search heroes',
+      autocomplete: 'off',
+      'aria-label': 'Search heroes',
+      onInput: (e) => {
+        state.query = e.target.value;
+        renderPickerList();
+      },
+    });
+    $('picker').replaceChildren(
+      h('div', { class: 'sheet-head' }, h('label', { class: 'search' }, icon('search'), input), h('button', { type: 'button', class: 'btn', onClick: closePicker }, 'Done')),
+      h('div', { id: 'picker-filters' }),
+      h('p', { class: 'picker-count', id: 'picker-count' }),
+      h('div', { class: 'sheet-body', id: 'picker-list' }),
+    );
+    $('picker').hidden = false;
+    renderPickerList();
+  }
+
+  function renderPickerList() {
+    $('picker-filters').replaceChildren(
+      roleFilters(state.pickerRole, (value) => {
+        state.pickerRole = value;
+        renderPickerList();
+      }),
+    );
+    const q = state.query.trim().toLowerCase();
+    const heroes = DATA.heroes
+      .filter((x) => (state.pickerRole === 'all' || x.role === state.pickerRole) && (!q || x.name.toLowerCase().includes(q)))
+      .sort((a, b) => a.name.localeCompare(b.name) || ROLES.indexOf(a.role) - ROLES.indexOf(b.role));
+    const full = state.enemies.length >= 6;
+    $('picker-count').textContent = `${state.enemies.length} of 6 enemies added`;
+    const list = $('picker-list');
+    const top = list.scrollTop;
+    list.replaceChildren(
+      heroes.length
+        ? h(
+            'div',
+            { class: 'picker-grid' },
+            heroes.map((x) => {
+              const on = state.enemies.includes(x.id);
+              return heroChip(
+                x,
+                () => {
+                  if (on) state.enemies = state.enemies.filter((e) => e !== x.id);
+                  else if (!full) state.enemies = [...state.enemies, x.id];
+                  state.example = false;
+                  renderPickerList();
+                },
+                { selected: on, pressable: true, disabled: !on && full },
+              );
+            }),
+          )
+        : h('p', { class: 'foot' }, `No hero matches “${state.query}”.`),
+    );
+    list.scrollTop = top;
+  }
+
+  function closePicker() {
+    $('picker').hidden = true;
+    renderView(false);
+  }
+
+  // ---- Hero detail ----
+  function counterCard(pick, role) {
+    const c = IDX[pick.hero];
+    if (!c) return null;
+    const mine = role && role === state.role;
+    return h(
+      'button',
+      { type: 'button', class: 'cc' + (mine ? ' mine' : ''), onClick: () => openDetail(c.id) },
+      role ? h('span', { class: 'cc-top' }, roleTag(role), mine ? h('span', { class: 'mine-tag' }, 'Your role') : null) : null,
+      h('span', { class: 'cc-main' }, avatar(c, 38), h('span', { class: 'cc-name' }, c.name), confTag(pick.confidence)),
+      h('span', { class: 'cc-why' }, pick.reason),
+      pick.note ? h('span', { class: 'cc-note' + (pick.weak ? ' warn' : '') }, pick.note) : null,
+      pick.alt && pick.alt.length ? h('span', { class: 'cc-alt' }, 'Also good: ' + names(pick.alt.map((a) => IDX[a]).filter(Boolean))) : null,
+    );
+  }
+
+  function openDetail(id) {
+    if (!IDX[id]) return;
+    state.detail = id;
+    const hero = IDX[id];
+    const body = h('div', { class: 'sheet-body' });
+    body.append(eyebrow(`Tier by rank · ${platformName()}`));
+    body.append(
+      h(
+        'div',
+        { class: 'tier-grid' },
+        DATA.brackets.map((b) => h('div', { class: 'tier-cell' + (b.id === state.bracket ? ' current' : '') }, tierChip(tierFor(hero, b.id, state.platform), 36), h('span', null, b.short))),
+      ),
+    );
+    body.append(
+      h(
+        'ul',
+        { class: 'notes' },
+        h('li', { class: `ban-${hero.banRisk}` }, BAN_LABEL[hero.banRisk] + '.'),
+        hero.patchNote ? h('li', null, hero.patchNote) : null,
+        hero.platformNote ? h('li', null, 'Console: ' + hero.platformNote) : null,
+      ),
+    );
+    body.append(eyebrow('Best counter overall'));
+    body.append(counterCard(hero.counters.overall));
+    body.append(eyebrow('Best counter in each role'));
+    for (const r of [state.role, ...ROLES.filter((x) => x !== state.role)]) body.append(counterCard(hero.counters[r], r));
+    const strong = sortHeroes(goodAgainst(DATA, hero.id), state.bracket, state.platform);
+    if (strong.length) {
+      body.append(eyebrow('Strong against'));
+      body.append(h('div', { class: 'tier-heroes' }, strong.map((x) => heroChip(x, () => openDetail(x.id)))));
+    }
+    $('detail').replaceChildren(
+      h(
+        'div',
+        { class: 'sheet-head' },
+        avatar(hero, 48),
+        h(
+          'div',
+          { class: 'dh-title' },
+          h('h1', { class: 'dh-name', id: 'detail-title' }, hero.name),
+          h('div', { class: 'dh-role' }, roleTag(hero.role), hero.isNew ? h('span', { class: 'new' }, 'New this season') : null),
+        ),
+        h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Close', onClick: closeDetail }, icon('close')),
+      ),
+      body,
+    );
+    $('detail').hidden = false;
+  }
+
+  function closeDetail() {
+    state.detail = null;
+    $('detail').hidden = true;
+  }
+
+  // ---- Comps ----
+  function compsView() {
+    return h(
+      'div',
+      null,
+      h('p', { class: 'lede' }, 'The lineups shaping Season 10 ranked, and how to beat each one.'),
+      DATA.comps.map((c) =>
+        h(
+          'article',
+          { class: 'comp' },
+          h('header', { class: 'comp-head' }, h('h2', { class: 'comp-name' }, c.name), h('span', { class: 'comp-split' }, `${c.style} · ${c.split}`)),
+          h('p', { class: 'comp-sum' }, c.summary),
+          h('p', { class: 'comp-best' }, h('span', { class: 'label' }, 'Best at'), c.bestBrackets.map((id) => h('span', { class: 'mini' }, bracketById(id).short))),
+          h(
+            'div',
+            { class: 'lineup' },
+            ROLES.map((r) => {
+              const slots = c.slots.filter((s) => s.role === r);
+              if (!slots.length) return null;
+              return h(
+                'div',
+                { class: 'lineup-row' },
+                h('span', { class: 'lineup-role', title: ROLE_LABEL[r] }, icon(r, r)),
+                h(
+                  'div',
+                  { class: 'lineup-slots' },
+                  slots.map((s, i) => [
+                    i > 0 ? h('span', { class: 'join' }, '+') : null,
+                    s.options.length
+                      ? s.options.map((id, j) => [j > 0 ? h('span', { class: 'join' }, 'or') : null, heroChip(IDX[id], () => openDetail(id))])
+                      : h('span', { class: 'flex-slot' }, `Any ${ROLE_LABEL[r]}`),
+                  ]),
+                ),
+              );
+            }),
+          ),
+          c.teamUps.length
+            ? h(
+                'div',
+                { class: 'teamups' },
+                h('span', { class: 'label' }, 'Team-ups'),
+                h(
+                  'ul',
+                  null,
+                  c.teamUps.map((t) => h('li', null, h('strong', null, t.name), ' · ', t.heroes.map((id) => IDX[id].name).join(' + '), t.note ? h('span', { class: 'tu-note' }, '. ' + t.note) : null)),
+                ),
+              )
+            : null,
+          h(
+            'div',
+            { class: 'beat' },
+            h('span', { class: 'label' }, 'How to beat it'),
+            h('p', { class: 'beat-name' }, c.counter.name),
+            h('div', { class: 'tier-heroes' }, c.counter.heroes.map((id) => heroChip(IDX[id], () => openDetail(id)))),
+            h('p', { class: 'beat-why' }, c.counter.why),
+          ),
+          h('p', { class: 'evidence' }, c.evidence),
+        ),
+      ),
+    );
+  }
+
+  // ---- About ----
+  function aboutView() {
+    return h(
+      'div',
+      null,
+      h(
+        'div',
+        { class: 'season-card' },
+        h('h2', null, DATA.season),
+        h('p', null, DATA.patch),
+        h(
+          'div',
+          { class: 'facts' },
+          h('span', { class: 'fact' }, h('b', null, `Rev ${DATA.revision}`), 'Data version'),
+          h('span', { class: 'fact' }, h('b', null, formatDate(DATA.updated)), 'Updated'),
+          h('span', { class: 'fact' }, h('b', null, formatDate(DATA.nextReview)), 'Next review'),
+        ),
+      ),
+      eyebrow('This season'),
+      h('ul', { class: 'bullets' }, DATA.seasonNotes.map((n) => h('li', null, n))),
+      eyebrow('How the tiers work'),
+      h('ul', { class: 'bullets' }, DATA.methodology.map((n) => h('li', null, n))),
+      eyebrow('Counter tags'),
+      h(
+        'div',
+        { class: 'legend' },
+        h('div', { class: 'legend-row' }, confTag('data'), h('span', null, 'Supported by public matchup data.')),
+        h('div', { class: 'legend-row' }, confTag('kit'), h('span', null, 'Follows from how the two kits interact. Not yet confirmed by data.')),
+        h('div', { class: 'legend-row' }, confTag('consensus'), h('span', null, 'What experienced players commonly recommend.')),
+      ),
+      eyebrow('What changed'),
+      h('ul', { class: 'bullets' }, DATA.changelog.map((n) => h('li', null, n))),
+      h(
+        'div',
+        { class: 'disclaimer' },
+        h('p', null, 'Hero Counters is an unofficial fan-made tool. It is not affiliated with or endorsed by NetEase Games or Marvel. Hero names belong to their owners.'),
+        h('p', null, 'This is a web preview of the phone app. Ads, data updates and privacy choices run in the phone build.'),
+      ),
+    );
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (!$('picker').hidden) closePicker();
+    else if (!$('detail').hidden) closeDetail();
+  });
+
+  $('meta').textContent = `${DATA.seasonShort} · updated ${formatDate(DATA.updated)}`;
+  renderHeader();
+  renderTabs();
+  renderView(true);
+})();
+</script>

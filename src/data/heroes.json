@@ -1,0 +1,2484 @@
+{
+  "schemaVersion": 1,
+  "revision": 1,
+  "season": "Season 10: Butcher's Blasphemy",
+  "seasonShort": "Season 10",
+  "patch": "Sept 11 balance patch and Sept 17 fix",
+  "updated": "2026-09-24",
+  "nextReview": "2026-10-09",
+  "brackets": [
+    {
+      "id": "bronze_gold",
+      "label": "Bronze–Gold",
+      "short": "Bronze–Gold"
+    },
+    {
+      "id": "plat_diamond",
+      "label": "Platinum–Diamond",
+      "short": "Plat–Diamond"
+    },
+    {
+      "id": "gm_celestial",
+      "label": "Grandmaster–Celestial",
+      "short": "GM–Celestial"
+    },
+    {
+      "id": "eternity_oaa",
+      "label": "Eternity–One Above All",
+      "short": "Eternity+"
+    }
+  ],
+  "methodology": [
+    "Tiers are curated estimates for each rank bracket, built from public win, pick and ban data after the latest balance patch. PC is the baseline.",
+    "Console tiers match PC except where official data shows a clear platform gap. Those heroes move one tier.",
+    "Each hero lists the best counter overall and the best counter in every role, so you can answer a threat without leaving your role.",
+    "Data-backed counters are supported by public matchup data. Kit-based counters come from how the heroes’ abilities interact. Consensus picks come from community play.",
+    "Bans happen at Gold III and above. Heroes marked as often banned may not be available.",
+    "The meta shifts with every patch. The data is reviewed weekly and after each balance update."
+  ],
+  "seasonNotes": [
+    "Gorr the God Butcher (Duelist) is new this season.",
+    "Every Strategist now charges their ultimate more slowly.",
+    "Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match.",
+    "Season 10.5 arrives October 9."
+  ],
+  "changelog": [
+    "Season 10 launch data: Gorr added, Sept 11 balance patch and Sept 17 Scarlet Witch fix reflected."
+  ],
+  "heroes": [
+    {
+      "id": "peni-parker",
+      "name": "Peni Parker",
+      "role": "vanguard",
+      "abbr": "PP",
+      "tiers": {
+        "bronze_gold": "S",
+        "plat_diamond": "S",
+        "gm_celestial": "S",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "high",
+      "patchNote": "Buffed this season: faster fire rate.",
+      "counters": {
+        "overall": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Mobile and hard to trap in her web zone.",
+          "alt": [
+            "jubilee"
+          ]
+        },
+        "vanguard": {
+          "hero": "the-hood",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "duelist": {
+          "hero": "the-punisher",
+          "confidence": "data",
+          "reason": "Out-ranges her nest and mines."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Mobile and hard to trap in her web zone.",
+          "alt": [
+            "jubilee"
+          ]
+        }
+      }
+    },
+    {
+      "id": "devil-dinosaur",
+      "name": "Devil Dinosaur",
+      "role": "vanguard",
+      "abbr": "DD",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "S",
+        "gm_celestial": "S",
+        "eternity_oaa": "S"
+      },
+      "banRisk": "high",
+      "patchNote": "Buffed this season: more bleed damage. The most-banned hero at Gold III and above.",
+      "counters": {
+        "overall": {
+          "hero": "phoenix",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data.",
+          "note": "Phoenix wins the duel but is weak overall. Peni is the safer pick."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "kit",
+          "reason": "Web zone punishes a big melee body."
+        },
+        "duelist": {
+          "hero": "phoenix",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data.",
+          "note": "Niche pick: Phoenix is weak overall."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Heals through the pressure while kiting away."
+        }
+      }
+    },
+    {
+      "id": "the-hood",
+      "name": "The Hood",
+      "role": "vanguard",
+      "abbr": "HO",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "A",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "kit",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Mobile healer who keeps your team up through the pressure."
+        }
+      }
+    },
+    {
+      "id": "hulk",
+      "name": "Hulk",
+      "role": "vanguard",
+      "abbr": "HU",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "A",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "kit",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "kit",
+          "reason": "Knockback and shields peel a big diver off your team."
+        }
+      }
+    },
+    {
+      "id": "thor",
+      "name": "Thor",
+      "role": "vanguard",
+      "abbr": "TH",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "kit",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep shuts down the dive."
+        }
+      }
+    },
+    {
+      "id": "captain-america",
+      "name": "Captain America",
+      "role": "vanguard",
+      "abbr": "CA",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season: more health.",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "kit",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep stops a shield-up dive."
+        }
+      }
+    },
+    {
+      "id": "rogue",
+      "name": "Rogue",
+      "role": "vanguard",
+      "abbr": "RO",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights.",
+          "alt": [
+            "peni-parker",
+            "the-thing"
+          ]
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights.",
+          "alt": [
+            "peni-parker",
+            "the-thing"
+          ]
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "kit",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep shuts down the dive."
+        }
+      }
+    },
+    {
+      "id": "doctor-strange",
+      "name": "Doctor Strange",
+      "role": "vanguard",
+      "abbr": "DS",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Gets past the shield to the tank."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "kit",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Gets past the shield to the tank."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Damage-boost ultimate helps your team break the shield."
+        }
+      }
+    },
+    {
+      "id": "magneto",
+      "name": "Magneto",
+      "role": "vanguard",
+      "abbr": "MG",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "Nerfed this season: less health and a smaller shield. Still the most-played Vanguard.",
+      "counters": {
+        "overall": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage scaling beats his smaller Season 10 shield."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "kit",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage scaling beats his smaller Season 10 shield."
+        },
+        "strategist": {
+          "hero": "cloak-and-dagger",
+          "confidence": "kit",
+          "reason": "Vulnerability helps burn through his shields."
+        }
+      }
+    },
+    {
+      "id": "venom",
+      "name": "Venom",
+      "role": "vanguard",
+      "abbr": "VE",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "kit",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep catches him mid-dive."
+        }
+      }
+    },
+    {
+      "id": "angela",
+      "name": "Angela",
+      "role": "vanguard",
+      "abbr": "AN",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage out-brawls a close-range diver."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage out-brawls a close-range diver."
+        },
+        "duelist": {
+          "hero": "hela",
+          "confidence": "kit",
+          "reason": "Precise long-range damage punishes a flying diver."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep shuts down the dive."
+        }
+      }
+    },
+    {
+      "id": "the-thing",
+      "name": "The Thing",
+      "role": "vanguard",
+      "abbr": "TT",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "medium",
+      "consoleShift": 1,
+      "platformNote": "Official data shows him stronger on console.",
+      "patchNote": "Nerfed this season: less health and a longer charge cooldown. Stat sites disagree on him, so treat this tier as shaky.",
+      "counters": {
+        "overall": {
+          "hero": "the-punisher",
+          "confidence": "data",
+          "reason": "Sustained damage from range, outside his reach."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines slow him before he reaches you."
+        },
+        "duelist": {
+          "hero": "the-punisher",
+          "confidence": "data",
+          "reason": "Sustained damage from range, outside his reach."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Keeps your team healed while staying out of his reach."
+        }
+      }
+    },
+    {
+      "id": "emma-frost",
+      "name": "Emma Frost",
+      "role": "vanguard",
+      "abbr": "EF",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "medium",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "kit",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Mobile healer who keeps your team up through the pressure."
+        }
+      }
+    },
+    {
+      "id": "groot",
+      "name": "Groot",
+      "role": "vanguard",
+      "abbr": "GR",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "kit",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "wolverine",
+          "confidence": "data",
+          "reason": "Rage-fueled claws shred big health pools."
+        },
+        "strategist": {
+          "hero": "cloak-and-dagger",
+          "confidence": "kit",
+          "reason": "Vulnerability speeds up breaking his walls."
+        }
+      }
+    },
+    {
+      "id": "deadpool-vanguard",
+      "name": "Deadpool",
+      "role": "vanguard",
+      "abbr": "DP",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed in all three roles this season.",
+      "variant": true,
+      "counters": {
+        "overall": {
+          "hero": "jubilee",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "the-thing",
+          "confidence": "kit",
+          "reason": "Out-trades him at close range."
+        },
+        "duelist": {
+          "hero": "magik",
+          "confidence": "kit",
+          "reason": "Bursts him down quickly at close range."
+        },
+        "strategist": {
+          "hero": "jubilee",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "magik",
+      "name": "Magik",
+      "role": "duelist",
+      "abbr": "MA",
+      "tiers": {
+        "bronze_gold": "S",
+        "plat_diamond": "S",
+        "gm_celestial": "S",
+        "eternity_oaa": "S"
+      },
+      "banRisk": "medium",
+      "patchNote": "Only her team-up with The Hood was nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines stall her dives.",
+          "alt": [
+            "the-thing"
+          ]
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines stall her dives.",
+          "alt": [
+            "the-thing"
+          ]
+        },
+        "duelist": {
+          "hero": "mister-fantastic",
+          "confidence": "data",
+          "reason": "Tough, elastic body soaks the burst."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "data",
+          "reason": "Flies above her melee range."
+        }
+      }
+    },
+    {
+      "id": "gorr",
+      "name": "Gorr the God Butcher",
+      "role": "duelist",
+      "abbr": "GO",
+      "tiers": {
+        "bronze_gold": "S",
+        "plat_diamond": "S",
+        "gm_celestial": "S",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "high",
+      "patchNote": "New this season. Turns downed enemies into AI Berserkers.",
+      "isNew": true,
+      "counters": {
+        "overall": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines stall his melee push.",
+          "alt": [
+            "devil-dinosaur"
+          ]
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines stall his melee push.",
+          "alt": [
+            "devil-dinosaur"
+          ]
+        },
+        "duelist": {
+          "hero": "scarlet-witch",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "data",
+          "reason": "Kites from the air, out of melee reach."
+        }
+      }
+    },
+    {
+      "id": "storm",
+      "name": "Storm",
+      "role": "duelist",
+      "abbr": "ST",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "A",
+        "gm_celestial": "S",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "black-widow",
+          "confidence": "data",
+          "reason": "Hitscan punishes a flyer. Less reliable on controller."
+        },
+        "vanguard": {
+          "hero": "thor",
+          "confidence": "kit",
+          "reason": "Mobile enough to chase flyers."
+        },
+        "duelist": {
+          "hero": "black-widow",
+          "confidence": "data",
+          "reason": "Hitscan punishes a flyer. Less reliable on controller."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Fights her in the air."
+        }
+      }
+    },
+    {
+      "id": "scarlet-witch",
+      "name": "Scarlet Witch",
+      "role": "duelist",
+      "abbr": "SW",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "A",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "medium",
+      "patchNote": "Reworked this season. A Sept 17 fix made her ultimate’s wind-up far less likely to block damage.",
+      "counters": {
+        "overall": {
+          "hero": "squirrel-girl",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data.",
+          "note": "Squirrel Girl wins the duel but is weak overall. Consider Doctor Strange’s shield instead."
+        },
+        "vanguard": {
+          "hero": "doctor-strange",
+          "confidence": "kit",
+          "reason": "His big shield soaks Chaos Control."
+        },
+        "duelist": {
+          "hero": "squirrel-girl",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data.",
+          "note": "Niche pick: Squirrel Girl is weak overall."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "kit",
+          "reason": "Shields soak her beam."
+        }
+      }
+    },
+    {
+      "id": "hela",
+      "name": "Hela",
+      "role": "duelist",
+      "abbr": "HE",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "A",
+        "gm_celestial": "A",
+        "eternity_oaa": "S"
+      },
+      "banRisk": "medium",
+      "counters": {
+        "overall": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle.",
+          "alt": [
+            "cloak-and-dagger"
+          ]
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "data",
+          "reason": "Shield blocks her sightlines."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dives the sniper before they can line up shots."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle.",
+          "alt": [
+            "cloak-and-dagger"
+          ]
+        }
+      }
+    },
+    {
+      "id": "daredevil",
+      "name": "Daredevil",
+      "role": "duelist",
+      "abbr": "DA",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "A",
+        "gm_celestial": "A",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "hela",
+          "confidence": "kit",
+          "reason": "Precise burst punishes his approach."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep shuts down the dive."
+        }
+      }
+    },
+    {
+      "id": "iron-fist",
+      "name": "Iron Fist",
+      "role": "duelist",
+      "abbr": "IF",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "A",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines stall his combos."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "data",
+          "reason": "Webs and mines stall his combos."
+        },
+        "duelist": {
+          "hero": "mister-fantastic",
+          "confidence": "kit",
+          "reason": "Tough, elastic body soaks the burst."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "kit",
+          "reason": "Knockback breaks up his combos."
+        }
+      }
+    },
+    {
+      "id": "mister-fantastic",
+      "name": "Mister Fantastic",
+      "role": "duelist",
+      "abbr": "MF",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "vanguard": {
+          "hero": "devil-dinosaur",
+          "confidence": "data",
+          "reason": "Bleed damage wins drawn-out close-range fights."
+        },
+        "duelist": {
+          "hero": "scarlet-witch",
+          "confidence": "kit",
+          "reason": "Sustained damage gets through his stretch."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep takes him out of the fight."
+        }
+      }
+    },
+    {
+      "id": "psylocke",
+      "name": "Psylocke",
+      "role": "duelist",
+      "abbr": "PS",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "medium",
+      "consoleShift": -1,
+      "platformNote": "Official data shows her weaker on console.",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "daredevil",
+          "confidence": "data",
+          "reason": "Tracks her through stealth."
+        },
+        "vanguard": {
+          "hero": "the-thing",
+          "confidence": "kit",
+          "reason": "CC catches her through her mobility."
+        },
+        "duelist": {
+          "hero": "daredevil",
+          "confidence": "data",
+          "reason": "Tracks her through stealth."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep takes her out of the fight."
+        }
+      }
+    },
+    {
+      "id": "spider-man",
+      "name": "Spider-Man",
+      "role": "duelist",
+      "abbr": "SM",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "S"
+      },
+      "banRisk": "high",
+      "patchNote": "Buffed this season: shorter combo cooldown.",
+      "counters": {
+        "overall": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "Tough brawler whose CC punishes divers.",
+          "alt": [
+            "angela",
+            "doctor-strange"
+          ]
+        },
+        "vanguard": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "Tough brawler whose CC punishes divers.",
+          "alt": [
+            "angela",
+            "doctor-strange"
+          ]
+        },
+        "duelist": {
+          "hero": "mister-fantastic",
+          "confidence": "data",
+          "reason": "Tough, elastic body survives his burst."
+        },
+        "strategist": {
+          "hero": "white-fox",
+          "confidence": "data",
+          "reason": "Only a slight edge.",
+          "note": "No Strategist counters him well. Lean on your Vanguards.",
+          "weak": true
+        }
+      }
+    },
+    {
+      "id": "black-panther",
+      "name": "Black Panther",
+      "role": "duelist",
+      "abbr": "BP",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "medium",
+      "counters": {
+        "overall": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "Tough brawler whose CC punishes divers."
+        },
+        "vanguard": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "Tough brawler whose CC punishes divers."
+        },
+        "duelist": {
+          "hero": "namor",
+          "confidence": "consensus",
+          "reason": "Turrets punish divers.",
+          "note": "Namor is weak overall."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep ends the dive."
+        }
+      }
+    },
+    {
+      "id": "blade",
+      "name": "Blade",
+      "role": "duelist",
+      "abbr": "BL",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "human-torch",
+          "confidence": "data",
+          "reason": "Area denial and flight keep him at range."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shields absorb his burst."
+        },
+        "duelist": {
+          "hero": "human-torch",
+          "confidence": "data",
+          "reason": "Area denial and flight keep him at range."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "kit",
+          "reason": "Shields and knockback peel the dive off your team."
+        }
+      }
+    },
+    {
+      "id": "iron-man",
+      "name": "Iron Man",
+      "role": "duelist",
+      "abbr": "IM",
+      "tiers": {
+        "bronze_gold": "A",
+        "plat_diamond": "B",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Swings up to reach airborne heroes."
+        },
+        "vanguard": {
+          "hero": "deadpool-vanguard",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Swings up to reach airborne heroes."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "human-torch",
+      "name": "Human Torch",
+      "role": "duelist",
+      "abbr": "HT",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Swings up to reach airborne heroes."
+        },
+        "vanguard": {
+          "hero": "thor",
+          "confidence": "kit",
+          "reason": "Mobile enough to chase flyers."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Swings up to reach airborne heroes."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Mobile healer who keeps your team up through the pressure."
+        }
+      }
+    },
+    {
+      "id": "wolverine",
+      "name": "Wolverine",
+      "role": "duelist",
+      "abbr": "WO",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "medium",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "iron-man",
+          "confidence": "data",
+          "reason": "Stays airborne, out of claw range."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "kit",
+          "reason": "Webs slow him so you can kite the melee."
+        },
+        "duelist": {
+          "hero": "iron-man",
+          "confidence": "data",
+          "reason": "Stays airborne, out of claw range."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep stops the leap."
+        }
+      }
+    },
+    {
+      "id": "elsa-bloodstone",
+      "name": "Elsa Bloodstone",
+      "role": "duelist",
+      "abbr": "EB",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "high",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "cloak-and-dagger",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shield blocks the shots."
+        },
+        "duelist": {
+          "hero": "hela",
+          "confidence": "kit",
+          "reason": "Out-ranges them with precise long-range damage."
+        },
+        "strategist": {
+          "hero": "cloak-and-dagger",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "winter-soldier",
+      "name": "Winter Soldier",
+      "role": "duelist",
+      "abbr": "WS",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "medium",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shield blocks the shots."
+        },
+        "duelist": {
+          "hero": "magik",
+          "confidence": "kit",
+          "reason": "Closes the gap fast and bursts him down."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle."
+        }
+      }
+    },
+    {
+      "id": "black-cat",
+      "name": "Black Cat",
+      "role": "duelist",
+      "abbr": "BC",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "patchNote": "Nerfed this season: her dash lost its invincibility and her stealth leaves a trail.",
+      "counters": {
+        "overall": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "CC and durability beat a dive that lost its invincibility."
+        },
+        "vanguard": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "CC and durability beat a dive that lost its invincibility."
+        },
+        "duelist": {
+          "hero": "hela",
+          "confidence": "kit",
+          "reason": "Her stealth trail now gives her away to precise aim."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "kit",
+          "reason": "Shields and knockback peel the dive off your team."
+        }
+      }
+    },
+    {
+      "id": "star-lord",
+      "name": "Star-Lord",
+      "role": "duelist",
+      "abbr": "SL",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "jubilee",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "kit",
+          "reason": "Webs and mines stall his flanks."
+        },
+        "duelist": {
+          "hero": "hela",
+          "confidence": "kit",
+          "reason": "Precise burst punishes his low health."
+        },
+        "strategist": {
+          "hero": "jubilee",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "black-widow",
+      "name": "Black Widow",
+      "role": "duelist",
+      "abbr": "BW",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "consoleShift": -1,
+      "platformNote": "Hitscan sniper: noticeably weaker on controller.",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shield blocks her sightlines."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "kit",
+          "reason": "Dives the sniper before they can line up shots."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle."
+        }
+      }
+    },
+    {
+      "id": "hawkeye",
+      "name": "Hawkeye",
+      "role": "duelist",
+      "abbr": "HA",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "consoleShift": -1,
+      "platformNote": "Precision aim: weaker on controller.",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dives the sniper before they can line up shots."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shield blocks his arrows."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dives the sniper before they can line up shots."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "kit",
+          "reason": "Shields block his arrows."
+        }
+      }
+    },
+    {
+      "id": "namor",
+      "name": "Namor",
+      "role": "duelist",
+      "abbr": "NA",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "medium",
+      "consoleShift": 1,
+      "platformNote": "His turrets don’t need aim, so he does better on console.",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "captain-america",
+          "confidence": "kit",
+          "reason": "Dives past the turrets."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "kit",
+          "reason": "Dives in before the turrets add up."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "moon-knight",
+      "name": "Moon Knight",
+      "role": "duelist",
+      "abbr": "MK",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "ultron",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dives the poke."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "kit",
+          "reason": "Dives him before his bounces add up."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "the-punisher",
+      "name": "The Punisher",
+      "role": "duelist",
+      "abbr": "PU",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shield blocks his sustained fire."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "kit",
+          "reason": "Dives in before he can settle."
+        },
+        "strategist": {
+          "hero": "invisible-woman",
+          "confidence": "data",
+          "reason": "Shields block the shots; knockback breaks the angle."
+        }
+      }
+    },
+    {
+      "id": "deadpool-duelist",
+      "name": "Deadpool",
+      "role": "duelist",
+      "abbr": "DP",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed in all three roles this season.",
+      "variant": true,
+      "counters": {
+        "overall": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "Out-brawls him up close.",
+          "alt": [
+            "venom"
+          ]
+        },
+        "vanguard": {
+          "hero": "the-thing",
+          "confidence": "data",
+          "reason": "Out-brawls him up close.",
+          "alt": [
+            "venom"
+          ]
+        },
+        "duelist": {
+          "hero": "mister-fantastic",
+          "confidence": "data",
+          "reason": "Tough, elastic body soaks the burst."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Mobile healer who keeps your team up through the pressure."
+        }
+      }
+    },
+    {
+      "id": "cyclops",
+      "name": "Cyclops",
+      "role": "duelist",
+      "abbr": "CY",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "magneto",
+          "confidence": "kit",
+          "reason": "Shield blocks his beams."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "kit",
+          "reason": "Dives him before he can line up shots."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "squirrel-girl",
+      "name": "Squirrel Girl",
+      "role": "duelist",
+      "abbr": "SG",
+      "tiers": {
+        "bronze_gold": "F",
+        "plat_diamond": "F",
+        "gm_celestial": "F",
+        "eternity_oaa": "F"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "ultron",
+          "confidence": "data",
+          "reason": "Airborne and hard to hit with her bouncing shots."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "kit",
+          "reason": "Holds space against her poke."
+        },
+        "duelist": {
+          "hero": "hela",
+          "confidence": "kit",
+          "reason": "Out-ranges them with precise long-range damage."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "data",
+          "reason": "Airborne and hard to hit with her bouncing shots."
+        }
+      }
+    },
+    {
+      "id": "phoenix",
+      "name": "Phoenix",
+      "role": "duelist",
+      "abbr": "PH",
+      "tiers": {
+        "bronze_gold": "F",
+        "plat_diamond": "F",
+        "gm_celestial": "F",
+        "eternity_oaa": "F"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "cloak-and-dagger",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "kit",
+          "reason": "Webs and mines hold space against her pressure."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "kit",
+          "reason": "Dives her before she can set up."
+        },
+        "strategist": {
+          "hero": "cloak-and-dagger",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data."
+        }
+      }
+    },
+    {
+      "id": "mantis",
+      "name": "Mantis",
+      "role": "strategist",
+      "abbr": "MN",
+      "tiers": {
+        "bronze_gold": "S",
+        "plat_diamond": "S",
+        "gm_celestial": "S",
+        "eternity_oaa": "S"
+      },
+      "banRisk": "low",
+      "patchNote": "Nerfed slightly this season.",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "ultron",
+      "name": "Ultron",
+      "role": "strategist",
+      "abbr": "UL",
+      "tiers": {
+        "bronze_gold": "S",
+        "plat_diamond": "S",
+        "gm_celestial": "S",
+        "eternity_oaa": "S"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Swings up to reach airborne heroes."
+        },
+        "vanguard": {
+          "hero": "thor",
+          "confidence": "kit",
+          "reason": "Mobile enough to chase flyers."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Swings up to reach airborne heroes."
+        },
+        "strategist": {
+          "hero": "rocket-raccoon",
+          "confidence": "kit",
+          "reason": "Keeps your team healed through his poke."
+        }
+      }
+    },
+    {
+      "id": "rocket-raccoon",
+      "name": "Rocket Raccoon",
+      "role": "strategist",
+      "abbr": "RR",
+      "tiers": {
+        "bronze_gold": "S",
+        "plat_diamond": "S",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "captain-america",
+          "confidence": "kit",
+          "reason": "Fast dive tank that chases down slippery targets."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "jubilee",
+      "name": "Jubilee",
+      "role": "strategist",
+      "abbr": "JU",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "gambit",
+      "name": "Gambit",
+      "role": "strategist",
+      "abbr": "GA",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "high",
+      "patchNote": "His team-up with Magneto was nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "loki",
+      "name": "Loki",
+      "role": "strategist",
+      "abbr": "LO",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Diving exposes the real Loki among the clones."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "spider-man",
+          "confidence": "data",
+          "reason": "Diving exposes the real Loki among the clones."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep takes them out of the fight at key moments."
+        }
+      }
+    },
+    {
+      "id": "cloak-and-dagger",
+      "name": "Cloak & Dagger",
+      "role": "strategist",
+      "abbr": "CD",
+      "tiers": {
+        "bronze_gold": "B",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "medium",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep takes them out of the fight at key moments."
+        }
+      }
+    },
+    {
+      "id": "adam-warlock",
+      "name": "Adam Warlock",
+      "role": "strategist",
+      "abbr": "AW",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "invisible-woman",
+      "name": "Invisible Woman",
+      "role": "strategist",
+      "abbr": "IW",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "Nerfed this season.",
+      "counters": {
+        "overall": {
+          "hero": "daredevil",
+          "confidence": "data",
+          "reason": "Tracks her through invisibility."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "daredevil",
+          "confidence": "data",
+          "reason": "Tracks her through invisibility."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "white-fox",
+      "name": "White Fox",
+      "role": "strategist",
+      "abbr": "WF",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "squirrel-girl",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data.",
+          "note": "Squirrel Girl wins the duel but is weak overall. Venom’s dive is the practical answer."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "squirrel-girl",
+          "confidence": "data",
+          "reason": "Wins this matchup consistently in public data.",
+          "note": "Niche pick: Squirrel Girl is weak overall."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "luna-snow",
+      "name": "Luna Snow",
+      "role": "strategist",
+      "abbr": "LS",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
+      },
+      "banRisk": "low",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes backliners before they can react."
+        },
+        "strategist": {
+          "hero": "ultron",
+          "confidence": "kit",
+          "reason": "Flies out of reach and out-pokes them."
+        }
+      }
+    },
+    {
+      "id": "deadpool-strategist",
+      "name": "Deadpool",
+      "role": "strategist",
+      "abbr": "DP",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed in all three roles this season.",
+      "variant": true,
+      "counters": {
+        "overall": {
+          "hero": "blade",
+          "confidence": "data",
+          "reason": "Anti-heal cuts through his sustain."
+        },
+        "vanguard": {
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
+        },
+        "duelist": {
+          "hero": "blade",
+          "confidence": "data",
+          "reason": "Anti-heal cuts through his sustain."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep takes them out of the fight at key moments."
+        }
+      }
+    },
+    {
+      "id": "jeff-the-land-shark",
+      "name": "Jeff the Land Shark",
+      "role": "strategist",
+      "abbr": "JF",
+      "tiers": {
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
+      },
+      "banRisk": "low",
+      "patchNote": "Buffed this season.",
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes him. The most lopsided matchup in the game."
+        },
+        "vanguard": {
+          "hero": "captain-america",
+          "confidence": "kit",
+          "reason": "Fast dive tank that chases down slippery targets."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "data",
+          "reason": "Dash combo deletes him. The most lopsided matchup in the game."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep takes them out of the fight at key moments."
+        }
+      }
+    }
+  ],
+  "comps": [
+    {
+      "id": "chaos-brawl",
+      "name": "Chaos brawl",
+      "style": "Brawl",
+      "split": "2-2-2",
+      "summary": "Magneto and The Hood walk the team in while Scarlet Witch and Gorr melt anything close. Jubilee pairs with Scarlet Witch. The top comp in public comp models this season.",
+      "slots": [
+        {
+          "role": "vanguard",
+          "options": [
+            "the-hood"
+          ]
+        },
+        {
+          "role": "vanguard",
+          "options": [
+            "magneto"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "gorr"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "scarlet-witch"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "cloak-and-dagger"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "jubilee"
+          ]
+        }
+      ],
+      "teamUps": [
+        {
+          "name": "Metallic Chaos",
+          "heroes": [
+            "magneto",
+            "scarlet-witch"
+          ],
+          "note": "Cooldown raised to 18s this season."
+        },
+        {
+          "name": "Void Pentagram",
+          "heroes": [
+            "magik",
+            "the-hood"
+          ],
+          "note": "If you swap Magik in."
+        }
+      ],
+      "bestBrackets": [
+        "plat_diamond",
+        "gm_celestial"
+      ],
+      "evidence": "Tops a public six-hero comp model. Part of its measured win rate comes from coordinated premade teams.",
+      "counter": {
+        "name": "Poke and peel",
+        "heroes": [
+          "hela",
+          "storm",
+          "ultron",
+          "invisible-woman"
+        ],
+        "why": "Brawl has to walk in. Long-range damage from high ground punishes the approach, shields stall the push, and Magneto’s smaller shield breaks faster this season."
+      }
+    },
+    {
+      "id": "shield-brawl",
+      "name": "Shield brawl",
+      "style": "Brawl",
+      "split": "2-2-2",
+      "summary": "Doctor Strange’s shield anchors the same brawl core. The most-played lineup this season, though it wins on comfort more than on draft strength.",
+      "slots": [
+        {
+          "role": "vanguard",
+          "options": [
+            "doctor-strange"
+          ]
+        },
+        {
+          "role": "vanguard",
+          "options": [
+            "the-hood"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "gorr"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "scarlet-witch"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "cloak-and-dagger"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "jubilee"
+          ]
+        }
+      ],
+      "teamUps": [
+        {
+          "name": "Gamma Maelstrom",
+          "heroes": [
+            "doctor-strange",
+            "hulk"
+          ],
+          "note": "If you run Hulk instead of The Hood."
+        }
+      ],
+      "bestBrackets": [
+        "bronze_gold",
+        "plat_diamond"
+      ],
+      "evidence": "The most-played brawl in public comp data. A comp model rates the draft itself as weak.",
+      "counter": {
+        "name": "Anti-tank dive",
+        "heroes": [
+          "wolverine",
+          "devil-dinosaur"
+        ],
+        "why": "Wolverine is Doctor Strange’s hardest counter. Take out the shield holder and the brawl falls apart."
+      }
+    },
+    {
+      "id": "peni-dive",
+      "name": "Peni dive",
+      "style": "Dive",
+      "split": "2-2-2",
+      "summary": "Peni holds space with webs and mines while Magik or Gorr and a mobile diver pick off the backline. Built from this season’s highest-rated heroes, and it needs voice comms.",
+      "slots": [
+        {
+          "role": "vanguard",
+          "options": [
+            "peni-parker"
+          ]
+        },
+        {
+          "role": "vanguard",
+          "options": [
+            "devil-dinosaur",
+            "thor"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "magik",
+            "gorr"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "spider-man",
+            "black-panther"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "mantis"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "ultron",
+            "rocket-raccoon"
+          ]
+        }
+      ],
+      "teamUps": [
+        {
+          "name": "Parker Power-Up",
+          "heroes": [
+            "spider-man",
+            "peni-parker"
+          ],
+          "note": "Cooldown cut to 10s this season."
+        },
+        {
+          "name": "SP//DR Sync",
+          "heroes": [
+            "ultron",
+            "peni-parker"
+          ]
+        },
+        {
+          "name": "Vibranium Mech",
+          "heroes": [
+            "peni-parker",
+            "black-panther"
+          ]
+        }
+      ],
+      "bestBrackets": [
+        "plat_diamond",
+        "gm_celestial",
+        "eternity_oaa"
+      ],
+      "evidence": "Peni, Magik, Gorr, Mantis and Ultron are the five highest win-rate heroes on a major stat tracker.",
+      "counter": {
+        "name": "Anti-dive brawl",
+        "heroes": [
+          "the-thing",
+          "rocket-raccoon",
+          "jubilee",
+          "the-punisher"
+        ],
+        "why": "The Thing punishes Spider-Man and Black Panther, Rocket and Jubilee are Peni’s hardest counters, and Punisher out-ranges her nest. Or ban Peni or Devil Dinosaur, which high ranks already do."
+      }
+    },
+    {
+      "id": "flyer-poke",
+      "name": "Flyer poke",
+      "style": "Poke",
+      "split": "2-2-2",
+      "summary": "Storm and Hela deal damage from the air and long range while Ultron heals from above. Strongest on open maps at high ranks, and better on PC.",
+      "slots": [
+        {
+          "role": "vanguard",
+          "options": [
+            "thor",
+            "hulk"
+          ]
+        },
+        {
+          "role": "vanguard",
+          "options": [
+            "magneto"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "storm"
+          ]
+        },
+        {
+          "role": "duelist",
+          "options": [
+            "hela"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "ultron"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "rocket-raccoon"
+          ]
+        }
+      ],
+      "teamUps": [
+        {
+          "name": "Ragnarök",
+          "heroes": [
+            "gorr",
+            "hela"
+          ],
+          "note": "New this season, if you swap Gorr in for Storm."
+        }
+      ],
+      "bestBrackets": [
+        "gm_celestial",
+        "eternity_oaa"
+      ],
+      "evidence": "Storm wins well above average but is rarely picked. Aim-heavy poke performs better on PC.",
+      "counter": {
+        "name": "Hitscan and vertical dive",
+        "heroes": [
+          "black-widow",
+          "spider-man"
+        ],
+        "why": "Black Widow’s hitscan punishes flyers (less reliable on controller), and Spider-Man swings up to reach Ultron and other airborne heroes."
+      }
+    },
+    {
+      "id": "triple-strategist",
+      "name": "Triple-Strategist sustain",
+      "style": "Sustain",
+      "split": "2-1-3",
+      "summary": "Three Strategists out-heal the enemy while two Vanguards hold the line. It ruled last season but is weaker now that every Strategist charges their ultimate more slowly.",
+      "slots": [
+        {
+          "role": "vanguard",
+          "options": [
+            "emma-frost"
+          ]
+        },
+        {
+          "role": "vanguard",
+          "options": []
+        },
+        {
+          "role": "duelist",
+          "options": []
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "mantis"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "rocket-raccoon"
+          ]
+        },
+        {
+          "role": "strategist",
+          "options": [
+            "ultron"
+          ]
+        }
+      ],
+      "teamUps": [
+        {
+          "name": "Spirit Breaker",
+          "heroes": [
+            "emma-frost",
+            "mantis"
+          ]
+        }
+      ],
+      "bestBrackets": [
+        "bronze_gold",
+        "plat_diamond"
+      ],
+      "evidence": "Dominant in Season 9. Not yet re-measured after this season’s ultimate-charge nerf.",
+      "counter": {
+        "name": "Burst dive with anti-heal",
+        "heroes": [
+          "black-panther",
+          "blade",
+          "magik",
+          "gorr"
+        ],
+        "why": "Black Panther is the top counter to most Strategists, Blade’s anti-heal cuts through the healing, and Magik or Gorr burst targets before heals land."
+      }
+    }
+  ]
+}

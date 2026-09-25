@@ -1,0 +1,91 @@
+import React from 'react';
+import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import type { RoleId } from '../data/types';
+
+export type IconName = RoleId | 'tiers' | 'draft' | 'comps' | 'about' | 'close' | 'plus' | 'search' | 'arrow';
+
+/** Original role and interface icons (no game artwork). */
+export function Icon({ name, size = 16, color }: { name: IconName; size?: number; color: string }) {
+  const stroke = { stroke: color, strokeWidth: 2, strokeLinecap: 'round' as const, fill: 'none' };
+  switch (name) {
+    case 'vanguard':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} d="M12 2l8 3v6c0 5.2-3.4 9.4-8 11-4.6-1.6-8-5.8-8-11V5l8-3z" />
+        </Svg>
+      );
+    case 'duelist':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} d="M12 1.5l5.5 10.5L12 22.5 6.5 12z" />
+        </Svg>
+      );
+    case 'strategist':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} d="M9.25 3h5.5v6.25H21v5.5h-6.25V21h-5.5v-6.25H3v-5.5h6.25z" />
+        </Svg>
+      );
+    case 'tiers':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Rect x={3} y={4} width={18} height={3.4} rx={1.2} fill={color} />
+          <Rect x={3} y={10.3} width={13} height={3.4} rx={1.2} fill={color} />
+          <Rect x={3} y={16.6} width={8} height={3.4} rx={1.2} fill={color} />
+        </Svg>
+      );
+    case 'draft':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Circle cx={12} cy={12} r={7.5} {...stroke} />
+          <Path d="M12 1.8v4M12 18.2v4M1.8 12h4M18.2 12h4" {...stroke} />
+          <Circle cx={12} cy={12} r={1.6} fill={color} />
+        </Svg>
+      );
+    case 'comps':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Circle cx={5.5} cy={8.5} r={2.6} fill={color} />
+          <Circle cx={12} cy={6.5} r={2.8} fill={color} />
+          <Circle cx={18.5} cy={8.5} r={2.6} fill={color} />
+          <Path
+            fill={color}
+            d="M1.5 18.5c.4-2.9 1.9-4.6 4-4.6s3.6 1.7 4 4.6zM7.8 17c.5-3.2 2.1-5 4.2-5s3.7 1.8 4.2 5zM14.5 18.5c.4-2.9 1.9-4.6 4-4.6s3.6 1.7 4 4.6z"
+          />
+        </Svg>
+      );
+    case 'about':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Circle cx={12} cy={12} r={9} {...stroke} />
+          <Path d="M12 11v6" {...stroke} />
+          <Circle cx={12} cy={7.6} r={1.2} fill={color} />
+        </Svg>
+      );
+    case 'close':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d="M6 6l12 12M18 6L6 18" {...stroke} strokeWidth={2.2} />
+        </Svg>
+      );
+    case 'plus':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d="M12 5v14M5 12h14" {...stroke} strokeWidth={2.2} />
+        </Svg>
+      );
+    case 'search':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Circle cx={11} cy={11} r={6.5} {...stroke} />
+          <Path d="M16 16l4.5 4.5" {...stroke} />
+        </Svg>
+      );
+    case 'arrow':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d="M5 12h13M13 6l6 6-6 6" {...stroke} strokeLinejoin="round" />
+        </Svg>
+      );
+  }
+}
