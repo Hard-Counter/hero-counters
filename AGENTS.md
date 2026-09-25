@@ -36,6 +36,7 @@ Run lint and typecheck before declaring any code task done.
 - Pushing `src/data/heroes.json` to `main` publishes it: installed apps fetch it from `DATA_URL` (the raw GitHub URL of that file on `main`) and keep it only if it validates and has a higher revision. Don't change `DATA_URL`, rename the branch or move the file.
 - Scheduled data refreshes push to a `claude/data-revision-<N>` branch, never to `main`. `.github/workflows/publish-data.yml` checks that branch (data files only, `heroes.json` matches the script, revision raised, based on current `main`) and then fast-forwards `main`.
 - Commits in this repo use the project identity `Nemesis Counter <nemesis-counter@noreply.invalid>`, set in the repo's local git config.
+- `MAPS` in the data script is the ranked map pool: each map has a mode (`domination`, `convoy`, `convergence`) and layout traits. Keep it in step with the season's ranked rotation. `STYLES` gives heroes their play styles; a new hero without an entry simply isn't nudged by maps. The map nudge is capped in `src/logic.ts` (`MAP_FIT_MIN`/`MAP_FIT_MAX`) so it never outweighs a counter.
 - Tiers and counters are our own analysis. The app is ad-supported and some stat sites only allow non-commercial use of their numbers, so never copy third-party win, pick or ban rates into the data. Tag each counter honestly: `data`, `kit` or `consensus`.
 - Heroes appear by name with initials badges and the project's own role icons. Don't add official portraits, logos or game screenshots, and keep "Marvel" out of the app name.
 

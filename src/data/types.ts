@@ -5,6 +5,25 @@ export type Platform = 'pc' | 'console';
 export type Confidence = 'data' | 'kit' | 'consensus';
 export type BanRisk = 'high' | 'medium' | 'low';
 
+export type MapMode = 'domination' | 'convoy' | 'convergence';
+/** Layout traits that change which heroes do well on a map. */
+export type MapTrait = 'long-sightlines' | 'close-quarters' | 'high-ground' | 'chokepoints' | 'flank-routes';
+/** How a hero plays, for matching heroes to map layouts. */
+export type HeroStyle = 'long-range' | 'brawl' | 'dive' | 'flyer' | 'area';
+/** Which side you're on. Only Convoy and Convergence have sides. */
+export type MapSide = 'either' | 'attack' | 'defense';
+
+export interface GameMap {
+  id: string;
+  name: string;
+  /** Where the map is set, such as "Tokyo 2099". */
+  world: string;
+  mode: MapMode;
+  traits: MapTrait[];
+  /** One line on how the map plays. */
+  note: string;
+}
+
 export interface CounterPick {
   hero: string;
   confidence: Confidence;
@@ -31,6 +50,8 @@ export interface Hero {
   isNew?: boolean;
   /** One of several role versions of the same hero (Deadpool). */
   variant?: boolean;
+  /** Play styles for map matching. Missing or empty means no map nudge either way. */
+  styles?: HeroStyle[];
   counters: {
     overall: CounterPick;
     vanguard: CounterPick;
@@ -84,4 +105,6 @@ export interface Dataset {
   changelog: string[];
   heroes: Hero[];
   comps: Comp[];
+  /** Ranked map pool. Optional so older data files still load. */
+  maps?: GameMap[];
 }

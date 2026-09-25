@@ -392,6 +392,26 @@
   .pick-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
   .pick-name { font-size: 15.5px; font-weight: 700; }
   .pick-why { font-size: 13px; color: var(--ink-2); }
+  .pick-map { font-size: 12.5px; font-weight: 600; }
+  .pick-map.good { color: var(--conf-data); }
+  .pick-map.bad { color: var(--ban-med); }
+  .map-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-align: left;
+  }
+  .map-btn.on { border-color: var(--accent); }
+  .map-btn-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .map-name { font-size: 15px; font-weight: 700; }
+  .map-meta { font-size: 12.5px; color: var(--ink-3); }
+  .map-btn .link { flex: none; }
+  .side-row { margin-top: 8px; }
   .matchups { display: grid; gap: 6px; }
   .mu {
     width: 100%;
@@ -481,6 +501,27 @@
   .cc-why { font-size: 14px; }
   .cc-note, .cc-alt { font-size: 12.5px; color: var(--ink-3); }
   .cc-note.warn { color: var(--ban-med); }
+  .map-title { flex: 1; min-width: 0; font: 800 20px/1.1 var(--font-display); letter-spacing: .02em; }
+  .map-intro { margin: 10px 0 12px; font-size: 13.5px; color: var(--ink-2); }
+  .map-group { display: grid; gap: 6px; }
+  .map-row {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    text-align: left;
+  }
+  .map-row[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--accent); }
+  .map-row-head { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 8px; }
+  .map-row-name { font-size: 15px; font-weight: 700; }
+  .map-row-world { font-size: 12.5px; color: var(--ink-3); }
+  .map-row-note { font-size: 13px; line-height: 1.38; color: var(--ink-2); }
+  .traits { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
+  .trait { padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); font-size: 11.5px; font-weight: 600; color: var(--ink-2); }
 
   .search {
     flex: 1;
@@ -602,6 +643,7 @@
   <nav class="tabs" id="tabs" aria-label="Sections"></nav>
   <section class="sheet" id="detail" hidden aria-labelledby="detail-title"></section>
   <section class="sheet" id="picker" hidden aria-label="Add enemy heroes"></section>
+  <section class="sheet" id="mappicker" hidden aria-labelledby="mappicker-title"></section>
 </div>
 
 <script>
@@ -610,6 +652,7 @@
   /*__BUNDLE__*/
 
   const IDX = indexHeroes(DATA);
+  const MAPS = usableMaps(DATA);
   const EXAMPLE_TEAM = ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'];
   const TABS = [['tiers', 'Tiers'], ['draft', 'Draft'], ['comps', 'Comps'], ['about', 'About']];
 
@@ -631,6 +674,9 @@
     roleFilter: 'all',
     enemies: [],
     example: false,
+    // The map and side change every match, so they aren't remembered between visits.
+    mapId: null,
+    side: 'either',
     detail: null,
     query: '',
     pickerRole: 'all',
@@ -797,6 +843,42 @@
         ROLES.map((r) => h('button', { type: 'button', class: `role-btn ${r}`, 'aria-pressed': String(state.role === r), onClick: () => set({ role: r }) }, icon(r), ROLE_LABEL[r])),
       ),
     );
+
+    const map = MAPS.find((m) => m.id === state.mapId) || null;
+    if (MAPS.length) {
+      wrap.append(eyebrow('Map'));
+      wrap.append(
+        h(
+          'button',
+          { type: 'button', class: 'map-btn' + (map ? ' on' : ''), 'aria-label': map ? `Map: ${map.name}. Change the map` : 'Pick a map', onClick: openMapPicker },
+          h(
+            'span',
+            { class: 'map-btn-body' },
+            h('span', { class: 'map-name' }, map ? map.name : 'Any map'),
+            h(
+              'span',
+              { class: 'map-meta' },
+              map ? [MAP_MODE_LABEL[map.mode], ...map.traits.map((tr) => MAP_TRAIT_LABEL[tr])].join(' · ') : 'Optional. Pick one to suit your picks to the layout.',
+            ),
+          ),
+          h('span', { class: 'link' }, map ? 'Change' : 'Pick'),
+        ),
+      );
+      if (map && hasSides(map.mode)) {
+        wrap.append(
+          h(
+            'div',
+            { class: 'side-row' },
+            h(
+              'div',
+              { class: 'seg', role: 'group', 'aria-label': 'Your side' },
+              MAP_SIDES.map((s) => h('button', { type: 'button', 'aria-pressed': String(state.side === s), onClick: () => set({ side: s }) }, MAP_SIDE_LABEL[s])),
+            ),
+          ),
+        );
+      }
+    }
+
     wrap.append(
       h(
         'div',
@@ -831,18 +913,22 @@
           h('button', { type: 'button', class: 'btn', onClick: () => set({ enemies: EXAMPLE_TEAM.slice(), example: true }) }, 'Try an example team'),
         ),
       );
-      return wrap;
+      // With a map picked, the best picks for it still show before any enemies are added.
+      if (!map) return wrap;
+    } else if (state.example) {
+      wrap.append(h('p', { class: 'example-note' }, 'Example team. Tap a hero to remove it, or Clear to start your own.'));
     }
-    if (state.example) wrap.append(h('p', { class: 'example-note' }, 'Example team. Tap a hero to remove it, or Clear to start your own.'));
 
-    const { picks, matchups } = draft(DATA, IDX, state.role, state.enemies, state.bracket, state.platform);
-    wrap.append(eyebrow(`Best ${ROLE_LABEL[state.role]} picks`));
+    const ctx = map ? { map, side: state.side } : null;
+    const { picks, matchups } = draft(DATA, IDX, state.role, state.enemies, state.bracket, state.platform, ctx);
+    wrap.append(eyebrow(`Best ${ROLE_LABEL[state.role]} picks${map && !state.enemies.length ? ` on ${map.name}` : ''}`));
     wrap.append(
       h(
         'ol',
         { class: 'picks' },
-        picks.map((p, i) =>
-          h(
+        picks.map((p, i) => {
+          const note = mapNote(p.map);
+          return h(
             'li',
             null,
             h(
@@ -850,13 +936,20 @@
               { type: 'button', class: 'pick' + (i === 0 ? ' top' : ''), onClick: () => openDetail(p.hero.id) },
               h('span', { class: 'pick-n' }, String(i + 1)),
               avatar(p.hero, 36),
-              h('span', { class: 'pick-body' }, h('span', { class: 'pick-name' }, p.hero.name), h('span', { class: 'pick-why' }, pickReason(p))),
+              h(
+                'span',
+                { class: 'pick-body' },
+                h('span', { class: 'pick-name' }, p.hero.name),
+                h('span', { class: 'pick-why' }, pickReason(p)),
+                note ? h('span', { class: 'pick-map ' + (p.map.score > 0 ? 'good' : 'bad') }, note) : null,
+              ),
               tierChip(p.tier, 30),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
+    if (!state.enemies.length) return wrap;
     wrap.append(eyebrow('Your counter to each enemy'));
     wrap.append(
       h(
@@ -951,6 +1044,55 @@
     renderView(false);
   }
 
+  // ---- Map picker ----
+  function mapRow(label, detail, opts) {
+    return h(
+      'button',
+      { type: 'button', class: 'map-row', 'aria-pressed': String(opts.on), onClick: opts.onClick },
+      h('span', { class: 'map-row-head' }, h('span', { class: 'map-row-name' }, label), opts.world ? h('span', { class: 'map-row-world' }, opts.world) : null),
+      h('span', { class: 'map-row-note' }, detail),
+      opts.traits && opts.traits.length ? h('span', { class: 'traits' }, opts.traits.map((tr) => h('span', { class: 'trait' }, tr))) : null,
+    );
+  }
+
+  function openMapPicker() {
+    const choose = (id) => {
+      state.mapId = id;
+      closeMapPicker();
+    };
+    const body = h(
+      'div',
+      { class: 'sheet-body' },
+      h('p', { class: 'map-intro' }, 'The map nudges close calls toward heroes whose play style suits its layout. Counters still count most.'),
+      mapRow('Any map', 'Don’t factor in the map', { on: state.mapId === null, onClick: () => choose(null) }),
+      MAP_MODES.map((mode) => {
+        const inMode = MAPS.filter((m) => m.mode === mode).sort((a, b) => a.name.localeCompare(b.name));
+        if (!inMode.length) return null;
+        return [
+          eyebrow(MAP_MODE_LABEL[mode]),
+          h(
+            'div',
+            { class: 'map-group' },
+            inMode.map((m) =>
+              mapRow(m.name, m.note, { world: m.world, traits: m.traits.map((tr) => MAP_TRAIT_LABEL[tr]), on: state.mapId === m.id, onClick: () => choose(m.id) }),
+            ),
+          ),
+        ];
+      }),
+      h('p', { class: 'foot' }, 'Ranked maps only. The list is updated as the map pool rotates.'),
+    );
+    $('mappicker').replaceChildren(
+      h('div', { class: 'sheet-head' }, h('h1', { class: 'map-title', id: 'mappicker-title' }, 'Pick the map'), h('button', { type: 'button', class: 'btn', onClick: closeMapPicker }, 'Done')),
+      body,
+    );
+    $('mappicker').hidden = false;
+  }
+
+  function closeMapPicker() {
+    $('mappicker').hidden = true;
+    renderView(false);
+  }
+
   // ---- Hero detail ----
   function counterCard(pick, role) {
     const c = IDX[pick.hero];
@@ -987,6 +1129,9 @@
         h('li', { class: `ban-${hero.banRisk}` }, BAN_LABEL[hero.banRisk] + '.'),
         hero.patchNote ? h('li', null, hero.patchNote) : null,
         hero.platformNote ? h('li', null, 'Console: ' + hero.platformNote) : null,
+        hero.styles && hero.styles.length
+          ? h('li', null, `Plays as: ${hero.styles.map((s) => HERO_STYLE_LABEL[s] || s).join(', ')}. The draft helper uses this to match maps.`)
+          : null,
       ),
     );
     body.append(eyebrow('Best counter overall'));
@@ -1127,6 +1272,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
     if (!$('picker').hidden) closePicker();
+    else if (!$('mappicker').hidden) closeMapPicker();
     else if (!$('detail').hidden) closeDetail();
   });
 

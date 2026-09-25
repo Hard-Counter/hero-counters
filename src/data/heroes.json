@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "revision": 1,
+  "revision": 2,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch and Sept 17 fix",
   "updated": "2026-09-24",
-  "nextReview": "2026-10-09",
+  "nextReview": "2026-09-26",
   "brackets": [
     {
       "id": "bronze_gold",
@@ -34,6 +34,7 @@
     "Each hero lists the best counter overall and the best counter in every role, so you can answer a threat without leaving your role.",
     "Data-backed counters are supported by public matchup data. Kit-based counters come from how the heroes’ abilities interact. Consensus picks come from community play.",
     "Bans happen at Gold III and above. Heroes marked as often banned may not be available.",
+    "Picking a map in the draft helper nudges close calls toward heroes whose play style suits its layout, mode and side. A real counter always outweighs the map.",
     "The meta shifts with every patch. The data is reviewed weekly and after each balance update."
   ],
   "seasonNotes": [
@@ -43,6 +44,7 @@
     "Season 10.5 arrives October 9."
   ],
   "changelog": [
+    "Draft helper: pick a map (and your side) to nudge suggestions by layout. Covers the 17 ranked maps.",
     "Season 10 launch data: Gorr added, Sept 11 balance patch and Sept 17 Scarlet Witch fix reflected."
   ],
   "heroes": [
@@ -59,6 +61,9 @@
       },
       "banRisk": "high",
       "patchNote": "Buffed this season: faster fire rate.",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "rocket-raccoon",
@@ -101,6 +106,9 @@
       },
       "banRisk": "high",
       "patchNote": "Buffed this season: more bleed damage. The most-banned hero at Gold III and above.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "phoenix",
@@ -139,6 +147,9 @@
       },
       "banRisk": "low",
       "patchNote": "Nerfed this season.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "wolverine",
@@ -174,6 +185,10 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
+      "styles": [
+        "brawl",
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -210,6 +225,9 @@
       },
       "banRisk": "low",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -246,6 +264,10 @@
       },
       "banRisk": "low",
       "patchNote": "Buffed this season: more health.",
+      "styles": [
+        "dive",
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -282,6 +304,9 @@
       },
       "banRisk": "low",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -326,6 +351,9 @@
       },
       "banRisk": "low",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "wolverine",
@@ -362,6 +390,9 @@
       },
       "banRisk": "low",
       "patchNote": "Nerfed this season: less health and a smaller shield. Still the most-played Vanguard.",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "wolverine",
@@ -397,6 +428,9 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "wolverine",
@@ -433,6 +467,10 @@
       },
       "banRisk": "low",
       "patchNote": "Nerfed this season.",
+      "styles": [
+        "dive",
+        "flyer"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -471,6 +509,9 @@
       "consoleShift": 1,
       "platformNote": "Official data shows him stronger on console.",
       "patchNote": "Nerfed this season: less health and a longer charge cooldown. Stat sites disagree on him, so treat this tier as shaky.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "the-punisher",
@@ -507,6 +548,9 @@
       },
       "banRisk": "medium",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "wolverine",
@@ -542,6 +586,9 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "wolverine",
@@ -615,6 +662,10 @@
       },
       "banRisk": "medium",
       "patchNote": "Only her team-up with The Hood was nerfed this season.",
+      "styles": [
+        "dive",
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "peni-parker",
@@ -658,6 +709,9 @@
       "banRisk": "high",
       "patchNote": "New this season. Turns downed enemies into AI Berserkers.",
       "isNew": true,
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "peni-parker",
@@ -699,6 +753,10 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
+      "styles": [
+        "flyer",
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "black-widow",
@@ -735,6 +793,9 @@
       },
       "banRisk": "medium",
       "patchNote": "Reworked this season. A Sept 17 fix made her ultimate’s wind-up far less likely to block damage.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "squirrel-girl",
@@ -772,6 +833,9 @@
         "eternity_oaa": "S"
       },
       "banRisk": "medium",
+      "styles": [
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "invisible-woman",
@@ -813,6 +877,10 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "styles": [
+        "dive",
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -849,6 +917,9 @@
       },
       "banRisk": "low",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "peni-parker",
@@ -884,6 +955,9 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "devil-dinosaur",
@@ -922,6 +996,9 @@
       "consoleShift": -1,
       "platformNote": "Official data shows her weaker on console.",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "daredevil",
@@ -958,6 +1035,9 @@
       },
       "banRisk": "high",
       "patchNote": "Buffed this season: shorter combo cooldown.",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "the-thing",
@@ -1003,6 +1083,9 @@
         "eternity_oaa": "A"
       },
       "banRisk": "medium",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "the-thing",
@@ -1039,6 +1122,9 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "human-torch",
@@ -1074,6 +1160,10 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
+      "styles": [
+        "flyer",
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "spider-man",
@@ -1109,6 +1199,10 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
+      "styles": [
+        "flyer",
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "spider-man",
@@ -1145,6 +1239,10 @@
       },
       "banRisk": "medium",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "brawl",
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "iron-man",
@@ -1217,6 +1315,9 @@
       },
       "banRisk": "medium",
       "patchNote": "Nerfed this season.",
+      "styles": [
+        "brawl"
+      ],
       "counters": {
         "overall": {
           "hero": "invisible-woman",
@@ -1253,6 +1354,9 @@
       },
       "banRisk": "low",
       "patchNote": "Nerfed this season: her dash lost its invincibility and her stealth leaves a trail.",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "the-thing",
@@ -1289,6 +1393,9 @@
       },
       "banRisk": "low",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "dive"
+      ],
       "counters": {
         "overall": {
           "hero": "jubilee",
@@ -1327,6 +1434,9 @@
       "consoleShift": -1,
       "platformNote": "Hitscan sniper: noticeably weaker on controller.",
       "patchNote": "Nerfed this season.",
+      "styles": [
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "invisible-woman",
@@ -1364,6 +1474,9 @@
       "banRisk": "low",
       "consoleShift": -1,
       "platformNote": "Precision aim: weaker on controller.",
+      "styles": [
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "black-panther",
@@ -1402,6 +1515,9 @@
       "consoleShift": 1,
       "platformNote": "His turrets don’t need aim, so he does better on console.",
       "patchNote": "Buffed this season.",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "rocket-raccoon",
@@ -1437,6 +1553,9 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "ultron",
@@ -1472,6 +1591,9 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
+      "styles": [
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "invisible-woman",
@@ -1550,6 +1672,9 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
+      "styles": [
+        "long-range"
+      ],
       "counters": {
         "overall": {
           "hero": "rocket-raccoon",
@@ -1585,6 +1710,9 @@
         "eternity_oaa": "F"
       },
       "banRisk": "low",
+      "styles": [
+        "area"
+      ],
       "counters": {
         "overall": {
           "hero": "ultron",
@@ -1691,6 +1819,9 @@
         "eternity_oaa": "S"
       },
       "banRisk": "low",
+      "styles": [
+        "flyer"
+      ],
       "counters": {
         "overall": {
           "hero": "spider-man",
@@ -2479,6 +2610,189 @@
         ],
         "why": "Black Panther is the top counter to most Strategists, Blade’s anti-heal cuts through the healing, and Magik or Gorr burst targets before heals land."
       }
+    }
+  ],
+  "maps": [
+    {
+      "id": "central-park",
+      "name": "Central Park",
+      "world": "Empire of Eternal Night",
+      "mode": "convergence",
+      "traits": [
+        "long-sightlines"
+      ],
+      "note": "An open clearing at the point, then a narrow wooded escort with little cover to hop between."
+    },
+    {
+      "id": "hall-of-djalia",
+      "name": "Hall of Djalia",
+      "world": "Intergalactic Empire of Wakanda",
+      "mode": "convergence",
+      "traits": [
+        "high-ground",
+        "chokepoints"
+      ],
+      "note": "Raised platforms around a crowded middle that rewards holding a spot."
+    },
+    {
+      "id": "heart-of-heaven",
+      "name": "Heart of Heaven",
+      "world": "K'un-Lun",
+      "mode": "convergence",
+      "traits": [
+        "close-quarters",
+        "high-ground"
+      ],
+      "note": "A winding climb through narrow paths, with the height on the defenders’ side."
+    },
+    {
+      "id": "lower-manhattan",
+      "name": "Lower Manhattan",
+      "world": "",
+      "mode": "convergence",
+      "traits": [
+        "long-sightlines",
+        "flank-routes"
+      ],
+      "note": "Long street sightlines broken up by corners that mobile heroes use to reset."
+    },
+    {
+      "id": "shin-shibuya",
+      "name": "Shin-Shibuya",
+      "world": "Tokyo 2099",
+      "mode": "convergence",
+      "traits": [
+        "chokepoints",
+        "high-ground",
+        "flank-routes"
+      ],
+      "note": "Three lanes under raised walkways that create chokepoints."
+    },
+    {
+      "id": "symbiotic-surface",
+      "name": "Symbiotic Surface",
+      "world": "Klyntar",
+      "mode": "convergence",
+      "traits": [
+        "close-quarters"
+      ],
+      "note": "Curved walls and pillars make short, messy fights with odd angles."
+    },
+    {
+      "id": "arakko",
+      "name": "Arakko",
+      "world": "Hellfire Gala",
+      "mode": "convoy",
+      "traits": [
+        "long-sightlines",
+        "high-ground",
+        "flank-routes"
+      ],
+      "note": "An open festival ground mid-route, with raised gardens that give defenders height."
+    },
+    {
+      "id": "midtown",
+      "name": "Midtown",
+      "world": "Empire of Eternal Night",
+      "mode": "convoy",
+      "traits": [
+        "close-quarters",
+        "chokepoints"
+      ],
+      "note": "Tight night-time streets where defenders stack overlapping angles."
+    },
+    {
+      "id": "museum-of-contemplation",
+      "name": "Museum of Contemplation",
+      "world": "",
+      "mode": "convoy",
+      "traits": [
+        "close-quarters",
+        "flank-routes"
+      ],
+      "note": "Mostly indoor galleries: close fights and hidden flanks, little room for snipers."
+    },
+    {
+      "id": "spider-islands",
+      "name": "Spider-Islands",
+      "world": "Tokyo 2099",
+      "mode": "convoy",
+      "traits": [
+        "high-ground",
+        "flank-routes"
+      ],
+      "note": "Web-covered platforms over the sea with lots of vertical ambush spots."
+    },
+    {
+      "id": "thebes",
+      "name": "Thebes",
+      "world": "",
+      "mode": "convoy",
+      "traits": [
+        "high-ground"
+      ],
+      "note": "Stepped temple levels with high perches along the route. Newer, so still being figured out."
+    },
+    {
+      "id": "yggdrasill-path",
+      "name": "Yggdrasill Path",
+      "world": "Yggsgard",
+      "mode": "convoy",
+      "traits": [
+        "chokepoints"
+      ],
+      "note": "A long route through roots and branches with several defensive holds and a narrow final stretch."
+    },
+    {
+      "id": "birnin-tchalla",
+      "name": "Birnin T’Challa",
+      "world": "Intergalactic Empire of Wakanda",
+      "mode": "domination",
+      "traits": [
+        "high-ground",
+        "flank-routes"
+      ],
+      "note": "A raised point you can approach from several angles below."
+    },
+    {
+      "id": "celestial-husk",
+      "name": "Celestial Husk",
+      "world": "Klyntar",
+      "mode": "domination",
+      "traits": [
+        "flank-routes"
+      ],
+      "note": "A round arena with curved walls and no single safe angle, good for dives."
+    },
+    {
+      "id": "hells-heaven",
+      "name": "Hell’s Heaven",
+      "world": "Hydra Charteris Base",
+      "mode": "domination",
+      "traits": [
+        "close-quarters"
+      ],
+      "note": "A factory floor full of hard cover and short sightlines."
+    },
+    {
+      "id": "krakoa",
+      "name": "Krakoa",
+      "world": "Hellfire Gala",
+      "mode": "domination",
+      "traits": [
+        "chokepoints"
+      ],
+      "note": "A small point where area denial forces attackers to commit to one angle."
+    },
+    {
+      "id": "royal-palace",
+      "name": "Royal Palace",
+      "world": "Yggsgard",
+      "mode": "domination",
+      "traits": [
+        "flank-routes"
+      ],
+      "note": "A throne-room point with narrow side corridors for flanks."
     }
   ]
 }

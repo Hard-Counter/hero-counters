@@ -10,7 +10,7 @@ import { Barlow_700Bold } from '@expo-google-fonts/barlow/700Bold';
 import { BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed/700Bold';
 import { BarlowCondensed_800ExtraBold } from '@expo-google-fonts/barlow-condensed/800ExtraBold';
 
-import type { BracketId, Platform, RoleId } from './src/data/types';
+import type { BracketId, MapSide, Platform, RoleId } from './src/data/types';
 import { useDataset } from './src/data/useDataset';
 import { ROLES, formatDate, indexHeroes } from './src/logic';
 import { FONT, Theme, useStyles, useTheme } from './src/theme';
@@ -64,6 +64,9 @@ function Root() {
   const [bracket, setBracket] = usePersisted<BracketId>('bracket', 'plat_diamond', BRACKETS);
   const [myRole, setMyRole] = usePersisted<RoleId>('role', 'duelist', ROLES);
   const [enemies, setEnemies] = useState<string[]>([]);
+  // The map and side change every match, so they aren't remembered between launches.
+  const [mapId, setMapId] = useState<string | null>(null);
+  const [side, setSide] = useState<MapSide>('either');
   const [detail, setDetail] = useState<string | null>(null);
 
   const showControls = tab === 'tiers' || tab === 'draft';
@@ -119,6 +122,10 @@ function Root() {
             setMyRole={setMyRole}
             enemies={enemies}
             setEnemies={setEnemies}
+            mapId={mapId}
+            setMapId={setMapId}
+            side={side}
+            setSide={setSide}
             onOpen={setDetail}
           />
         ) : null}

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { BracketId, CounterPick, Dataset, Platform, RoleId } from '../data/types';
-import { BAN_LABEL, HeroIndex, ROLES, goodAgainst, sortHeroes, tierFor } from '../logic';
+import { BAN_LABEL, HERO_STYLE_LABEL, HeroIndex, ROLES, goodAgainst, sortHeroes, tierFor } from '../logic';
 import { FONT, Theme, useStyles, useTheme } from '../theme';
 import { Avatar, ConfTag, Eyebrow, HeroChip, RoleTag, TierBadge } from '../components/ui';
 import { Icon } from '../components/icons';
@@ -77,6 +77,11 @@ export default function HeroDetail({
               <Note color={t.ban[hero.banRisk]}>{BAN_LABEL[hero.banRisk]}.</Note>
               {hero.patchNote ? <Note color={t.ink3}>{hero.patchNote}</Note> : null}
               {hero.platformNote ? <Note color={t.ink3}>Console: {hero.platformNote}</Note> : null}
+              {hero.styles && hero.styles.length ? (
+                <Note color={t.ink3}>
+                  Plays as: {hero.styles.map((s) => HERO_STYLE_LABEL[s] ?? s).join(', ')}. The draft helper uses this to match maps.
+                </Note>
+              ) : null}
             </View>
 
             <Eyebrow>Best counter overall</Eyebrow>

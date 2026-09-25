@@ -13,14 +13,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 1;
+const REVISION = 2;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
   seasonShort: 'Season 10',
   patch: 'Sept 11 balance patch and Sept 17 fix',
   updated: '2026-09-24',
-  nextReview: '2026-10-09',
+  nextReview: '2026-09-26',
 };
 
 const BRACKETS = [
@@ -36,6 +36,7 @@ const METHODOLOGY = [
   'Each hero lists the best counter overall and the best counter in every role, so you can answer a threat without leaving your role.',
   'Data-backed counters are supported by public matchup data. Kit-based counters come from how the heroes’ abilities interact. Consensus picks come from community play.',
   'Bans happen at Gold III and above. Heroes marked as often banned may not be available.',
+  'Picking a map in the draft helper nudges close calls toward heroes whose play style suits its layout, mode and side. A real counter always outweighs the map.',
   'The meta shifts with every patch. The data is reviewed weekly and after each balance update.',
 ];
 
@@ -47,6 +48,7 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
+  'Draft helper: pick a map (and your side) to nudge suggestions by layout. Covers the 17 ranked maps.',
   'Season 10 launch data: Gorr added, Sept 11 balance patch and Sept 17 Scarlet Witch fix reflected.',
 ];
 
@@ -585,6 +587,88 @@ const COMPS = [
 ];
 
 // ---------------------------------------------------------------------------
+// Play styles, for matching heroes to map layouts in the draft helper.
+// long-range: precise damage from distance · brawl: wins close fights and holds space
+// dive: reaches the backline or flanks · flyer: fights from the air · area: zones and chokes
+// Leave a hero out when unsure of their kit: no styles means no map nudge either way.
+// Healers mostly stay neutral; map layout matters less for them.
+// ---------------------------------------------------------------------------
+const STYLES = {
+  // Vanguards
+  'peni-parker': ['area'],
+  'devil-dinosaur': ['brawl'],
+  'the-hood': ['brawl'],
+  hulk: ['brawl', 'dive'],
+  thor: ['brawl'],
+  'captain-america': ['dive', 'brawl'],
+  rogue: ['brawl'],
+  'doctor-strange': ['area'],
+  magneto: ['area'],
+  venom: ['dive'],
+  angela: ['dive', 'flyer'],
+  'the-thing': ['brawl'],
+  'emma-frost': ['brawl'],
+  groot: ['area'],
+  // Duelists
+  magik: ['dive', 'brawl'],
+  gorr: ['brawl'],
+  storm: ['flyer', 'long-range'],
+  'scarlet-witch': ['brawl'],
+  hela: ['long-range'],
+  daredevil: ['dive', 'brawl'],
+  'iron-fist': ['dive'],
+  'mister-fantastic': ['brawl'],
+  psylocke: ['dive'],
+  'spider-man': ['dive'],
+  'black-panther': ['dive'],
+  blade: ['brawl'],
+  'iron-man': ['flyer', 'long-range'],
+  'human-torch': ['flyer', 'area'],
+  wolverine: ['brawl', 'dive'],
+  'winter-soldier': ['brawl'],
+  'black-cat': ['dive'],
+  'star-lord': ['dive'],
+  'black-widow': ['long-range'],
+  hawkeye: ['long-range'],
+  namor: ['area'],
+  'moon-knight': ['area'],
+  'the-punisher': ['long-range'],
+  cyclops: ['long-range'],
+  'squirrel-girl': ['area'],
+  // Strategists
+  ultron: ['flyer'],
+};
+
+// ---------------------------------------------------------------------------
+// Ranked map pool: [id, name, world ('' if unsure), mode, traits, note]
+// mode: convergence | convoy | domination
+// traits: long-sightlines, close-quarters, high-ground, chokepoints, flank-routes
+// Keep it to maps in ranked. Traits are our own read of each layout.
+// ---------------------------------------------------------------------------
+const MAPS = [
+  // Convergence: capture a point, then escort
+  ['central-park', 'Central Park', 'Empire of Eternal Night', 'convergence', ['long-sightlines'], 'An open clearing at the point, then a narrow wooded escort with little cover to hop between.'],
+  ['hall-of-djalia', 'Hall of Djalia', 'Intergalactic Empire of Wakanda', 'convergence', ['high-ground', 'chokepoints'], 'Raised platforms around a crowded middle that rewards holding a spot.'],
+  ['heart-of-heaven', 'Heart of Heaven', "K'un-Lun", 'convergence', ['close-quarters', 'high-ground'], 'A winding climb through narrow paths, with the height on the defenders’ side.'],
+  ['lower-manhattan', 'Lower Manhattan', '', 'convergence', ['long-sightlines', 'flank-routes'], 'Long street sightlines broken up by corners that mobile heroes use to reset.'],
+  ['shin-shibuya', 'Shin-Shibuya', 'Tokyo 2099', 'convergence', ['chokepoints', 'high-ground', 'flank-routes'], 'Three lanes under raised walkways that create chokepoints.'],
+  ['symbiotic-surface', 'Symbiotic Surface', 'Klyntar', 'convergence', ['close-quarters'], 'Curved walls and pillars make short, messy fights with odd angles.'],
+  // Convoy: escort the payload
+  ['arakko', 'Arakko', 'Hellfire Gala', 'convoy', ['long-sightlines', 'high-ground', 'flank-routes'], 'An open festival ground mid-route, with raised gardens that give defenders height.'],
+  ['midtown', 'Midtown', 'Empire of Eternal Night', 'convoy', ['close-quarters', 'chokepoints'], 'Tight night-time streets where defenders stack overlapping angles.'],
+  ['museum-of-contemplation', 'Museum of Contemplation', '', 'convoy', ['close-quarters', 'flank-routes'], 'Mostly indoor galleries: close fights and hidden flanks, little room for snipers.'],
+  ['spider-islands', 'Spider-Islands', 'Tokyo 2099', 'convoy', ['high-ground', 'flank-routes'], 'Web-covered platforms over the sea with lots of vertical ambush spots.'],
+  ['thebes', 'Thebes', '', 'convoy', ['high-ground'], 'Stepped temple levels with high perches along the route. Newer, so still being figured out.'],
+  ['yggdrasill-path', 'Yggdrasill Path', 'Yggsgard', 'convoy', ['chokepoints'], 'A long route through roots and branches with several defensive holds and a narrow final stretch.'],
+  // Domination: hold the point
+  ['birnin-tchalla', 'Birnin T’Challa', 'Intergalactic Empire of Wakanda', 'domination', ['high-ground', 'flank-routes'], 'A raised point you can approach from several angles below.'],
+  ['celestial-husk', 'Celestial Husk', 'Klyntar', 'domination', ['flank-routes'], 'A round arena with curved walls and no single safe angle, good for dives.'],
+  ['hells-heaven', 'Hell’s Heaven', 'Hydra Charteris Base', 'domination', ['close-quarters'], 'A factory floor full of hard cover and short sightlines.'],
+  ['krakoa', 'Krakoa', 'Hellfire Gala', 'domination', ['chokepoints'], 'A small point where area denial forces attackers to commit to one angle.'],
+  ['royal-palace', 'Royal Palace', 'Yggsgard', 'domination', ['flank-routes'], 'A throne-room point with narrow side corridors for flanks.'],
+];
+
+// ---------------------------------------------------------------------------
 // Build and validate
 // ---------------------------------------------------------------------------
 const ROLE = { V: 'vanguard', D: 'duelist', S: 'strategist' };
@@ -622,11 +706,33 @@ const heroes = HEROES.map(([id, name, r, tiers, ban, extra = {}]) => {
   for (const k of ['consoleShift', 'platformNote', 'patchNote', 'isNew', 'variant']) {
     if (extra[k] !== undefined) hero[k] = extra[k];
   }
+  if (STYLES[id]) hero.styles = STYLES[id];
   return hero;
 });
 
 const byId = new Map(heroes.map((h) => [h.id, h]));
 if (byId.size !== heroes.length) fail('duplicate hero ids');
+
+const STYLE_IDS = ['long-range', 'brawl', 'dive', 'flyer', 'area'];
+for (const [id, styles] of Object.entries(STYLES)) {
+  if (!byId.has(id)) fail(`styles for unknown hero ${id}`);
+  if (!Array.isArray(styles) || styles.length === 0) fail(`${id}: styles must be a non-empty list`);
+  for (const s of styles) if (!STYLE_IDS.includes(s)) fail(`${id}: unknown style ${s}`);
+  if (new Set(styles).size !== styles.length) fail(`${id}: repeated style`);
+}
+
+const MODES = ['convergence', 'convoy', 'domination'];
+const TRAITS = ['long-sightlines', 'close-quarters', 'high-ground', 'chokepoints', 'flank-routes'];
+const maps = MAPS.map(([id, name, world, mode, traits, note]) => {
+  if (!/^[a-z0-9-]+$/.test(id)) fail(`map ${id}: id must be lowercase letters, digits and dashes`);
+  if (!name || !note) fail(`map ${id}: missing name or note`);
+  if (typeof world !== 'string') fail(`map ${id}: world must be a string ('' if unsure)`);
+  if (!MODES.includes(mode)) fail(`map ${id}: bad mode ${mode}`);
+  if (!Array.isArray(traits) || traits.length === 0) fail(`map ${id}: needs at least one trait`);
+  for (const tr of traits ?? []) if (!TRAITS.includes(tr)) fail(`map ${id}: unknown trait ${tr}`);
+  return { id, name, world, mode, traits, note };
+});
+if (new Set(maps.map((m) => m.id)).size !== maps.length) fail('duplicate map ids');
 
 function pick(raw, where) {
   const [hero, c, reason, extra = {}] = raw;
@@ -711,6 +817,7 @@ const dataset = {
   changelog: CHANGELOG,
   heroes,
   comps,
+  maps,
 };
 
 const out = resolve(dirname(fileURLToPath(import.meta.url)), '../src/data/heroes.json');

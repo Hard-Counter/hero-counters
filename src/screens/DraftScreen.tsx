@@ -1,11 +1,25 @@
 import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { BracketId, Dataset, Platform, RoleId } from '../data/types';
-import { HeroIndex, ROLES, ROLE_LABEL, Suggestion, draft } from '../logic';
+import type { BracketId, Dataset, MapSide, Platform, RoleId } from '../data/types';
+import {
+  HeroIndex,
+  MAP_MODE_LABEL,
+  MAP_SIDES,
+  MAP_SIDE_LABEL,
+  MAP_TRAIT_LABEL,
+  ROLES,
+  ROLE_LABEL,
+  Suggestion,
+  draft,
+  hasSides,
+  mapNote,
+  usableMaps,
+} from '../logic';
 import { FONT, Theme, alpha, useStyles, useTheme } from '../theme';
-import { Avatar, ConfTag, Eyebrow, TierBadge } from '../components/ui';
+import { Avatar, ConfTag, Eyebrow, Segmented, TierBadge } from '../components/ui';
 import { Icon } from '../components/icons';
 import HeroPicker, { MAX_ENEMIES } from './HeroPicker';
+import MapPicker from './MapPicker';
 
 const EXAMPLE_TEAM = ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'];
 
@@ -26,6 +40,10 @@ export default function DraftScreen({
   setMyRole,
   enemies,
   setEnemies,
+  mapId,
+  setMapId,
+  side,
+  setSide,
   onOpen,
 }: {
   data: Dataset;
@@ -36,17 +54,27 @@ export default function DraftScreen({
   setMyRole: (r: RoleId) => void;
   enemies: string[];
   setEnemies: (ids: string[]) => void;
+  mapId: string | null;
+  setMapId: (id: string | null) => void;
+  side: MapSide;
+  setSide: (s: MapSide) => void;
   onOpen: (heroId: string) => void;
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
   const [picking, setPicking] = useState(false);
+  const [pickingMap, setPickingMap] = useState(false);
   const [example, setExample] = useState(false);
 
+  const maps = useMemo(() => usableMaps(data), [data]);
+  const map = maps.find((m) => m.id === mapId) ?? null;
+  const mapCtx = useMemo(() => (map ? { map, side } : null), [map, side]);
+
   const result = useMemo(
-    () => draft(data, idx, myRole, enemies, bracket, platform),
-    [data, idx, myRole, enemies, bracket, platform],
+    () => draft(data, idx, myRole, enemies, bracket, platform, mapCtx),
+    [data, idx, myRole, enemies, bracket, platform, mapCtx],
   );
+  const showPicks = enemies.length > 0 || map !== null;
 
   const toggle = (id: string) => {
     setExample(false);
@@ -75,6 +103,37 @@ export default function DraftScreen({
             );
           })}
         </View>
+
+        {maps.length > 0 ? (
+          <>
+            <Eyebrow>Map</Eyebrow>
+            <Pressable
+              onPress={() => setPickingMap(true)}
+              accessibilityRole="button"
+              accessibilityLabel={map ? `Map: ${map.name}. Change the map` : 'Pick a map'}
+              style={({ pressed }) => [st.mapBtn, map && { borderColor: t.accent }, pressed && { opacity: 0.8 }]}
+            >
+              <View style={st.mapBody}>
+                <Text style={st.mapName}>{map ? map.name : 'Any map'}</Text>
+                <Text style={st.mapMeta} numberOfLines={2}>
+                  {map
+                    ? [MAP_MODE_LABEL[map.mode], ...map.traits.map((tr) => MAP_TRAIT_LABEL[tr])].join(' · ')
+                    : 'Optional. Pick one to suit your picks to the layout.'}
+                </Text>
+              </View>
+              <Text style={st.link}>{map ? 'Change' : 'Pick'}</Text>
+            </Pressable>
+            {map && hasSides(map.mode) ? (
+              <View style={st.sideRow}>
+                <Segmented
+                  value={side}
+                  onChange={setSide}
+                  options={MAP_SIDES.map((s) => ({ value: s, label: MAP_SIDE_LABEL[s] }))}
+                />
+              </View>
+            ) : null}
+          </>
+        ) : null}
 
         <View style={st.between}>
           <Eyebrow>
@@ -144,30 +203,45 @@ export default function DraftScreen({
               <Text style={st.btnText}>Try an example team</Text>
             </Pressable>
           </View>
-        ) : (
+        ) : null}
+        {example && enemies.length > 0 ? (
+          <Text style={st.exampleNote}>Example team. Tap a hero to remove it, or Clear to start your own.</Text>
+        ) : null}
+
+        {showPicks ? (
           <>
-            {example ? <Text style={st.exampleNote}>Example team. Tap a hero to remove it, or Clear to start your own.</Text> : null}
-
-            <Eyebrow>Best {ROLE_LABEL[myRole]} picks</Eyebrow>
+            <Eyebrow>
+              Best {ROLE_LABEL[myRole]} picks{map && enemies.length === 0 ? ` on ${map.name}` : ''}
+            </Eyebrow>
             <View style={st.list}>
-              {result.picks.map((p, i) => (
-                <Pressable
-                  key={p.hero.id}
-                  onPress={() => onOpen(p.hero.id)}
-                  accessibilityRole="button"
-                  style={({ pressed }) => [st.pick, i === 0 && { borderColor: t.accent }, pressed && { opacity: 0.8 }]}
-                >
-                  <Text style={[st.pickN, i === 0 && { color: t.accent }]}>{i + 1}</Text>
-                  <Avatar hero={p.hero} size={36} />
-                  <View style={st.pickBody}>
-                    <Text style={st.pickName}>{p.hero.name}</Text>
-                    <Text style={st.pickWhy}>{pickReason(p)}</Text>
-                  </View>
-                  <TierBadge tier={p.tier} size={30} />
-                </Pressable>
-              ))}
+              {result.picks.map((p, i) => {
+                const note = mapNote(p.map);
+                return (
+                  <Pressable
+                    key={p.hero.id}
+                    onPress={() => onOpen(p.hero.id)}
+                    accessibilityRole="button"
+                    style={({ pressed }) => [st.pick, i === 0 && { borderColor: t.accent }, pressed && { opacity: 0.8 }]}
+                  >
+                    <Text style={[st.pickN, i === 0 && { color: t.accent }]}>{i + 1}</Text>
+                    <Avatar hero={p.hero} size={36} />
+                    <View style={st.pickBody}>
+                      <Text style={st.pickName}>{p.hero.name}</Text>
+                      <Text style={st.pickWhy}>{pickReason(p)}</Text>
+                      {note ? (
+                        <Text style={[st.pickMap, { color: p.map.score > 0 ? t.conf.data : t.ban.medium }]}>{note}</Text>
+                      ) : null}
+                    </View>
+                    <TierBadge tier={p.tier} size={30} />
+                  </Pressable>
+                );
+              })}
             </View>
+          </>
+        ) : null}
 
+        {enemies.length > 0 ? (
+          <>
             <Eyebrow>Your counter to each enemy</Eyebrow>
             <View style={st.list}>
               {result.matchups.map((m) => (
@@ -197,10 +271,17 @@ export default function DraftScreen({
               ))}
             </View>
           </>
-        )}
+        ) : null}
       </ScrollView>
 
       <HeroPicker visible={picking} data={data} selected={enemies} onToggle={toggle} onClose={() => setPicking(false)} />
+      <MapPicker
+        visible={pickingMap}
+        maps={maps}
+        selected={map ? map.id : null}
+        onSelect={setMapId}
+        onClose={() => setPickingMap(false)}
+      />
     </>
   );
 }
@@ -263,6 +344,22 @@ const makeStyles = (t: Theme) =>
     pickBody: { flex: 1, gap: 2 },
     pickName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15.5 },
     pickWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13 },
+    pickMap: { fontFamily: FONT.bodySemi, fontSize: 12.5 },
+    mapBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    mapBody: { flex: 1, gap: 2 },
+    mapName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
+    mapMeta: { color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },
+    sideRow: { flexDirection: 'row', marginTop: 8 },
     mu: { gap: 6, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
     muHead: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
     muHero: { flexDirection: 'row', alignItems: 'center', gap: 6 },

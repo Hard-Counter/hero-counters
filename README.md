@@ -10,7 +10,7 @@ Data: curated tiers and counters, reviewed weekly and after major patches. The c
 | --- | --- |
 | `App.tsx` | App shell: header, rank strip, tabs, ad slot |
 | `app.config.ts` | App name, bundle IDs, AdMob IDs, data URL (already set), privacy URL. **Edit before release.** |
-| `src/screens/` | Tier list, draft helper, comps, about, hero detail, enemy picker |
+| `src/screens/` | Tier list, draft helper, comps, about, hero detail, enemy and map pickers |
 | `src/logic.ts` | Tier, counter and draft logic (shared with the web preview) |
 | `src/data/heroes.json` | The hero data the app ships with (generated, don't hand-edit) |
 | `src/ads/`, `src/components/AdBanner.tsx` | AdMob banner, Google consent form, Apple tracking prompt |
@@ -67,7 +67,7 @@ eas submit --platform android
 
 ## 4. Update the data
 
-1. Edit `scripts/build-data.mjs` (tiers, counters, comps, notes) and bump `REVISION`.
+1. Edit `scripts/build-data.mjs` (tiers, counters, comps, notes, the ranked map list in `MAPS`, hero play styles in `STYLES`) and bump `REVISION`.
 2. Run `npm run data` (or `node scripts/build-data.mjs`). It checks every hero, role and counter and refuses to write a broken file.
 3. Commit and push to `main`. That publishes the data: `DATA_URL` in `app.config.ts` points installed apps at the raw copy of the file on `main`, <https://raw.githubusercontent.com/Nemesis-Counter/hero-counters/main/src/data/heroes.json>. On launch the app downloads it and keeps it only if it passes validation and has a higher revision than the data it already has. GitHub caches the file for about five minutes, so allow that long before checking.
 4. Optional: `npm run preview` rebuilds the web preview at `preview/dist/hero-counters.html`.
@@ -93,3 +93,4 @@ npm run data        # after data edits
 - **Tiers** are curated letter grades per rank bracket, PC first. Console tiers equal PC tiers except where official data shows a clear platform gap (Black Widow, Hawkeye and Psylocke one tier lower; Namor and The Thing one tier higher).
 - **Counters** list the best answer overall plus the best answer in each role, each tagged *Data-backed*, *Kit-based* or *Consensus*.
 - **Draft helper** ranks the heroes in your role: each is scored on its tier at your rank, plus points for every enemy it is the listed counter to (full weight for data-backed picks, less for kit-based ones and for weak edges). You get the top three and a counter for each enemy.
+- **Maps** are optional. Each ranked map is tagged with its mode and layout (long sightlines, tight spaces, high ground, chokepoints, flank routes), and each hero with a play style (long range, brawler, dive, flyer, area control). Picking a map, and your side on Convoy and Convergence, adds a small nudge of at most one and a half tier steps toward heroes whose style suits it, so a real counter still outweighs the map. Heroes without a style tag are unaffected.
