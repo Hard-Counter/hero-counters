@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "revision": 2,
+  "revision": 3,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
-  "patch": "Sept 11 balance patch and Sept 17 fix",
-  "updated": "2026-09-24",
-  "nextReview": "2026-09-26",
+  "patch": "Sept 11 balance patch, Sept 17 fix and Sept 24 update (cosmetic only)",
+  "updated": "2026-09-26",
+  "nextReview": "2026-10-03",
   "brackets": [
     {
       "id": "bronze_gold",
@@ -41,9 +41,11 @@
     "Gorr the God Butcher (Duelist) is new this season.",
     "Every Strategist now charges their ultimate more slowly.",
     "Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match.",
+    "God Quarry, a new Domination map, is live in a limited Quick Match event through Sept 29. It is not yet confirmed for the ranked map pool.",
     "Season 10.5 arrives October 9."
   ],
   "changelog": [
+    "Weekly review, Sep 26: no tier or counter changes. The Sept 24 update was cosmetic only (new God Quarry map in Quick Match, a Devil Dinosaur KO-feed fix); no ranked map pool change yet.",
     "Draft helper: pick a map (and your side) to nudge suggestions by layout. Covers the 17 ranked maps.",
     "Season 10 launch data: Gorr added, Sept 11 balance patch and Sept 17 Scarlet Witch fix reflected."
   ],
