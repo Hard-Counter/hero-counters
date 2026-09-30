@@ -1,7 +1,7 @@
 import React from 'react';
-import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
-import type { Confidence, Hero, RoleId, Tier } from '../data/types';
-import { CONFIDENCE_LABEL, ROLE_LABEL, ROLES } from '../logic';
+import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
+import type { Confidence, FocusLevel, Hero, RoleId, Tier } from '../data/types';
+import { CONFIDENCE_LABEL, FOCUS_LABEL, ROLE_LABEL, ROLES } from '../logic';
 import { FONT, Theme, alpha, useStyles, useTheme } from '../theme';
 import { Icon } from './icons';
 
@@ -78,18 +78,97 @@ export function Eyebrow({ children, style }: { children: React.ReactNode; style?
   );
 }
 
+/**
+ * A section eyebrow with an optional "what does this mean" button and an optional control on
+ * the right (a Clear link, say).
+ */
+export function SectionHead({
+  children,
+  onInfo,
+  infoLabel,
+  right,
+  style,
+}: {
+  children: React.ReactNode;
+  onInfo?: () => void;
+  infoLabel?: string;
+  right?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+}) {
+  const t = useTheme();
+  const st = useStyles(makeStyles);
+  return (
+    <View style={[st.sectionHead, style]}>
+      <Text accessibilityRole="header" style={[st.eyebrow, st.eyebrowInline]}>
+        {children}
+      </Text>
+      {onInfo ? (
+        <Pressable
+          onPress={onInfo}
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel={infoLabel ?? 'What this means'}
+          style={({ pressed }) => [st.info, pressed && { opacity: 0.6 }]}
+        >
+          <Icon name="about" size={16} color={t.ink3} />
+        </Pressable>
+      ) : null}
+      <View style={st.sectionSpacer} />
+      {right}
+    </View>
+  );
+}
+
+/** A small text button, like "Clear" or "Change". */
+export function LinkButton({ label, onPress, accessibilityLabel }: { label: string; onPress: () => void; accessibilityLabel?: string }) {
+  const st = useStyles(makeStyles);
+  return (
+    <Pressable onPress={onPress} hitSlop={8} accessibilityRole="button" accessibilityLabel={accessibilityLabel}>
+      {({ pressed }) => <Text style={[st.link, pressed && { opacity: 0.6 }]}>{label}</Text>}
+    </Pressable>
+  );
+}
+
+export function FocusTag({ level }: { level: FocusLevel }) {
+  const t = useTheme();
+  const c = level === 'high' ? t.ban.high : level === 'medium' ? t.ban.medium : t.ink3;
+  return (
+    <View style={[s.pill, { borderColor: alpha(c, 0.5) }]} accessible accessibilityLabel={`Focus priority ${FOCUS_LABEL[level]}`}>
+      <Text style={[s.pillText, { color: c }]}>{`FOCUS · ${FOCUS_LABEL[level].toUpperCase()}`}</Text>
+    </View>
+  );
+}
+
+/** Short tips as a dotted list. */
+export function TipList({ items }: { items: string[] }) {
+  const st = useStyles(makeStyles);
+  return (
+    <View style={st.tips}>
+      {items.map((item) => (
+        <View key={item} style={st.tip}>
+          <View style={st.tipDot} />
+          <Text style={st.tipText}>{item}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export function HeroChip({
   hero,
   onPress,
   selected,
   disabled,
   wide,
+  selectedColor,
 }: {
   hero: Hero;
   onPress: () => void;
   selected?: boolean;
   disabled?: boolean;
   wide?: boolean;
+  /** Border and tint when selected. Enemy red by default. */
+  selectedColor?: string;
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
@@ -106,7 +185,7 @@ export function HeroChip({
       style={({ pressed }) => [
         st.chip,
         wide && st.chipWide,
-        selected && { borderColor: t.enemy, backgroundColor: alpha(t.enemy, 0.12) },
+        selected && { borderColor: selectedColor ?? t.enemy, backgroundColor: alpha(selectedColor ?? t.enemy, 0.12) },
         disabled && { opacity: 0.4 },
         pressed && { opacity: 0.7 },
       ]}
@@ -228,6 +307,15 @@ const makeStyles = (t: Theme) =>
       textTransform: 'uppercase',
       color: t.ink3,
     },
+    eyebrowInline: { marginTop: 0, marginBottom: 0, flexShrink: 1 },
+    sectionHead: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 22, marginBottom: 8, minHeight: 20 },
+    sectionSpacer: { flex: 1 },
+    info: { width: 22, height: 22, alignItems: 'center', justifyContent: 'center' },
+    link: { color: t.accent, fontFamily: FONT.bodySemi, fontSize: 14 },
+    tips: { gap: 7 },
+    tip: { flexDirection: 'row', gap: 9 },
+    tipDot: { width: 5, height: 5, marginTop: 8, borderRadius: 3, backgroundColor: t.ink3 },
+    tipText: { flex: 1, color: t.ink, fontFamily: FONT.body, fontSize: 14.5, lineHeight: 20 },
     chip: {
       flexDirection: 'row',
       alignItems: 'center',

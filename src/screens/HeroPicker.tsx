@@ -7,19 +7,34 @@ import { HeroChip, RoleFilter, RoleFilterValue } from '../components/ui';
 import { Icon } from '../components/icons';
 import { Sheet } from '../components/Sheet';
 
-export const MAX_ENEMIES = 6;
-
-/** Searchable hero list for building the enemy team. */
+/**
+ * Searchable hero list for bans, teams and "the hero you want to play".
+ * Heroes in `unavailable` (banned, or already on a team) show greyed out.
+ */
 export default function HeroPicker({
   visible,
   data,
+  title,
   selected,
+  max,
+  single,
+  unavailable,
+  initialRole = 'all',
+  tone = 'enemy',
   onToggle,
   onClose,
 }: {
   visible: boolean;
   data: Dataset;
-  selected: string[];
+  title: string;
+  selected: readonly string[];
+  max: number;
+  /** Pick one hero; choosing another replaces it. */
+  single?: boolean;
+  unavailable?: readonly string[];
+  initialRole?: RoleFilterValue;
+  /** Enemy picks and bans show red; your team shows in the accent color. */
+  tone?: 'enemy' | 'ally';
   onToggle: (heroId: string) => void;
   onClose: () => void;
 }) {
@@ -27,7 +42,7 @@ export default function HeroPicker({
   const st = useStyles(makeStyles);
   const { width } = useWindowDimensions();
   const [query, setQuery] = useState('');
-  const [role, setRole] = useState<RoleFilterValue>('all');
+  const [role, setRole] = useState<RoleFilterValue>(initialRole);
 
   // Start from a clear search each time the picker opens. Done while rendering rather
   // than in an effect, so the sheet never shows a frame with the old search.
@@ -36,7 +51,7 @@ export default function HeroPicker({
     setWasVisible(visible);
     if (visible) {
       setQuery('');
-      setRole('all');
+      setRole(initialRole);
     }
   }
 
@@ -47,8 +62,9 @@ export default function HeroPicker({
       .sort((a, b) => a.name.localeCompare(b.name) || ROLES.indexOf(a.role) - ROLES.indexOf(b.role));
   }, [data, query, role]);
 
-  const full = selected.length >= MAX_ENEMIES;
+  const full = !single && selected.length >= max;
   const itemWidth = (Math.min(width, 600) - 32 - 6) / 2;
+  const blocked = unavailable ?? [];
 
   return (
     <Sheet visible={visible} onClose={onClose}>
@@ -73,18 +89,28 @@ export default function HeroPicker({
         </Pressable>
       </View>
       <View style={st.controls}>
-        <RoleFilter value={role} onChange={setRole} />
-        <Text style={st.count}>
-          {selected.length} of {MAX_ENEMIES} enemies added
+        <Text style={st.title} accessibilityRole="header">
+          {title}
+          {single ? '' : ` · ${selected.length}/${max}`}
         </Text>
+        <RoleFilter value={role} onChange={setRole} />
+        {blocked.length ? <Text style={st.count}>Greyed-out heroes are banned or already picked.</Text> : null}
       </View>
       <ScrollView contentContainerStyle={st.list} keyboardShouldPersistTaps="handled">
         {heroes.length === 0 ? <Text style={st.empty}>No hero matches “{query}”.</Text> : null}
         {heroes.map((h) => {
           const on = selected.includes(h.id);
+          const off = blocked.includes(h.id);
           return (
             <View key={h.id} style={{ width: itemWidth }}>
-              <HeroChip hero={h} wide selected={on} disabled={!on && full} onPress={() => onToggle(h.id)} />
+              <HeroChip
+                hero={h}
+                wide
+                selected={on}
+                selectedColor={tone === 'ally' ? t.accent : t.enemy}
+                disabled={!on && (off || full)}
+                onPress={() => onToggle(h.id)}
+              />
             </View>
           );
         })}
@@ -120,7 +146,8 @@ const makeStyles = (t: Theme) =>
     input: { flex: 1, height: '100%', color: t.ink, fontFamily: FONT.body, fontSize: 15 },
     done: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 9, backgroundColor: t.accent },
     doneText: { color: t.onAccent, fontFamily: FONT.bodyBold, fontSize: 14 },
-    controls: { paddingHorizontal: 16, paddingTop: 4 },
+    controls: { paddingHorizontal: 16, paddingTop: 12 },
+    title: { color: t.ink, fontFamily: FONT.displayBold, fontSize: 15, letterSpacing: 1, textTransform: 'uppercase' },
     count: { marginBottom: 8, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },
     list: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 16, paddingBottom: 28 },
     empty: { color: t.ink3, fontFamily: FONT.body, fontSize: 13.5 },

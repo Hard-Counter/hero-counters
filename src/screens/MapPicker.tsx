@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { GameMap } from '../data/types';
-import { MAP_MODES, MAP_MODE_LABEL, MAP_TRAIT_LABEL } from '../logic';
+import type { GameMap, MapTrait } from '../data/types';
+import { MAP_MODES, MAP_MODE_INFO, MAP_MODE_LABEL, MAP_TRAIT_INFO, MAP_TRAIT_LABEL } from '../logic';
 import { FONT, Theme, useStyles, useTheme } from '../theme';
 import { Eyebrow } from '../components/ui';
 import { Sheet } from '../components/Sheet';
@@ -22,6 +22,7 @@ export default function MapPicker({
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
+  const [legend, setLegend] = useState(false);
 
   const choose = (id: string | null) => {
     onSelect(id);
@@ -40,6 +41,24 @@ export default function MapPicker({
         <Text style={st.intro}>
           The map nudges close calls toward heroes whose play style suits its layout. Counters still count most.
         </Text>
+        <Pressable
+          onPress={() => setLegend((v) => !v)}
+          accessibilityRole="button"
+          accessibilityState={{ expanded: legend }}
+          style={st.legendToggle}
+        >
+          <Text style={st.legendToggleText}>{legend ? 'Hide what the tags mean' : 'What the tags mean'}</Text>
+        </Pressable>
+        {legend ? (
+          <View style={st.legend}>
+            {(Object.keys(MAP_TRAIT_INFO) as MapTrait[]).map((tr) => (
+              <Text key={tr} style={st.legendText}>
+                <Text style={st.legendName}>{MAP_TRAIT_LABEL[tr]}. </Text>
+                {MAP_TRAIT_INFO[tr]}
+              </Text>
+            ))}
+          </View>
+        ) : null}
         <MapRow label="Any map" detail="Don’t factor in the map" on={selected === null} onPress={() => choose(null)} />
         {MAP_MODES.map((mode) => {
           const inMode = maps.filter((m) => m.mode === mode).sort((a, b) => a.name.localeCompare(b.name));
@@ -47,6 +66,7 @@ export default function MapPicker({
           return (
             <View key={mode}>
               <Eyebrow>{MAP_MODE_LABEL[mode]}</Eyebrow>
+              <Text style={st.modeInfo}>{MAP_MODE_INFO[mode]}</Text>
               <View style={st.group}>
                 {inMode.map((m) => (
                   <MapRow
@@ -129,6 +149,12 @@ const makeStyles = (t: Theme) =>
     list: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 28 },
     intro: { marginBottom: 12, color: t.ink2, fontFamily: FONT.body, fontSize: 13.5, lineHeight: 19 },
     group: { gap: 6 },
+    legendToggle: { alignSelf: 'flex-start', marginBottom: 12 },
+    legendToggleText: { color: t.accent, fontFamily: FONT.bodySemi, fontSize: 14 },
+    legend: { gap: 6, marginBottom: 14, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
+    legendText: { color: t.ink2, fontFamily: FONT.body, fontSize: 13.5, lineHeight: 19 },
+    legendName: { color: t.ink, fontFamily: FONT.bodyBold },
+    modeInfo: { marginTop: -4, marginBottom: 8, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
     row: { gap: 4, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
     rowHead: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', columnGap: 8 },
     rowName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },

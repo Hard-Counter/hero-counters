@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import type { RoleId } from '../data/types';
 
-export type IconName = RoleId | 'tiers' | 'draft' | 'comps' | 'about' | 'close' | 'plus' | 'search' | 'arrow';
+export type IconName = RoleId | 'tiers' | 'draft' | 'comps' | 'about' | 'close' | 'plus' | 'search' | 'arrow' | 'back';
 
 /** Original role and interface icons (no game artwork). */
 export function Icon({ name, size = 16, color }: { name: IconName; size?: number; color: string }) {
@@ -85,6 +85,12 @@ export function Icon({ name, size = 16, color }: { name: IconName; size?: number
       return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
           <Path d="M5 12h13M13 6l6 6-6 6" {...stroke} strokeLinejoin="round" />
+        </Svg>
+      );
+    case 'back':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d="M15 5l-7 7 7 7" {...stroke} strokeWidth={2.4} strokeLinejoin="round" />
         </Svg>
       );
   }

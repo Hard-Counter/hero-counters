@@ -32,6 +32,7 @@
     --conf-data: #3ed39b;
     --conf-kit: #6aa6ff;
     --conf-consensus: #c69cff;
+    --scrim: rgba(0, 0, 0, .6);
     --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
     --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   }
@@ -57,6 +58,7 @@
       --conf-data: #0c8a60;
       --conf-kit: #2e6bd9;
       --conf-consensus: #7c4dd8;
+      --scrim: rgba(14, 19, 26, .45);
     }
   }
   :root[data-theme="light"] {
@@ -80,6 +82,7 @@
     --conf-data: #0c8a60;
     --conf-kit: #2e6bd9;
     --conf-consensus: #7c4dd8;
+    --scrim: rgba(14, 19, 26, .45);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -244,6 +247,7 @@
   }
   .hero-chip:hover { border-color: var(--ink-3); }
   .hero-chip.selected { border-color: var(--enemy); background: color-mix(in srgb, var(--enemy) 12%, var(--surface)); }
+  .hero-chip.selected.ally { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface)); }
   .hero-chip[disabled] { opacity: .4; cursor: not-allowed; }
   .hc-name { min-width: 0; overflow-wrap: anywhere; }
   .hc-variant { display: inline-flex; margin-left: 4px; font-size: 11px; vertical-align: -1px; }
@@ -575,11 +579,122 @@
   .fact { display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: var(--ink-3); }
   .fact b { font: 700 18px/1.1 var(--font-display); letter-spacing: .02em; color: var(--ink); font-variant-numeric: tabular-nums; }
   .bullets { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); max-width: 65ch; }
-  .legend { display: grid; gap: 10px; }
-  .legend-row { display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 10px; align-items: start; font-size: 13.5px; color: var(--ink-2); }
-  .legend-row .conf { justify-self: start; }
   .disclaimer { margin-top: 22px; padding: 12px; border-radius: 10px; border: 1px solid var(--line); font-size: 12.5px; color: var(--ink-3); }
   .disclaimer p + p { margin-top: 8px; }
+
+
+  /* Section heads with a "what this means" button */
+  .sec { display: flex; align-items: center; gap: 6px; min-height: 20px; margin: 22px 0 8px; }
+  .sec .eyebrow { margin: 0; min-width: 0; }
+  .sec .spacer { flex: 1; }
+  .info-btn { width: 22px; height: 22px; flex: none; display: grid; place-items: center; border-radius: 50%; color: var(--ink-3); font-size: 16px; }
+  .info-btn:hover { color: var(--ink); }
+  .hint { margin: 0 0 8px; font-size: 13px; color: var(--ink-3); }
+  .flex1 { flex: 1; min-width: 0; }
+
+  /* Quick lookup */
+  .search.lookup { flex: none; height: 44px; border-radius: 12px; }
+  .results { display: grid; gap: 4px; margin-top: 6px; }
+  .results:empty { display: none; }
+  .results .hint { margin: 2px 0 0; }
+  .result { display: flex; align-items: center; gap: 8px; padding-right: 8px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); }
+  .result-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 8px 0 8px 10px; text-align: left; }
+  .result-name { display: block; font-size: 15px; font-weight: 700; }
+  .result-sub { display: block; font-size: 12.5px; color: var(--ink-3); }
+  .add-enemy { display: inline-flex; align-items: center; gap: 4px; padding: 7px 10px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--enemy) 45%, transparent); color: var(--enemy); font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .add-enemy .ic { font-size: 13px; }
+  .result-tag { font: 700 11px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--enemy); white-space: nowrap; }
+
+  /* Bans */
+  .ban-group { display: grid; gap: 5px; margin-bottom: 10px; }
+  .ban-label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .ban-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .ban-slot { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 4px 6px; border-radius: 9px; font-size: 12.5px; font-weight: 600; line-height: 1.15; text-align: left; }
+  .ban-slot.filled { justify-content: flex-start; border: 1px solid color-mix(in srgb, var(--ban-high) 45%, transparent); background: color-mix(in srgb, var(--ban-high) 8%, var(--surface)); }
+  .ban-slot.empty { border: 1.5px dashed var(--line); color: var(--ink-3); }
+  .ban-slot .ic { font-size: 13px; }
+  .ban-name { min-width: 0; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+
+  /* Protect your pick */
+  .protect { margin-top: 6px; display: grid; gap: 8px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+  .protect-head { display: flex; align-items: center; gap: 12px; }
+  .protect-label { font: 700 11.5px/1.2 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+  .protect-hero { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink-2); }
+  .protect-hero strong { color: var(--ink); }
+  .ban-idea { display: flex; align-items: center; gap: 10px; padding-top: 8px; border-top: 1px solid var(--line); }
+  .ban-idea-name { display: block; font-size: 14px; font-weight: 700; }
+  .ban-idea-why { display: block; font-size: 12.5px; color: var(--ink-2); }
+  .ban-btn { padding: 7px 12px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--ban-high) 50%, transparent); color: var(--ban-high); font-size: 13px; font-weight: 700; }
+  .ban-btn[disabled] { opacity: .4; cursor: not-allowed; }
+  .protect-btn { margin-top: 6px; }
+
+  /* Teams */
+  .slot.filled.ally { background: color-mix(in srgb, var(--accent) 9%, var(--surface)); border-color: color-mix(in srgb, var(--accent) 42%, var(--line)); }
+  .team-note { margin-top: 8px; font-size: 13px; color: var(--ink-2); }
+  .pick-teamup { font-size: 12.5px; font-weight: 600; color: var(--accent); }
+
+  /* Focus first */
+  .focus-row { width: 100%; display: flex; align-items: center; gap: 10px; padding: 9px 12px 9px 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); text-align: left; }
+  .focus-n { width: 16px; flex: none; font: 800 18px/1 var(--font-display); color: var(--ink-3); text-align: center; }
+  .focus-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .focus-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .focus-name { font-size: 14.5px; font-weight: 700; }
+  .focus-why { font-size: 12.5px; color: var(--ink-2); }
+  .focus-tag { --c: var(--ink-3); display: inline-flex; align-items: center; padding: 3px 7px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--c) 50%, transparent); color: var(--c); font: 700 10.5px/1.2 var(--font-display); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; justify-self: start; }
+  .focus-tag.high { --c: var(--ban-high); }
+  .focus-tag.medium { --c: var(--ban-med); }
+
+  /* Matchup status */
+  .mu-tag { font: 700 11px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+  .mu-tag.ally { color: var(--accent); }
+  .mu-tag.banned { color: var(--ban-high); }
+  .mu.banned .mu-counter { opacity: .5; text-decoration: line-through; }
+  .mu-note.status { color: var(--ink-3); }
+  .mu.banned .mu-note.status { color: var(--ban-med); }
+
+  /* Hero page extras */
+  .style-list { display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); }
+  .style-list b { color: var(--ink); }
+  .tips { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 14.5px; line-height: 1.38; }
+  .tips li { display: flex; gap: 9px; }
+  .tips li::before { content: ""; flex: none; width: 5px; height: 5px; margin-top: .55em; border-radius: 50%; background: var(--ink-3); }
+  .focus-box { display: grid; gap: 6px; margin-bottom: 10px; }
+  .focus-box p { font-size: 13.5px; color: var(--ink-2); }
+  .quirks { display: grid; gap: 10px; }
+  .quirk { padding-left: 10px; border-left: 2px solid var(--line); font-size: 14px; }
+  .quirk small { display: block; margin-top: 3px; font-size: 12px; color: var(--ink-3); }
+
+  /* Overlay cards: glossary groups and hero quick looks */
+  .overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end; }
+  .overlay-backdrop { position: absolute; inset: 0; background: var(--scrim); }
+  .overlay-card { position: relative; max-height: 82%; overflow-y: auto; margin-inline: 0; padding: 16px 16px 18px; border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0; background: var(--bg); }
+  @media (prefers-reduced-motion: no-preference) {
+    .overlay:not([hidden]) .overlay-card { animation: rise .18s ease-out; }
+  }
+  .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .card-title { flex: 1; margin: 0; font: 800 21px/1.1 var(--font-display); letter-spacing: .02em; text-transform: uppercase; }
+  .terms { display: grid; gap: 12px; }
+  .term b { display: block; font-size: 14.5px; }
+  .term p { margin-top: 3px; font-size: 14px; color: var(--ink-2); }
+  .term .conf { margin-bottom: 2px; }
+  .term-intro { font-size: 13.5px; color: var(--ink-2); }
+  .peek { display: grid; gap: 12px; }
+  .peek-head { display: flex; align-items: center; gap: 12px; }
+  .peek-name { margin-bottom: 4px; font: 800 22px/1.05 var(--font-display); text-transform: uppercase; }
+  .peek-why { display: grid; gap: 6px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 14px; }
+  .peek-label { font: 700 11.5px/1.2 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+  .peek-foot { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .peek-buttons { display: flex; gap: 8px; }
+  .btn.wide { flex: 1; justify-content: center; padding: 12px; font-size: 15px; }
+  .btn-secondary { padding: 12px 18px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface); font-size: 15px; font-weight: 600; }
+  .peek .notes { margin: 0; }
+
+  /* Map tag legend and glossary page */
+  .legend-toggle { margin-bottom: 12px; color: var(--accent); font-size: 14px; font-weight: 600; }
+  .tag-legend { display: grid; gap: 6px; margin-bottom: 14px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); font-size: 13.5px; color: var(--ink-2); }
+  .tag-legend b { color: var(--ink); }
+  .mode-info { margin: -4px 0 8px; font-size: 12.5px; color: var(--ink-3); }
+  .glossary-title { flex: 1; min-width: 0; margin: 0; font: 800 24px/1.05 var(--font-display); letter-spacing: .02em; text-transform: uppercase; }
 
   /* Ad slot and tabs */
   .ad {
@@ -642,8 +757,10 @@
   <div class="ad" aria-hidden="true">Ad banner · shows in the phone app</div>
   <nav class="tabs" id="tabs" aria-label="Sections"></nav>
   <section class="sheet" id="detail" hidden aria-labelledby="detail-title"></section>
-  <section class="sheet" id="picker" hidden aria-label="Add enemy heroes"></section>
+  <section class="sheet" id="picker" hidden aria-label="Pick heroes"></section>
   <section class="sheet" id="mappicker" hidden aria-labelledby="mappicker-title"></section>
+  <section class="sheet" id="glossary" hidden aria-labelledby="glossary-title"></section>
+  <div class="overlay" id="overlay" hidden></div>
 </div>
 
 <script>
@@ -653,8 +770,17 @@
 
   const IDX = indexHeroes(DATA);
   const MAPS = usableMaps(DATA);
-  const EXAMPLE_TEAM = ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'];
+  const TEAM_UPS = usableTeamUps(DATA, IDX);
   const TABS = [['tiers', 'Tiers'], ['draft', 'Draft'], ['comps', 'Comps'], ['about', 'About']];
+  const MAX_BANS = 3;
+  const MAX_ALLIES = 5;
+  const MAX_ENEMIES = 6;
+  const emptyMatch = () => ({ mapId: null, side: 'either', bans: { ours: [], theirs: [] }, allies: [], enemies: [], protectId: null, example: false });
+  const EXAMPLE = {
+    bans: { ours: ['elsa-bloodstone', 'gambit', 'magik'], theirs: ['black-panther', 'wolverine', 'hela'] },
+    allies: ['magneto', 'the-hood', 'rocket-raccoon', 'jubilee'],
+    enemies: ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'],
+  };
 
   const store = {
     get(key, fallback) {
@@ -672,14 +798,15 @@
     bracket: oneOf(store.get('bracket', 'plat_diamond'), DATA.brackets.map((b) => b.id), 'plat_diamond'),
     role: oneOf(store.get('role', 'duelist'), ROLES, 'duelist'),
     roleFilter: 'all',
-    enemies: [],
-    example: false,
-    // The map and side change every match, so they aren't remembered between visits.
-    mapId: null,
-    side: 'either',
-    detail: null,
-    query: '',
+    // Bans, teams and the map change every match, so they aren't remembered between visits.
+    match: emptyMatch(),
+    // Hero pages opened from a hero page stack up, so Back returns to the one before.
+    detailStack: [],
+    picker: null,
+    pickerQuery: '',
     pickerRole: 'all',
+    lookup: '',
+    legend: false,
   };
 
   const ICON = {
@@ -694,6 +821,7 @@
     plus: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
+    back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
   };
 
   // Tiny element builder. `html` is used only for the trusted icon strings above.
@@ -705,6 +833,7 @@
         if (key === 'class') el.className = value;
         else if (key === 'style') el.style.cssText = value;
         else if (key === 'html') el.innerHTML = value;
+        else if (key === 'value') el.value = value;
         else if (key.startsWith('on')) el.addEventListener(key.slice(2).toLowerCase(), value);
         else el.setAttribute(key, value === true ? '' : value);
       }
@@ -721,6 +850,8 @@
   const bracketById = (id) => DATA.brackets.find((b) => b.id === id) || DATA.brackets[0];
   const platformName = () => (state.platform === 'pc' ? 'PC' : 'Console');
   const names = (heroes) => heroes.map((x) => x.name).join(', ');
+  const toggleIn = (list, id, max) => (list.includes(id) ? list.filter((x) => x !== id) : list.length < max ? [...list, id] : list);
+  const bannedIds = () => [...state.match.bans.ours, ...state.match.bans.theirs];
 
   const avatar = (hero, size = 28) =>
     h('span', { class: `av ${hero.role}`, style: `--s:${size}px`, 'aria-hidden': 'true' }, hero.abbr);
@@ -728,6 +859,21 @@
     h('span', { class: `tier t-${tier.toLowerCase()}`, style: `--s:${size}px`, 'aria-label': `${tier} tier` }, tier);
   const confTag = (c) => h('span', { class: `conf ${c}` }, CONFIDENCE_LABEL[c]);
   const roleTag = (role) => h('span', { class: `role-tag ${role}` }, icon(role), ROLE_LABEL[role]);
+  const focusTag = (level) => h('span', { class: `focus-tag ${level}` }, `Focus · ${FOCUS_LABEL[level]}`);
+  const tipList = (items) => h('ul', { class: 'tips' }, items.map((t) => h('li', null, t)));
+  const linkBtn = (label, onClick, aria) => h('button', { type: 'button', class: 'link', onClick, 'aria-label': aria || null }, label);
+
+  /** A section eyebrow with an optional "what this means" button and a control on the right. */
+  function sectionHead(title, opts = {}) {
+    return h(
+      'div',
+      { class: 'sec', style: opts.style || null },
+      h('h2', { class: 'eyebrow' }, title),
+      opts.info ? h('button', { type: 'button', class: 'info-btn', 'aria-label': opts.infoLabel || 'What this means', onClick: () => openInfo(opts.info) }, icon('about')) : null,
+      h('span', { class: 'spacer' }),
+      opts.right || null,
+    );
+  }
 
   function heroChip(hero, onClick, opts = {}) {
     const label = [hero.name, hero.variant ? ROLE_LABEL[hero.role] : null, hero.banRisk === 'high' ? 'often banned' : null]
@@ -737,7 +883,7 @@
       'button',
       {
         type: 'button',
-        class: 'hero-chip' + (opts.selected ? ' selected' : ''),
+        class: 'hero-chip' + (opts.selected ? ' selected' : '') + (opts.tone === 'ally' ? ' ally' : ''),
         onClick,
         disabled: opts.disabled || null,
         'aria-pressed': opts.pressable ? String(!!opts.selected) : null,
@@ -757,6 +903,14 @@
     renderHeader();
     renderTabs();
     renderView(tabChanged);
+    // Tier chips on an open hero page follow the platform and rank.
+    if (('platform' in patch || 'bracket' in patch || 'role' in patch) && !$('detail').hidden) renderDetail(true);
+  }
+
+  /** Change the current match. Any edit ends the example. */
+  function edit(fn) {
+    state.match = { ...state.match, ...fn(state.match), example: false };
+    renderView(false);
   }
 
   function renderHeader() {
@@ -823,6 +977,7 @@
       roleFilters(state.roleFilter, (value) => set({ roleFilter: value })),
       list,
       h('p', { class: 'foot' }, `${bracketById(state.bracket).label} on ${platformName()}. `, h('span', { class: 'ban inline' }), 'Often banned at Gold III and above. Tap any hero for counters.'),
+      h('p', { class: 'foot', style: 'margin-top:10px' }, linkBtn('What tiers and tags mean', () => openInfo('tiers'))),
     );
   }
 
@@ -833,9 +988,153 @@
     return 'Strong pick at this rank';
   }
 
+  function lookupResults() {
+    const q = state.lookup.trim().toLowerCase();
+    if (!q) return [];
+    return DATA.heroes
+      .filter((x) => x.name.toLowerCase().includes(q))
+      .sort(
+        (a, b) =>
+          Number(!a.name.toLowerCase().startsWith(q)) - Number(!b.name.toLowerCase().startsWith(q)) ||
+          a.name.localeCompare(b.name) ||
+          ROLES.indexOf(a.role) - ROLES.indexOf(b.role),
+      )
+      .slice(0, 6);
+  }
+
+  // Updates only the results under the search box, so typing keeps the focus.
+  function fillLookup(box) {
+    const q = state.lookup.trim();
+    const m = state.match;
+    const banned = bannedIds();
+    const rows = lookupResults();
+    const kids = [];
+    if (q && !rows.length) kids.push(h('p', { class: 'hint' }, `No hero matches “${q}”.`));
+    for (const x of rows) {
+      const isEnemy = m.enemies.includes(x.id);
+      const canAdd = !isEnemy && m.enemies.length < MAX_ENEMIES && !banned.includes(x.id);
+      kids.push(
+        h(
+          'div',
+          { class: 'result' },
+          h(
+            'button',
+            { type: 'button', class: 'result-main', 'aria-label': `How to beat ${x.name}`, onClick: () => lookUp(x.id) },
+            avatar(x, 28),
+            h('span', { class: 'flex1' }, h('span', { class: 'result-name' }, x.name), h('span', { class: 'result-sub' }, (x.variant ? ROLE_LABEL[x.role] + ' · ' : '') + 'See counters and tips')),
+          ),
+          canAdd
+            ? h(
+                'button',
+                {
+                  type: 'button',
+                  class: 'add-enemy',
+                  'aria-label': `Add ${x.name} to the enemy team`,
+                  onClick: () => {
+                    state.lookup = '';
+                    edit((mm) => ({ enemies: toggleIn(mm.enemies, x.id, MAX_ENEMIES) }));
+                  },
+                },
+                icon('plus'),
+                'Enemy',
+              )
+            : isEnemy
+              ? h('span', { class: 'result-tag' }, 'On enemy team')
+              : null,
+        ),
+      );
+    }
+    box.replaceChildren(...kids);
+  }
+
+  function lookUp(id) {
+    state.lookup = '';
+    renderView(false);
+    openDetail(id);
+  }
+
+  function banRow(label, side) {
+    const ids = state.match.bans[side];
+    const slots = [];
+    for (let i = 0; i < MAX_BANS; i++) {
+      const hero = IDX[ids[i]];
+      slots.push(
+        hero
+          ? h(
+              'button',
+              {
+                type: 'button',
+                class: 'ban-slot filled',
+                'aria-label': `Remove ban on ${hero.name}`,
+                onClick: () => edit((m) => ({ bans: { ...m.bans, [side]: m.bans[side].filter((x) => x !== hero.id) } })),
+              },
+              avatar(hero, 22),
+              h('span', { class: 'ban-name' }, hero.name),
+            )
+          : h('button', { type: 'button', class: 'ban-slot empty', 'aria-label': `Add a ban for ${side === 'ours' ? 'your team' : 'the enemy team'}`, onClick: () => openPicker(side) }, icon('plus'), 'Ban'),
+      );
+    }
+    return h('div', { class: 'ban-group' }, h('span', { class: 'ban-label' }, label), h('div', { class: 'ban-row' }, slots));
+  }
+
+  function teamSlots(ids, max, tone, target) {
+    const who = tone === 'enemy' ? 'the enemy team' : 'your team';
+    const slots = h('div', { class: 'slots' });
+    for (let i = 0; i < max; i++) {
+      const hero = IDX[ids[i]];
+      slots.append(
+        hero
+          ? h(
+              'button',
+              {
+                type: 'button',
+                class: 'slot filled' + (tone === 'ally' ? ' ally' : ''),
+                'aria-label': `Remove ${hero.name} from ${who}`,
+                onClick: () => edit((m) => ({ [target]: m[target].filter((e) => e !== hero.id) })),
+              },
+              avatar(hero, 30),
+              h('span', { class: 'slot-name' }, hero.name),
+              icon('close', 'slot-x'),
+            )
+          : h('button', { type: 'button', class: 'slot empty', 'aria-label': `Add a hero to ${who}`, onClick: () => openPicker(target) }, icon('plus'), 'Add'),
+      );
+    }
+    return slots;
+  }
+
   function draftView() {
+    const m = state.match;
+    const map = MAPS.find((x) => x.id === m.mapId) || null;
+    const banned = bannedIds();
+    const started = !!(map || banned.length || m.allies.length || m.enemies.length || m.protectId);
+    const showPicks = !!(map || banned.length || m.allies.length || m.enemies.length);
     const wrap = h('div', null);
-    wrap.append(eyebrow('Your role'));
+
+    // Quick lookup: the most common use is one hero causing trouble.
+    wrap.append(sectionHead('Who’s giving you trouble?', { style: 'margin-top:10px' }));
+    const results = h('div', { class: 'results', id: 'lookup-results' });
+    const input = h('input', {
+      id: 'lookup',
+      type: 'search',
+      placeholder: 'Search a hero to see how to beat them',
+      autocomplete: 'off',
+      'aria-label': 'Search a hero to see how to beat them',
+      value: state.lookup,
+      onInput: (e) => {
+        state.lookup = e.target.value;
+        fillLookup(results);
+      },
+      onKeydown: (e) => {
+        if (e.key !== 'Enter') return;
+        const first = lookupResults()[0];
+        if (first) lookUp(first.id);
+      },
+    });
+    wrap.append(h('label', { class: 'search lookup' }, icon('search'), input));
+    fillLookup(results);
+    wrap.append(results);
+
+    wrap.append(sectionHead('Your role', { right: started ? linkBtn('New match', () => { state.match = emptyMatch(); renderView(false); }) : null }));
     wrap.append(
       h(
         'div',
@@ -844,9 +1143,8 @@
       ),
     );
 
-    const map = MAPS.find((m) => m.id === state.mapId) || null;
     if (MAPS.length) {
-      wrap.append(eyebrow('Map'));
+      wrap.append(sectionHead('Map', { info: 'maps', infoLabel: 'What map modes and tags mean' }));
       wrap.append(
         h(
           'button',
@@ -855,11 +1153,7 @@
             'span',
             { class: 'map-btn-body' },
             h('span', { class: 'map-name' }, map ? map.name : 'Any map'),
-            h(
-              'span',
-              { class: 'map-meta' },
-              map ? [MAP_MODE_LABEL[map.mode], ...map.traits.map((tr) => MAP_TRAIT_LABEL[tr])].join(' · ') : 'Optional. Pick one to suit your picks to the layout.',
-            ),
+            h('span', { class: 'map-meta' }, map ? [MAP_MODE_LABEL[map.mode], ...map.traits.map((tr) => MAP_TRAIT_LABEL[tr])].join(' · ') : 'Optional. Pick one to suit your picks to the layout.'),
           ),
           h('span', { class: 'link' }, map ? 'Change' : 'Pick'),
         ),
@@ -872,7 +1166,9 @@
             h(
               'div',
               { class: 'seg', role: 'group', 'aria-label': 'Your side' },
-              MAP_SIDES.map((s) => h('button', { type: 'button', 'aria-pressed': String(state.side === s), onClick: () => set({ side: s }) }, MAP_SIDE_LABEL[s])),
+              MAP_SIDES.map((s) =>
+                h('button', { type: 'button', 'aria-pressed': String(m.side === s), onClick: () => { state.match = { ...state.match, side: s }; renderView(false); } }, MAP_SIDE_LABEL[s]),
+              ),
             ),
           ),
         );
@@ -880,105 +1176,207 @@
     }
 
     wrap.append(
-      h(
-        'div',
-        { class: 'row-between' },
-        eyebrow(`Enemy team · ${state.enemies.length}/6`),
-        state.enemies.length ? h('button', { type: 'button', class: 'link', onClick: () => set({ enemies: [], example: false }) }, 'Clear') : null,
-      ),
+      sectionHead(`Bans · ${banned.length}/${MAX_BANS * 2}`, {
+        info: 'bans',
+        infoLabel: 'How bans work',
+        right: banned.length ? linkBtn('Clear', () => edit(() => ({ bans: { ours: [], theirs: [] } }))) : null,
+      }),
     );
-    const slots = h('div', { class: 'slots' });
-    for (let i = 0; i < 6; i++) {
-      const hero = IDX[state.enemies[i]];
-      slots.append(
-        hero
-          ? h(
-              'button',
-              { type: 'button', class: 'slot filled', 'aria-label': `Remove ${hero.name}`, onClick: () => set({ enemies: state.enemies.filter((e) => e !== hero.id) }) },
-              avatar(hero, 30),
-              h('span', { class: 'slot-name' }, hero.name),
-              icon('close', 'slot-x'),
-            )
-          : h('button', { type: 'button', class: 'slot empty', 'aria-label': 'Add an enemy hero', onClick: openPicker }, icon('plus'), 'Add'),
-      );
-    }
-    wrap.append(slots);
+    wrap.append(banRow('Your team', 'ours'), banRow('Enemy team', 'theirs'));
+    wrap.append(protectBlock());
 
-    if (!state.enemies.length) {
+    wrap.append(
+      sectionHead(`Your team · ${m.allies.length}/${MAX_ALLIES}`, {
+        info: 'match',
+        infoLabel: 'What team-ups are',
+        right: m.allies.length ? linkBtn('Clear', () => edit(() => ({ allies: [] }))) : null,
+      }),
+    );
+    if (!m.allies.length) wrap.append(h('p', { class: 'hint' }, 'Your teammates, as they lock in. Leave yourself out.'));
+    wrap.append(teamSlots(m.allies, MAX_ALLIES, 'ally', 'allies'));
+    const note = teamNote(m.allies.map((id) => IDX[id]).filter(Boolean), state.role);
+    if (note) wrap.append(h('p', { class: 'team-note' }, note));
+
+    wrap.append(sectionHead(`Enemy team · ${m.enemies.length}/${MAX_ENEMIES}`, { right: m.enemies.length ? linkBtn('Clear', () => edit(() => ({ enemies: [] }))) : null }));
+    if (!m.enemies.length) wrap.append(h('p', { class: 'hint' }, 'Add enemies as you spot them on the scoreboard.'));
+    wrap.append(teamSlots(m.enemies, MAX_ENEMIES, 'enemy', 'enemies'));
+
+    if (!started) {
       wrap.append(
         h(
           'div',
           { class: 'empty' },
-          h('p', null, 'Add the enemy heroes you see in hero select. You get the three best picks for your role and a counter for each enemy.'),
-          h('button', { type: 'button', class: 'btn', onClick: () => set({ enemies: EXAMPLE_TEAM.slice(), example: true }) }, 'Try an example team'),
-        ),
-      );
-      // With a map picked, the best picks for it still show before any enemies are added.
-      if (!map) return wrap;
-    } else if (state.example) {
-      wrap.append(h('p', { class: 'example-note' }, 'Example team. Tap a hero to remove it, or Clear to start your own.'));
-    }
-
-    const ctx = map ? { map, side: state.side } : null;
-    const { picks, matchups } = draft(DATA, IDX, state.role, state.enemies, state.bracket, state.platform, ctx);
-    wrap.append(eyebrow(`Best ${ROLE_LABEL[state.role]} picks${map && !state.enemies.length ? ` on ${map.name}` : ''}`));
-    wrap.append(
-      h(
-        'ol',
-        { class: 'picks' },
-        picks.map((p, i) => {
-          const note = mapNote(p.map);
-          return h(
-            'li',
-            null,
-            h(
-              'button',
-              { type: 'button', class: 'pick' + (i === 0 ? ' top' : ''), onClick: () => openDetail(p.hero.id) },
-              h('span', { class: 'pick-n' }, String(i + 1)),
-              avatar(p.hero, 36),
-              h(
-                'span',
-                { class: 'pick-body' },
-                h('span', { class: 'pick-name' }, p.hero.name),
-                h('span', { class: 'pick-why' }, pickReason(p)),
-                note ? h('span', { class: 'pick-map ' + (p.map.score > 0 ? 'good' : 'bad') }, note) : null,
-              ),
-              tierChip(p.tier, 30),
-            ),
-          );
-        }),
-      ),
-    );
-    if (!state.enemies.length) return wrap;
-    wrap.append(eyebrow('Your counter to each enemy'));
-    wrap.append(
-      h(
-        'div',
-        { class: 'matchups' },
-        matchups.map((m) =>
+          h('p', null, 'Fill this in as the match goes: bans and your team during hero select, the enemy team once you see the scoreboard. Suggestions update as you go.'),
           h(
             'button',
-            { type: 'button', class: 'mu', onClick: () => openDetail(m.counter.id) },
-            h(
-              'span',
-              { class: 'mu-head' },
-              h('span', { class: 'mu-enemy' }, avatar(m.enemy, 24), m.enemy.name),
-              icon('arrow', 'mu-arrow'),
-              h('span', { class: 'mu-counter' }, avatar(m.counter, 24), m.counter.name),
-            ),
-            h('span', { class: 'mu-why' }, m.pick.reason),
-            h('span', { class: 'mu-foot' }, confTag(m.pick.confidence), m.pick.note ? h('span', { class: 'mu-note' + (m.pick.weak ? ' warn' : '') }, m.pick.note) : null),
+            {
+              type: 'button',
+              class: 'btn',
+              onClick: () => {
+                state.match = { ...emptyMatch(), bans: { ours: [...EXAMPLE.bans.ours], theirs: [...EXAMPLE.bans.theirs] }, allies: [...EXAMPLE.allies], enemies: [...EXAMPLE.enemies], example: true };
+                renderView(false);
+              },
+            },
+            'Try an example match',
           ),
         ),
-      ),
-    );
+      );
+    }
+    if (m.example) wrap.append(h('p', { class: 'example-note' }, 'Example match. Tap a hero to remove it, or New match to start your own.'));
+
+    const ctx = map ? { map, side: m.side } : null;
+    const { picks, matchups } = draft(DATA, IDX, state.role, m.enemies, state.bracket, state.platform, { map: ctx, banned, allies: m.allies, teamUps: TEAM_UPS });
+
+    if (showPicks) {
+      wrap.append(sectionHead(`Best ${ROLE_LABEL[state.role]} picks${map && !m.enemies.length ? ` on ${map.name}` : ''}`));
+      if (!picks.length) wrap.append(h('p', { class: 'hint' }, `Every ${ROLE_LABEL[state.role]} is banned or taken.`));
+      wrap.append(
+        h(
+          'ol',
+          { class: 'picks' },
+          picks.map((p, i) => {
+            const mapLine = mapNote(p.map);
+            return h(
+              'li',
+              null,
+              h(
+                'button',
+                { type: 'button', class: 'pick' + (i === 0 ? ' top' : ''), onClick: () => openDetail(p.hero.id) },
+                h('span', { class: 'pick-n' }, String(i + 1)),
+                avatar(p.hero, 36),
+                h(
+                  'span',
+                  { class: 'pick-body' },
+                  h('span', { class: 'pick-name' }, p.hero.name),
+                  h('span', { class: 'pick-why' }, pickReason(p)),
+                  p.teamUps.map((t) => h('span', { class: 'pick-teamup' }, teamUpLabel(t))),
+                  mapLine ? h('span', { class: 'pick-map ' + (p.map.score > 0 ? 'good' : 'bad') }, mapLine) : null,
+                ),
+                tierChip(p.tier, 30),
+              ),
+            );
+          }),
+        ),
+      );
+    }
+
+    const enemyHeroes = m.enemies.map((id) => IDX[id]).filter(Boolean);
+    if (enemyHeroes.length >= 2) {
+      wrap.append(sectionHead('Focus first', { info: 'match', infoLabel: 'What focus priority means' }));
+      wrap.append(
+        h(
+          'div',
+          { class: 'matchups' },
+          focusOrder(enemyHeroes, state.bracket, state.platform).map((f, i) =>
+            h(
+              'button',
+              { type: 'button', class: 'focus-row', onClick: () => openDetail(f.hero.id) },
+              h('span', { class: 'focus-n' }, String(i + 1)),
+              avatar(f.hero, 28),
+              h('span', { class: 'focus-body' }, h('span', { class: 'focus-head' }, h('span', { class: 'focus-name' }, f.hero.name), focusTag(f.level)), h('span', { class: 'focus-why' }, f.why)),
+            ),
+          ),
+        ),
+      );
+    }
+
+    if (matchups.length) {
+      wrap.append(sectionHead('Your counter to each enemy'));
+      wrap.append(h('div', { class: 'matchups' }, matchups.map(matchupCard)));
+    }
     return wrap;
   }
 
-  // ---- Enemy picker ----
-  function openPicker() {
-    state.query = '';
-    state.pickerRole = 'all';
+  function protectBlock() {
+    const m = state.match;
+    const hero = m.protectId ? IDX[m.protectId] : null;
+    if (!hero) {
+      return h(
+        'button',
+        { type: 'button', class: 'map-btn protect-btn', onClick: () => openPicker('protect') },
+        h('span', { class: 'map-btn-body' }, h('span', { class: 'map-name' }, 'Protect your pick'), h('span', { class: 'map-meta' }, 'Choose the hero you want to play to see which counters to ban.')),
+        h('span', { class: 'link' }, 'Choose'),
+      );
+    }
+    const oursFull = m.bans.ours.length >= MAX_BANS;
+    const ideas = banSuggestions(IDX, hero.id, state.bracket, state.platform, [...bannedIds(), ...m.allies, ...m.enemies]);
+    return h(
+      'div',
+      { class: 'protect' },
+      h(
+        'div',
+        { class: 'protect-head' },
+        h('span', { class: 'protect-label' }, 'Protect your pick'),
+        h('span', { class: 'flex1' }),
+        linkBtn('Change', () => openPicker('protect')),
+        h('button', { type: 'button', class: 'icon-btn', style: 'width:28px;height:28px;font-size:13px', 'aria-label': 'Stop protecting this pick', onClick: () => { state.match = { ...state.match, protectId: null }; renderView(false); } }, icon('close')),
+      ),
+      h('div', { class: 'protect-hero' }, avatar(hero, 30), h('span', null, 'Ban these to protect ', h('strong', null, hero.name), ':')),
+      ideas.length ? null : h('p', { class: 'hint' }, 'Its listed counters are already banned or picked.'),
+      ideas.map((b) =>
+        h(
+          'div',
+          { class: 'ban-idea' },
+          avatar(b.hero, 28),
+          h('span', { class: 'flex1' }, h('span', { class: 'ban-idea-name' }, b.hero.name), h('span', { class: 'ban-idea-why' }, b.pick.reason)),
+          h('button', { type: 'button', class: 'ban-btn', disabled: oursFull || null, 'aria-label': `Ban ${b.hero.name}`, onClick: () => edit((mm) => ({ bans: { ...mm.bans, ours: toggleIn(mm.bans.ours, b.hero.id, MAX_BANS) } })) }, 'Ban'),
+        ),
+      ),
+      oursFull && ideas.length ? h('p', { class: 'hint', style: 'margin:0' }, 'Your team’s three bans are used.') : null,
+    );
+  }
+
+  function matchupCard(mu) {
+    const note =
+      mu.status === 'ally'
+        ? `${mu.counter.name} is already on your team.`
+        : mu.status === 'banned'
+          ? `${mu.counter.name} is banned, and no other ${ROLE_LABEL[state.role]} is listed. Lean on your team.`
+          : mu.instead
+            ? `${mu.instead.name} is banned, so ${mu.counter.name} stands in.`
+            : null;
+    return h(
+      'button',
+      { type: 'button', class: 'mu' + (mu.status === 'banned' ? ' banned' : ''), onClick: () => openDetail(mu.status === 'banned' ? mu.enemy.id : mu.counter.id) },
+      h(
+        'span',
+        { class: 'mu-head' },
+        h('span', { class: 'mu-enemy' }, avatar(mu.enemy, 24), mu.enemy.name),
+        icon('arrow', 'mu-arrow'),
+        h('span', { class: 'mu-counter' }, avatar(mu.counter, 24), mu.counter.name),
+        mu.status === 'ally' ? h('span', { class: 'mu-tag ally' }, 'On your team') : null,
+        mu.status === 'banned' ? h('span', { class: 'mu-tag banned' }, 'Banned') : null,
+      ),
+      h('span', { class: 'mu-why' }, mu.pick.reason),
+      h('span', { class: 'mu-foot' }, confTag(mu.pick.confidence), mu.pick.note ? h('span', { class: 'mu-note' + (mu.pick.weak ? ' warn' : '') }, mu.pick.note) : null),
+      note ? h('span', { class: 'mu-note status' }, note) : null,
+    );
+  }
+
+  // ---- Hero picker (bans, teams, the hero you want to play) ----
+  function pickerConfig() {
+    const m = state.match;
+    const banned = bannedIds();
+    switch (state.picker) {
+      case 'ours':
+        return { title: 'Your team’s bans', selected: m.bans.ours, max: MAX_BANS, unavailable: [...m.bans.theirs, ...m.allies, ...m.enemies] };
+      case 'theirs':
+        return { title: 'Enemy bans', selected: m.bans.theirs, max: MAX_BANS, unavailable: [...m.bans.ours, ...m.allies, ...m.enemies] };
+      case 'allies':
+        return { title: 'Your team', selected: m.allies, max: MAX_ALLIES, unavailable: banned, tone: 'ally' };
+      case 'enemies':
+        return { title: 'Enemy team', selected: m.enemies, max: MAX_ENEMIES, unavailable: banned };
+      case 'protect':
+        return { title: 'The hero you want to play', selected: m.protectId ? [m.protectId] : [], max: 1, single: true, unavailable: [...banned, ...m.allies], tone: 'ally', initialRole: state.role };
+      default:
+        return { title: '', selected: [], max: 0, unavailable: [] };
+    }
+  }
+
+  function openPicker(target) {
+    state.picker = target;
+    state.pickerQuery = '';
+    state.pickerRole = pickerConfig().initialRole || 'all';
     const input = h('input', {
       id: 'picker-search',
       type: 'search',
@@ -986,7 +1384,7 @@
       autocomplete: 'off',
       'aria-label': 'Search heroes',
       onInput: (e) => {
-        state.query = e.target.value;
+        state.pickerQuery = e.target.value;
         renderPickerList();
       },
     });
@@ -1001,18 +1399,20 @@
   }
 
   function renderPickerList() {
+    const cfg = pickerConfig();
     $('picker-filters').replaceChildren(
+      h('h2', { class: 'eyebrow', style: 'margin:12px 0 0' }, cfg.single ? cfg.title : `${cfg.title} · ${cfg.selected.length}/${cfg.max}`),
       roleFilters(state.pickerRole, (value) => {
         state.pickerRole = value;
         renderPickerList();
       }),
     );
-    const q = state.query.trim().toLowerCase();
+    const q = state.pickerQuery.trim().toLowerCase();
     const heroes = DATA.heroes
       .filter((x) => (state.pickerRole === 'all' || x.role === state.pickerRole) && (!q || x.name.toLowerCase().includes(q)))
       .sort((a, b) => a.name.localeCompare(b.name) || ROLES.indexOf(a.role) - ROLES.indexOf(b.role));
-    const full = state.enemies.length >= 6;
-    $('picker-count').textContent = `${state.enemies.length} of 6 enemies added`;
+    const full = !cfg.single && cfg.selected.length >= cfg.max;
+    $('picker-count').textContent = cfg.unavailable.length ? 'Greyed-out heroes are banned or already picked.' : '';
     const list = $('picker-list');
     const top = list.scrollTop;
     list.replaceChildren(
@@ -1021,25 +1421,41 @@
             'div',
             { class: 'picker-grid' },
             heroes.map((x) => {
-              const on = state.enemies.includes(x.id);
-              return heroChip(
-                x,
-                () => {
-                  if (on) state.enemies = state.enemies.filter((e) => e !== x.id);
-                  else if (!full) state.enemies = [...state.enemies, x.id];
-                  state.example = false;
-                  renderPickerList();
-                },
-                { selected: on, pressable: true, disabled: !on && full },
-              );
+              const on = cfg.selected.includes(x.id);
+              const off = cfg.unavailable.includes(x.id);
+              return heroChip(x, () => onPickerToggle(x.id), { selected: on, pressable: true, disabled: !on && (off || full), tone: cfg.tone });
             }),
           )
-        : h('p', { class: 'foot' }, `No hero matches “${state.query}”.`),
+        : h('p', { class: 'foot' }, `No hero matches “${state.pickerQuery}”.`),
     );
     list.scrollTop = top;
   }
 
+  function onPickerToggle(id) {
+    const m = state.match;
+    switch (state.picker) {
+      case 'ours':
+        state.match = { ...m, example: false, bans: { ...m.bans, ours: toggleIn(m.bans.ours, id, MAX_BANS) } };
+        break;
+      case 'theirs':
+        state.match = { ...m, example: false, bans: { ...m.bans, theirs: toggleIn(m.bans.theirs, id, MAX_BANS) } };
+        break;
+      case 'allies':
+        state.match = { ...m, example: false, allies: toggleIn(m.allies, id, MAX_ALLIES) };
+        break;
+      case 'enemies':
+        state.match = { ...m, example: false, enemies: toggleIn(m.enemies, id, MAX_ENEMIES) };
+        break;
+      case 'protect':
+        state.match = { ...m, protectId: m.protectId === id ? null : id };
+        closePicker();
+        return;
+    }
+    renderPickerList();
+  }
+
   function closePicker() {
+    state.picker = null;
     $('picker').hidden = true;
     renderView(false);
   }
@@ -1057,25 +1473,46 @@
 
   function openMapPicker() {
     const choose = (id) => {
-      state.mapId = id;
+      state.match = { ...state.match, mapId: id };
       closeMapPicker();
     };
+    const legendBox = h(
+      'div',
+      { class: 'tag-legend', hidden: !state.legend || null },
+      Object.keys(MAP_TRAIT_INFO).map((tr) => h('p', null, h('b', null, MAP_TRAIT_LABEL[tr] + '. '), MAP_TRAIT_INFO[tr])),
+    );
+    const toggle = h(
+      'button',
+      {
+        type: 'button',
+        class: 'legend-toggle',
+        'aria-expanded': String(state.legend),
+        onClick: (e) => {
+          state.legend = !state.legend;
+          legendBox.hidden = !state.legend;
+          e.currentTarget.textContent = state.legend ? 'Hide what the tags mean' : 'What the tags mean';
+          e.currentTarget.setAttribute('aria-expanded', String(state.legend));
+        },
+      },
+      state.legend ? 'Hide what the tags mean' : 'What the tags mean',
+    );
     const body = h(
       'div',
       { class: 'sheet-body' },
       h('p', { class: 'map-intro' }, 'The map nudges close calls toward heroes whose play style suits its layout. Counters still count most.'),
-      mapRow('Any map', 'Don’t factor in the map', { on: state.mapId === null, onClick: () => choose(null) }),
+      toggle,
+      legendBox,
+      mapRow('Any map', 'Don’t factor in the map', { on: state.match.mapId === null, onClick: () => choose(null) }),
       MAP_MODES.map((mode) => {
-        const inMode = MAPS.filter((m) => m.mode === mode).sort((a, b) => a.name.localeCompare(b.name));
+        const inMode = MAPS.filter((x) => x.mode === mode).sort((a, b) => a.name.localeCompare(b.name));
         if (!inMode.length) return null;
         return [
           eyebrow(MAP_MODE_LABEL[mode]),
+          h('p', { class: 'mode-info' }, MAP_MODE_INFO[mode]),
           h(
             'div',
             { class: 'map-group' },
-            inMode.map((m) =>
-              mapRow(m.name, m.note, { world: m.world, traits: m.traits.map((tr) => MAP_TRAIT_LABEL[tr]), on: state.mapId === m.id, onClick: () => choose(m.id) }),
-            ),
+            inMode.map((x) => mapRow(x.name, x.note, { world: x.world, traits: x.traits.map((tr) => MAP_TRAIT_LABEL[tr]), on: state.match.mapId === x.id, onClick: () => choose(x.id) })),
           ),
         ];
       }),
@@ -1093,6 +1530,90 @@
     renderView(false);
   }
 
+  // ---- Overlay cards ----
+  function openOverlay(content) {
+    const o = $('overlay');
+    o.replaceChildren(h('div', { class: 'overlay-backdrop', onClick: closeOverlay }), h('div', { class: 'overlay-card', role: 'dialog', 'aria-modal': 'true' }, content));
+    o.hidden = false;
+    const btn = o.querySelector('button');
+    if (btn) btn.focus({ preventScroll: true });
+  }
+
+  function closeOverlay() {
+    const o = $('overlay');
+    o.hidden = true;
+    o.replaceChildren();
+  }
+
+  function glossaryTerms(group) {
+    return h(
+      'div',
+      { class: 'terms' },
+      group.intro ? h('p', { class: 'term-intro' }, group.intro) : null,
+      group.terms.map((term) => h('div', { class: 'term' }, term.confidence ? confTag(term.confidence) : h('b', null, term.term), h('p', null, term.text))),
+    );
+  }
+
+  function openInfo(groupId) {
+    const group = glossaryGroup(groupId);
+    openOverlay([
+      h('div', { class: 'card-head' }, h('h2', { class: 'card-title' }, group.title), h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Close', onClick: closeOverlay }, icon('close'))),
+      glossaryTerms(group),
+    ]);
+  }
+
+  /** A quick look at a hero tapped on a hero page, so a stray tap doesn't leave the page. */
+  function openPeek(peek) {
+    const stack = state.detailStack;
+    const hero = IDX[stack[stack.length - 1]];
+    const other = IDX[peek.heroId];
+    if (!hero || !other) return;
+    let label;
+    let pick;
+    if (peek.kind === 'counter') {
+      label = `Counters ${hero.name}`;
+      pick = peek.pick;
+    } else {
+      label = `${hero.name} counters ${other.name}`;
+      for (const k of [hero.role, 'overall', ...ROLES.filter((r) => r !== hero.role)]) {
+        const p = other.counters[k];
+        if (p && (p.hero === hero.id || (p.alt || []).includes(hero.id))) {
+          pick = p;
+          break;
+        }
+      }
+    }
+    openOverlay(
+      h(
+        'div',
+        { class: 'peek', 'aria-label': `${other.name}, quick look` },
+        h(
+          'div',
+          { class: 'peek-head' },
+          avatar(other, 44),
+          h('div', { class: 'dh-title' }, h('div', { class: 'peek-name' }, other.name), h('div', { class: 'dh-role' }, roleTag(other.role), other.isNew ? h('span', { class: 'new' }, 'New') : null)),
+          tierChip(tierFor(other, state.bracket, state.platform), 34),
+        ),
+        pick
+          ? h(
+              'div',
+              { class: 'peek-why' },
+              h('span', { class: 'peek-label' }, label),
+              h('span', null, pick.reason),
+              h('span', { class: 'peek-foot' }, confTag(pick.confidence), pick.note ? h('span', { class: 'cc-note' + (pick.weak ? ' warn' : '') }, pick.note) : null),
+            )
+          : null,
+        other.banRisk !== 'low' ? h('ul', { class: 'notes' }, h('li', { class: `ban-${other.banRisk}` }, BAN_LABEL[other.banRisk] + '.')) : null,
+        h(
+          'div',
+          { class: 'peek-buttons' },
+          h('button', { type: 'button', class: 'btn wide', onClick: () => { closeOverlay(); pushDetail(other.id); } }, `Open ${other.name}`),
+          h('button', { type: 'button', class: 'btn-secondary', onClick: closeOverlay }, 'Close'),
+        ),
+      ),
+    );
+  }
+
   // ---- Hero detail ----
   function counterCard(pick, role) {
     const c = IDX[pick.hero];
@@ -1100,7 +1621,7 @@
     const mine = role && role === state.role;
     return h(
       'button',
-      { type: 'button', class: 'cc' + (mine ? ' mine' : ''), onClick: () => openDetail(c.id) },
+      { type: 'button', class: 'cc' + (mine ? ' mine' : ''), onClick: () => openPeek({ kind: 'counter', heroId: c.id, pick }) },
       role ? h('span', { class: 'cc-top' }, roleTag(role), mine ? h('span', { class: 'mine-tag' }, 'Your role') : null) : null,
       h('span', { class: 'cc-main' }, avatar(c, 38), h('span', { class: 'cc-name' }, c.name), confTag(pick.confidence)),
       h('span', { class: 'cc-why' }, pick.reason),
@@ -1111,10 +1632,43 @@
 
   function openDetail(id) {
     if (!IDX[id]) return;
-    state.detail = id;
-    const hero = IDX[id];
+    state.detailStack = [id];
+    renderDetail();
+  }
+
+  function pushDetail(id) {
+    const s = state.detailStack;
+    if (s[s.length - 1] !== id) state.detailStack = [...s, id].slice(-20);
+    renderDetail();
+  }
+
+  function popDetail() {
+    state.detailStack = state.detailStack.slice(0, -1);
+    renderDetail();
+  }
+
+  function closeDetail() {
+    state.detailStack = [];
+    closeOverlay();
+    $('detail').hidden = true;
+  }
+
+  function renderDetail(keepScroll) {
+    const stack = state.detailStack;
+    const hero = IDX[stack[stack.length - 1]];
+    closeOverlay();
+    if (!hero) {
+      $('detail').hidden = true;
+      return;
+    }
+    const oldBody = $('detail').querySelector('.sheet-body');
+    const oldTop = keepScroll && oldBody ? oldBody.scrollTop : 0;
+    const backTo = stack.length > 1 ? IDX[stack[stack.length - 2]] : null;
+    const tips = tipsFor(hero);
+    const focus = focusFor(hero);
     const body = h('div', { class: 'sheet-body' });
-    body.append(eyebrow(`Tier by rank · ${platformName()}`));
+
+    body.append(sectionHead(`Tier by rank · ${platformName()}`, { info: 'tiers', infoLabel: 'What tiers mean' }));
     body.append(
       h(
         'div',
@@ -1129,24 +1683,41 @@
         h('li', { class: `ban-${hero.banRisk}` }, BAN_LABEL[hero.banRisk] + '.'),
         hero.patchNote ? h('li', null, hero.patchNote) : null,
         hero.platformNote ? h('li', null, 'Console: ' + hero.platformNote) : null,
-        hero.styles && hero.styles.length
-          ? h('li', null, `Plays as: ${hero.styles.map((s) => HERO_STYLE_LABEL[s] || s).join(', ')}. The draft helper uses this to match maps.`)
-          : null,
       ),
     );
-    body.append(eyebrow('Best counter overall'));
+    if (hero.styles && hero.styles.length) {
+      body.append(sectionHead('Play style', { info: 'styles', infoLabel: 'What play styles mean' }));
+      body.append(h('div', { class: 'style-list' }, hero.styles.filter((s) => HERO_STYLE_LABEL[s]).map((s) => h('p', null, h('b', null, HERO_STYLE_LABEL[s] + '. '), HERO_STYLE_INFO[s]))));
+    }
+    body.append(sectionHead('Best counter overall', { info: 'counters', infoLabel: 'What the counter tags mean' }));
     body.append(counterCard(hero.counters.overall));
-    body.append(eyebrow('Best counter in each role'));
+    body.append(sectionHead('Best counter in each role'));
     for (const r of [state.role, ...ROLES.filter((x) => x !== state.role)]) body.append(counterCard(hero.counters[r], r));
+
+    if (tips && tips.against.length) {
+      body.append(sectionHead(`Playing against ${hero.name}`, { info: 'match', infoLabel: 'What focus priority means' }));
+      if (!focus.general) body.append(h('div', { class: 'focus-box' }, focusTag(focus.level), h('p', null, focus.why)));
+      body.append(tipList(tips.against));
+    }
+    if (tips && tips.as.length) {
+      body.append(sectionHead(`Playing as ${hero.name}`));
+      body.append(tipList(tips.as));
+    }
+    if (tips && tips.quirks.length) {
+      body.append(sectionHead('Quirks', { info: 'match', infoLabel: 'What quirks are' }));
+      body.append(h('div', { class: 'quirks' }, tips.quirks.map((q) => h('div', { class: 'quirk' }, q.text, h('small', null, `Checked ${formatDate(q.asOf)}`)))));
+    }
+
     const strong = sortHeroes(goodAgainst(DATA, hero.id), state.bracket, state.platform);
     if (strong.length) {
-      body.append(eyebrow('Strong against'));
-      body.append(h('div', { class: 'tier-heroes' }, strong.map((x) => heroChip(x, () => openDetail(x.id)))));
+      body.append(sectionHead('Strong against'));
+      body.append(h('div', { class: 'tier-heroes' }, strong.map((x) => heroChip(x, () => openPeek({ kind: 'strong', heroId: x.id })))));
     }
     $('detail').replaceChildren(
       h(
         'div',
         { class: 'sheet-head' },
+        backTo ? h('button', { type: 'button', class: 'icon-btn', 'aria-label': `Back to ${backTo.name}`, onClick: popDetail }, icon('back')) : null,
         avatar(hero, 48),
         h(
           'div',
@@ -1159,11 +1730,30 @@
       body,
     );
     $('detail').hidden = false;
+    body.scrollTop = oldTop;
   }
 
-  function closeDetail() {
-    state.detail = null;
-    $('detail').hidden = true;
+  // ---- Glossary page ----
+  function openGlossary() {
+    $('glossary').replaceChildren(
+      h(
+        'div',
+        { class: 'sheet-head' },
+        h('h1', { class: 'glossary-title', id: 'glossary-title' }, 'Glossary'),
+        h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Close', onClick: closeGlossary }, icon('close')),
+      ),
+      h(
+        'div',
+        { class: 'sheet-body' },
+        h('p', { class: 'term-intro', style: 'margin-top:10px' }, 'What the labels, tags and terms in the app mean.'),
+        GLOSSARY.map((g) => [eyebrow(g.title), glossaryTerms(g)]),
+      ),
+    );
+    $('glossary').hidden = false;
+  }
+
+  function closeGlossary() {
+    $('glossary').hidden = true;
   }
 
   // ---- Comps ----
@@ -1171,7 +1761,7 @@
     return h(
       'div',
       null,
-      h('p', { class: 'lede' }, 'The lineups shaping Season 10 ranked, and how to beat each one.'),
+      h('p', { class: 'lede' }, `The lineups shaping ${DATA.seasonShort} ranked, and how to beat each one.`),
       DATA.comps.map((c) =>
         h(
           'article',
@@ -1246,18 +1836,17 @@
           h('span', { class: 'fact' }, h('b', null, formatDate(DATA.nextReview)), 'Next review'),
         ),
       ),
+      eyebrow('Glossary'),
+      h(
+        'button',
+        { type: 'button', class: 'map-btn', onClick: openGlossary },
+        h('span', { class: 'map-btn-body' }, h('span', { class: 'map-name' }, 'What every term means'), h('span', { class: 'map-meta' }, 'Tiers, counter tags, bans, play styles, map tags, team-ups and more.')),
+        h('span', { class: 'link' }, 'Open'),
+      ),
       eyebrow('This season'),
       h('ul', { class: 'bullets' }, DATA.seasonNotes.map((n) => h('li', null, n))),
       eyebrow('How the tiers work'),
       h('ul', { class: 'bullets' }, DATA.methodology.map((n) => h('li', null, n))),
-      eyebrow('Counter tags'),
-      h(
-        'div',
-        { class: 'legend' },
-        h('div', { class: 'legend-row' }, confTag('data'), h('span', null, 'Supported by public matchup data.')),
-        h('div', { class: 'legend-row' }, confTag('kit'), h('span', null, 'Follows from how the two kits interact. Not yet confirmed by data.')),
-        h('div', { class: 'legend-row' }, confTag('consensus'), h('span', null, 'What experienced players commonly recommend.')),
-      ),
       eyebrow('What changed'),
       h('ul', { class: 'bullets' }, DATA.changelog.map((n) => h('li', null, n))),
       h(
@@ -1269,11 +1858,17 @@
     );
   }
 
+  // Escape closes whatever is on top: a card, then a picker, then steps back through hero pages.
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (!$('picker').hidden) closePicker();
+    if (!$('overlay').hidden) closeOverlay();
+    else if (!$('picker').hidden) closePicker();
     else if (!$('mappicker').hidden) closeMapPicker();
-    else if (!$('detail').hidden) closeDetail();
+    else if (!$('glossary').hidden) closeGlossary();
+    else if (!$('detail').hidden) {
+      if (state.detailStack.length > 1) popDetail();
+      else closeDetail();
+    }
   });
 
   $('meta').textContent = `${DATA.seasonShort} · updated ${formatDate(DATA.updated)}`;

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,7 +10,7 @@ import { Barlow_700Bold } from '@expo-google-fonts/barlow/700Bold';
 import { BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed/700Bold';
 import { BarlowCondensed_800ExtraBold } from '@expo-google-fonts/barlow-condensed/800ExtraBold';
 
-import type { BracketId, MapSide, Platform, RoleId } from './src/data/types';
+import type { BracketId, Platform, RoleId } from './src/data/types';
 import { useDataset } from './src/data/useDataset';
 import { ROLES, formatDate, indexHeroes } from './src/logic';
 import { FONT, Theme, useStyles, useTheme } from './src/theme';
@@ -19,7 +19,7 @@ import { Segmented, SlantChip } from './src/components/ui';
 import { Icon } from './src/components/icons';
 import AdBanner from './src/components/AdBanner';
 import TierListScreen from './src/screens/TierListScreen';
-import DraftScreen from './src/screens/DraftScreen';
+import DraftScreen, { EMPTY_MATCH, MatchState } from './src/screens/DraftScreen';
 import CompsScreen from './src/screens/CompsScreen';
 import AboutScreen from './src/screens/AboutScreen';
 import HeroDetail from './src/screens/HeroDetail';
@@ -63,11 +63,19 @@ function Root() {
   const [platform, setPlatform] = usePersisted<Platform>('platform', 'pc', PLATFORMS);
   const [bracket, setBracket] = usePersisted<BracketId>('bracket', 'plat_diamond', BRACKETS);
   const [myRole, setMyRole] = usePersisted<RoleId>('role', 'duelist', ROLES);
-  const [enemies, setEnemies] = useState<string[]>([]);
-  // The map and side change every match, so they aren't remembered between launches.
-  const [mapId, setMapId] = useState<string | null>(null);
-  const [side, setSide] = useState<MapSide>('either');
-  const [detail, setDetail] = useState<string | null>(null);
+  // Bans, teams and the map change every match, so they aren't remembered between launches.
+  const [match, setMatch] = useState<MatchState>(EMPTY_MATCH);
+  // Hero pages opened from a hero page stack up, so Back returns to the one before.
+  const [detailStack, setDetailStack] = useState<string[]>([]);
+  const openDetail = useCallback((id: string) => setDetailStack([id]), []);
+  const pushDetail = useCallback(
+    (id: string) => setDetailStack((s) => (s[s.length - 1] === id ? s : [...s, id].slice(-20))),
+    [],
+  );
+  const popDetail = useCallback(() => setDetailStack((s) => s.slice(0, -1)), []);
+  const closeDetail = useCallback(() => setDetailStack([]), []);
+  const detail = detailStack.length ? detailStack[detailStack.length - 1] : null;
+  const backTo = detailStack.length > 1 ? (idx[detailStack[detailStack.length - 2]]?.name ?? null) : null;
 
   const showControls = tab === 'tiers' || tab === 'draft';
 
@@ -111,7 +119,7 @@ function Root() {
       </View>
 
       <View style={st.body}>
-        {tab === 'tiers' ? <TierListScreen data={data} platform={platform} bracket={bracket} onOpen={setDetail} /> : null}
+        {tab === 'tiers' ? <TierListScreen data={data} platform={platform} bracket={bracket} onOpen={openDetail} /> : null}
         {tab === 'draft' ? (
           <DraftScreen
             data={data}
@@ -120,16 +128,12 @@ function Root() {
             bracket={bracket}
             myRole={myRole}
             setMyRole={setMyRole}
-            enemies={enemies}
-            setEnemies={setEnemies}
-            mapId={mapId}
-            setMapId={setMapId}
-            side={side}
-            setSide={setSide}
-            onOpen={setDetail}
+            match={match}
+            setMatch={setMatch}
+            onOpen={openDetail}
           />
         ) : null}
-        {tab === 'comps' ? <CompsScreen data={data} idx={idx} onOpen={setDetail} /> : null}
+        {tab === 'comps' ? <CompsScreen data={data} idx={idx} onOpen={openDetail} /> : null}
         {tab === 'about' ? <AboutScreen data={data} source={source} /> : null}
       </View>
 
@@ -158,13 +162,15 @@ function Root() {
 
       <HeroDetail
         heroId={detail}
+        backTo={backTo}
         data={data}
         idx={idx}
         platform={platform}
         bracket={bracket}
         myRole={myRole}
-        onOpen={setDetail}
-        onClose={() => setDetail(null)}
+        onOpen={pushDetail}
+        onBack={popDetail}
+        onClose={closeDetail}
       />
     </View>
   );

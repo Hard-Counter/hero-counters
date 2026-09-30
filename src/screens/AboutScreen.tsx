@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
-import type { Confidence, Dataset } from '../data/types';
+import type { Dataset } from '../data/types';
 import type { DataSource } from '../data/useDataset';
 import { formatDate } from '../logic';
 import { FONT, Theme, useStyles } from '../theme';
-import { ConfTag, Eyebrow } from '../components/ui';
+import { Eyebrow } from '../components/ui';
+import { GlossarySheet } from '../components/Glossary';
 import { privacyOptionsRequired, showPrivacyOptions } from '../ads/consent';
 
 const SOURCE_LABEL: Record<DataSource, string> = {
@@ -14,15 +15,10 @@ const SOURCE_LABEL: Record<DataSource, string> = {
   live: 'Updated from the server just now',
 };
 
-const LEGEND: { c: Confidence; text: string }[] = [
-  { c: 'data', text: 'Supported by public matchup data.' },
-  { c: 'kit', text: 'Follows from how the two kits interact. Not yet confirmed by data.' },
-  { c: 'consensus', text: 'What experienced players commonly recommend.' },
-];
-
 export default function AboutScreen({ data, source }: { data: Dataset; source: DataSource }) {
   const st = useStyles(makeStyles);
   const [needsPrivacyMenu, setNeedsPrivacyMenu] = useState(false);
+  const [glossary, setGlossary] = useState(false);
   const extra = Constants.expoConfig?.extra as { privacyUrl?: string } | undefined;
   const privacyUrl = extra?.privacyUrl;
 
@@ -49,23 +45,24 @@ export default function AboutScreen({ data, source }: { data: Dataset; source: D
         <Text style={st.small}>{SOURCE_LABEL[source]}.</Text>
       </View>
 
+      <Eyebrow>Glossary</Eyebrow>
+      <Pressable
+        onPress={() => setGlossary(true)}
+        accessibilityRole="button"
+        style={({ pressed }) => [st.glossaryBtn, pressed && { opacity: 0.8 }]}
+      >
+        <View style={st.glossaryText}>
+          <Text style={st.glossaryTitle}>What every term means</Text>
+          <Text style={st.small}>Tiers, counter tags, bans, play styles, map tags, team-ups and more.</Text>
+        </View>
+        <Text style={st.rowText}>Open</Text>
+      </Pressable>
+
       <Eyebrow>This season</Eyebrow>
       <Bullets items={data.seasonNotes} />
 
       <Eyebrow>How the tiers work</Eyebrow>
       <Bullets items={data.methodology} />
-
-      <Eyebrow>Counter tags</Eyebrow>
-      <View style={st.legend}>
-        {LEGEND.map((l) => (
-          <View key={l.c} style={st.legendRow}>
-            <View style={st.legendTag}>
-              <ConfTag confidence={l.c} />
-            </View>
-            <Text style={[st.body, st.legendText]}>{l.text}</Text>
-          </View>
-        ))}
-      </View>
 
       <Eyebrow>What changed</Eyebrow>
       <Bullets items={data.changelog} />
@@ -89,6 +86,7 @@ export default function AboutScreen({ data, source }: { data: Dataset; source: D
         </Text>
         <Text style={[st.small, { marginTop: 8 }]}>Version {Constants.expoConfig?.version ?? '—'}</Text>
       </View>
+      <GlossarySheet visible={glossary} onClose={() => setGlossary(false)} />
     </ScrollView>
   );
 }
@@ -131,10 +129,18 @@ const makeStyles = (t: Theme) =>
     bullet: { flexDirection: 'row', gap: 8 },
     bulletDot: { width: 5, height: 5, marginTop: 8, borderRadius: 3, backgroundColor: t.ink3 },
     bulletText: { flex: 1 },
-    legend: { gap: 10 },
-    legendRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 10 },
-    legendTag: { width: 118 },
-    legendText: { flex: 1 },
+    glossaryBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      padding: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    glossaryText: { flex: 1, gap: 2 },
+    glossaryTitle: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
     row: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: t.line },
     rowText: { color: t.accent, fontFamily: FONT.bodySemi, fontSize: 15 },
     disclaimer: { marginTop: 22, padding: 12, borderRadius: 10, borderWidth: 1, borderColor: t.line },

@@ -1,27 +1,70 @@
 import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { BracketId, Dataset, MapSide, Platform, RoleId } from '../data/types';
+import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import type { BracketId, Dataset, Hero, MapSide, Platform, RoleId } from '../data/types';
 import {
+  GlossaryGroupId,
   HeroIndex,
   MAP_MODE_LABEL,
   MAP_SIDES,
   MAP_SIDE_LABEL,
   MAP_TRAIT_LABEL,
+  Matchup,
   ROLES,
   ROLE_LABEL,
   Suggestion,
+  banSuggestions,
   draft,
+  focusOrder,
   hasSides,
   mapNote,
+  teamNote,
+  teamUpLabel,
   usableMaps,
+  usableTeamUps,
 } from '../logic';
 import { FONT, Theme, alpha, useStyles, useTheme } from '../theme';
-import { Avatar, ConfTag, Eyebrow, Segmented, TierBadge } from '../components/ui';
+import { Avatar, ConfTag, FocusTag, LinkButton, SectionHead, Segmented, TierBadge } from '../components/ui';
 import { Icon } from '../components/icons';
-import HeroPicker, { MAX_ENEMIES } from './HeroPicker';
+import { Overlay } from '../components/Overlay';
+import { InfoCard } from '../components/Glossary';
+import HeroPicker from './HeroPicker';
 import MapPicker from './MapPicker';
 
-const EXAMPLE_TEAM = ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'];
+export interface MatchState {
+  mapId: string | null;
+  side: MapSide;
+  /** Bans by each team. A banned hero can't be picked by anyone. */
+  bans: { ours: string[]; theirs: string[] };
+  /** Your teammates' heroes (not yours). */
+  allies: string[];
+  enemies: string[];
+  /** The hero you want to play, for ban suggestions. */
+  protectId: string | null;
+  /** Filled in by "Try an example match". */
+  example: boolean;
+}
+
+export const EMPTY_MATCH: MatchState = {
+  mapId: null,
+  side: 'either',
+  bans: { ours: [], theirs: [] },
+  allies: [],
+  enemies: [],
+  protectId: null,
+  example: false,
+};
+
+const MAX_BANS = 3;
+const MAX_ALLIES = 5;
+const MAX_ENEMIES = 6;
+
+const EXAMPLE: Pick<MatchState, 'bans' | 'allies' | 'enemies'> = {
+  bans: { ours: ['elsa-bloodstone', 'gambit', 'magik'], theirs: ['black-panther', 'wolverine', 'hela'] },
+  allies: ['magneto', 'the-hood', 'rocket-raccoon', 'jubilee'],
+  enemies: ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'],
+};
+
+type PickerTarget = 'ours' | 'theirs' | 'allies' | 'enemies' | 'protect';
 
 const names = (list: { name: string }[]) => list.map((h) => h.name).join(', ');
 
@@ -31,6 +74,9 @@ function pickReason(p: Suggestion): string {
   return 'Strong pick at this rank';
 }
 
+const toggleIn = (list: string[], id: string, max: number) =>
+  list.includes(id) ? list.filter((x) => x !== id) : list.length < max ? [...list, id] : list;
+
 export default function DraftScreen({
   data,
   idx,
@@ -38,12 +84,8 @@ export default function DraftScreen({
   bracket,
   myRole,
   setMyRole,
-  enemies,
-  setEnemies,
-  mapId,
-  setMapId,
-  side,
-  setSide,
+  match,
+  setMatch,
   onOpen,
 }: {
   data: Dataset;
@@ -52,40 +94,184 @@ export default function DraftScreen({
   bracket: BracketId;
   myRole: RoleId;
   setMyRole: (r: RoleId) => void;
-  enemies: string[];
-  setEnemies: (ids: string[]) => void;
-  mapId: string | null;
-  setMapId: (id: string | null) => void;
-  side: MapSide;
-  setSide: (s: MapSide) => void;
+  match: MatchState;
+  setMatch: React.Dispatch<React.SetStateAction<MatchState>>;
   onOpen: (heroId: string) => void;
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
-  const [picking, setPicking] = useState(false);
+  const [picker, setPicker] = useState<PickerTarget | null>(null);
   const [pickingMap, setPickingMap] = useState(false);
-  const [example, setExample] = useState(false);
+  const [info, setInfo] = useState<GlossaryGroupId | null>(null);
+  const [query, setQuery] = useState('');
 
   const maps = useMemo(() => usableMaps(data), [data]);
-  const map = maps.find((m) => m.id === mapId) ?? null;
-  const mapCtx = useMemo(() => (map ? { map, side } : null), [map, side]);
+  const teamUps = useMemo(() => usableTeamUps(data, idx), [data, idx]);
+  const map = maps.find((m) => m.id === match.mapId) ?? null;
+  const mapCtx = useMemo(() => (map ? { map, side: match.side } : null), [map, match.side]);
+  const banned = useMemo(() => [...match.bans.ours, ...match.bans.theirs], [match.bans]);
 
   const result = useMemo(
-    () => draft(data, idx, myRole, enemies, bracket, platform, mapCtx),
-    [data, idx, myRole, enemies, bracket, platform, mapCtx],
+    () => draft(data, idx, myRole, match.enemies, bracket, platform, { map: mapCtx, banned, allies: match.allies, teamUps }),
+    [data, idx, myRole, match.enemies, match.allies, bracket, platform, mapCtx, banned, teamUps],
   );
-  const showPicks = enemies.length > 0 || map !== null;
 
-  const toggle = (id: string) => {
-    setExample(false);
-    if (enemies.includes(id)) setEnemies(enemies.filter((e) => e !== id));
-    else if (enemies.length < MAX_ENEMIES) setEnemies([...enemies, id]);
+  const protectHero = match.protectId ? idx[match.protectId] : undefined;
+  const banIdeas = useMemo(
+    () =>
+      protectHero
+        ? banSuggestions(idx, protectHero.id, bracket, platform, [...banned, ...match.allies, ...match.enemies])
+        : [],
+    [idx, protectHero, bracket, platform, banned, match.allies, match.enemies],
+  );
+
+  const allyHeroes = match.allies.map((id) => idx[id]).filter(Boolean);
+  const enemyHeroes = match.enemies.map((id) => idx[id]).filter(Boolean);
+  const started = !!(map || banned.length || match.allies.length || match.enemies.length || match.protectId);
+  const showPicks = !!(map || banned.length || match.allies.length || match.enemies.length);
+  const oursFull = match.bans.ours.length >= MAX_BANS;
+
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return [];
+    return data.heroes
+      .filter((h) => h.name.toLowerCase().includes(q))
+      .sort(
+        (a, b) =>
+          Number(!a.name.toLowerCase().startsWith(q)) - Number(!b.name.toLowerCase().startsWith(q)) ||
+          a.name.localeCompare(b.name) ||
+          ROLES.indexOf(a.role) - ROLES.indexOf(b.role),
+      )
+      .slice(0, 6);
+  }, [data, query]);
+
+  const lookUp = (id: string) => {
+    setQuery('');
+    Keyboard.dismiss();
+    onOpen(id);
   };
 
+  const addEnemy = (id: string) => {
+    setQuery('');
+    Keyboard.dismiss();
+    setMatch((m) => (m.enemies.includes(id) ? m : { ...m, example: false, enemies: toggleIn(m.enemies, id, MAX_ENEMIES) }));
+  };
+
+  const edit = (patch: (m: MatchState) => Partial<MatchState>) => setMatch((m) => ({ ...m, example: false, ...patch(m) }));
+
+  const onPickerToggle = (id: string) => {
+    switch (picker) {
+      case 'ours':
+        edit((m) => ({ bans: { ...m.bans, ours: toggleIn(m.bans.ours, id, MAX_BANS) } }));
+        break;
+      case 'theirs':
+        edit((m) => ({ bans: { ...m.bans, theirs: toggleIn(m.bans.theirs, id, MAX_BANS) } }));
+        break;
+      case 'allies':
+        edit((m) => ({ allies: toggleIn(m.allies, id, MAX_ALLIES) }));
+        break;
+      case 'enemies':
+        edit((m) => ({ enemies: toggleIn(m.enemies, id, MAX_ENEMIES) }));
+        break;
+      case 'protect':
+        setMatch((m) => ({ ...m, protectId: m.protectId === id ? null : id }));
+        setPicker(null);
+        break;
+    }
+  };
+
+  const pickerProps = (() => {
+    switch (picker) {
+      case 'ours':
+        return { title: 'Your team’s bans', selected: match.bans.ours, max: MAX_BANS, unavailable: [...match.bans.theirs, ...match.allies, ...match.enemies] };
+      case 'theirs':
+        return { title: 'Enemy bans', selected: match.bans.theirs, max: MAX_BANS, unavailable: [...match.bans.ours, ...match.allies, ...match.enemies] };
+      case 'allies':
+        return { title: 'Your team', selected: match.allies, max: MAX_ALLIES, unavailable: banned, tone: 'ally' as const };
+      case 'enemies':
+        return { title: 'Enemy team', selected: match.enemies, max: MAX_ENEMIES, unavailable: banned };
+      case 'protect':
+        return {
+          title: 'The hero you want to play',
+          selected: match.protectId ? [match.protectId] : [],
+          max: 1,
+          single: true,
+          unavailable: [...banned, ...match.allies],
+          initialRole: myRole,
+          tone: 'ally' as const,
+        };
+      default:
+        return { title: '', selected: [], max: 0 };
+    }
+  })();
+
   return (
-    <>
-      <ScrollView contentContainerStyle={st.content}>
-        <Eyebrow style={{ marginTop: 10 }}>Your role</Eyebrow>
+    <View style={st.fill}>
+      <ScrollView contentContainerStyle={st.content} keyboardShouldPersistTaps="handled">
+        {/* Quick lookup: the most common use is one hero causing trouble. */}
+        <SectionHead style={{ marginTop: 10 }}>Who’s giving you trouble?</SectionHead>
+        <View style={st.search}>
+          <Icon name="search" size={16} color={t.ink3} />
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Search a hero to see how to beat them"
+            placeholderTextColor={t.ink3}
+            style={st.input}
+            autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="search"
+            onSubmitEditing={() => (results[0] ? lookUp(results[0].id) : undefined)}
+            accessibilityLabel="Search a hero to see how to beat them"
+          />
+          {query ? (
+            <Pressable onPress={() => setQuery('')} accessibilityRole="button" accessibilityLabel="Clear search" hitSlop={8}>
+              <Icon name="close" size={14} color={t.ink3} />
+            </Pressable>
+          ) : null}
+        </View>
+        {query.trim() ? (
+          <View style={st.results}>
+            {results.length === 0 ? <Text style={st.hint}>No hero matches “{query.trim()}”.</Text> : null}
+            {results.map((h) => {
+              const isEnemy = match.enemies.includes(h.id);
+              const canAdd = !isEnemy && match.enemies.length < MAX_ENEMIES && !banned.includes(h.id);
+              return (
+                <View key={h.id} style={st.resultRow}>
+                  <Pressable
+                    onPress={() => lookUp(h.id)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`How to beat ${h.name}`}
+                    style={({ pressed }) => [st.resultMain, pressed && { opacity: 0.7 }]}
+                  >
+                    <Avatar hero={h} size={28} />
+                    <View style={st.flex}>
+                      <Text style={st.resultName}>{h.name}</Text>
+                      <Text style={st.resultSub}>{h.variant ? `${ROLE_LABEL[h.role]} · ` : ''}See counters and tips</Text>
+                    </View>
+                  </Pressable>
+                  {canAdd ? (
+                    <Pressable
+                      onPress={() => addEnemy(h.id)}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Add ${h.name} to the enemy team`}
+                      style={({ pressed }) => [st.addEnemy, pressed && { opacity: 0.7 }]}
+                    >
+                      <Icon name="plus" size={13} color={t.enemy} />
+                      <Text style={st.addEnemyText}>Enemy</Text>
+                    </Pressable>
+                  ) : isEnemy ? (
+                    <Text style={st.resultTag}>On enemy team</Text>
+                  ) : null}
+                </View>
+              );
+            })}
+          </View>
+        ) : null}
+
+        <SectionHead right={started ? <LinkButton label="New match" onPress={() => setMatch(EMPTY_MATCH)} /> : null}>
+          Your role
+        </SectionHead>
         <View style={st.roleRow} accessibilityRole="radiogroup">
           {ROLES.map((r) => {
             const on = r === myRole;
@@ -106,14 +292,16 @@ export default function DraftScreen({
 
         {maps.length > 0 ? (
           <>
-            <Eyebrow>Map</Eyebrow>
+            <SectionHead onInfo={() => setInfo('maps')} infoLabel="What map modes and tags mean">
+              Map
+            </SectionHead>
             <Pressable
               onPress={() => setPickingMap(true)}
               accessibilityRole="button"
               accessibilityLabel={map ? `Map: ${map.name}. Change the map` : 'Pick a map'}
               style={({ pressed }) => [st.mapBtn, map && { borderColor: t.accent }, pressed && { opacity: 0.8 }]}
             >
-              <View style={st.mapBody}>
+              <View style={st.flex}>
                 <Text style={st.mapName}>{map ? map.name : 'Any map'}</Text>
                 <Text style={st.mapMeta} numberOfLines={2}>
                   {map
@@ -126,8 +314,8 @@ export default function DraftScreen({
             {map && hasSides(map.mode) ? (
               <View style={st.sideRow}>
                 <Segmented
-                  value={side}
-                  onChange={setSide}
+                  value={match.side}
+                  onChange={(side) => setMatch((m) => ({ ...m, side }))}
                   options={MAP_SIDES.map((s) => ({ value: s, label: MAP_SIDE_LABEL[s] }))}
                 />
               </View>
@@ -135,84 +323,139 @@ export default function DraftScreen({
           </>
         ) : null}
 
-        <View style={st.between}>
-          <Eyebrow>
-            Enemy team · {enemies.length}/{MAX_ENEMIES}
-          </Eyebrow>
-          {enemies.length > 0 ? (
-            <Pressable
-              onPress={() => {
-                setEnemies([]);
-                setExample(false);
-              }}
-              accessibilityRole="button"
-              hitSlop={8}
-            >
-              <Text style={st.link}>Clear</Text>
-            </Pressable>
-          ) : null}
-        </View>
-        <View style={st.slots}>
-          {Array.from({ length: MAX_ENEMIES }, (_, i) => {
-            const hero = idx[enemies[i]];
-            return hero ? (
-              <Pressable
-                key={hero.id}
-                onPress={() => toggle(hero.id)}
-                accessibilityRole="button"
-                accessibilityLabel={`Remove ${hero.name}`}
-                style={[st.slot, st.slotFilled]}
-              >
-                <View style={st.slotX}>
-                  <Icon name="close" size={11} color={t.ink3} />
-                </View>
-                <Avatar hero={hero} size={30} />
-                <Text style={st.slotName} numberOfLines={2}>
-                  {hero.name}
-                </Text>
-              </Pressable>
-            ) : (
-              <Pressable
-                key={`empty-${i}`}
-                onPress={() => setPicking(true)}
-                accessibilityRole="button"
-                accessibilityLabel="Add an enemy hero"
-                style={[st.slot, st.slotEmpty]}
-              >
-                <Icon name="plus" size={18} color={t.ink3} />
-                <Text style={st.slotAdd}>Add</Text>
-              </Pressable>
-            );
-          })}
-        </View>
+        <SectionHead
+          onInfo={() => setInfo('bans')}
+          infoLabel="How bans work"
+          right={banned.length ? <LinkButton label="Clear" onPress={() => edit(() => ({ bans: { ours: [], theirs: [] } }))} /> : null}
+        >
+          Bans · {banned.length}/{MAX_BANS * 2}
+        </SectionHead>
+        <BanRow
+          label="Your team"
+          ids={match.bans.ours}
+          idx={idx}
+          onAdd={() => setPicker('ours')}
+          onRemove={(id) => edit((m) => ({ bans: { ...m.bans, ours: m.bans.ours.filter((x) => x !== id) } }))}
+        />
+        <BanRow
+          label="Enemy team"
+          ids={match.bans.theirs}
+          idx={idx}
+          onAdd={() => setPicker('theirs')}
+          onRemove={(id) => edit((m) => ({ bans: { ...m.bans, theirs: m.bans.theirs.filter((x) => x !== id) } }))}
+        />
 
-        {enemies.length === 0 ? (
+        {protectHero ? (
+          <View style={st.protect}>
+            <View style={st.protectHead}>
+              <Text style={st.protectLabel}>PROTECT YOUR PICK</Text>
+              <View style={st.flex} />
+              <LinkButton label="Change" onPress={() => setPicker('protect')} />
+              <Pressable
+                onPress={() => setMatch((m) => ({ ...m, protectId: null }))}
+                accessibilityRole="button"
+                accessibilityLabel="Stop protecting this pick"
+                hitSlop={8}
+              >
+                <Icon name="close" size={14} color={t.ink3} />
+              </Pressable>
+            </View>
+            <View style={st.protectHero}>
+              <Avatar hero={protectHero} size={30} />
+              <Text style={st.protectName}>
+                Ban these to protect <Text style={st.protectStrong}>{protectHero.name}</Text>:
+              </Text>
+            </View>
+            {banIdeas.length === 0 ? <Text style={st.hint}>Its listed counters are already banned or picked.</Text> : null}
+            {banIdeas.map((b) => (
+              <View key={b.hero.id} style={st.banIdea}>
+                <Avatar hero={b.hero} size={28} />
+                <View style={st.flex}>
+                  <Text style={st.banIdeaName}>{b.hero.name}</Text>
+                  <Text style={st.banIdeaWhy}>{b.pick.reason}</Text>
+                </View>
+                <Pressable
+                  onPress={() => edit((m) => ({ bans: { ...m.bans, ours: toggleIn(m.bans.ours, b.hero.id, MAX_BANS) } }))}
+                  disabled={oursFull}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Ban ${b.hero.name}`}
+                  accessibilityState={{ disabled: oursFull }}
+                  style={({ pressed }) => [st.banBtn, oursFull && { opacity: 0.4 }, pressed && { opacity: 0.7 }]}
+                >
+                  <Text style={st.banBtnText}>Ban</Text>
+                </Pressable>
+              </View>
+            ))}
+            {oursFull && banIdeas.length ? <Text style={st.hint}>Your team’s three bans are used.</Text> : null}
+          </View>
+        ) : (
+          <Pressable
+            onPress={() => setPicker('protect')}
+            accessibilityRole="button"
+            style={({ pressed }) => [st.protectBtn, pressed && { opacity: 0.8 }]}
+          >
+            <View style={st.flex}>
+              <Text style={st.protectBtnTitle}>Protect your pick</Text>
+              <Text style={st.mapMeta}>Choose the hero you want to play to see which counters to ban.</Text>
+            </View>
+            <Text style={st.link}>Choose</Text>
+          </Pressable>
+        )}
+
+        <SectionHead
+          onInfo={() => setInfo('match')}
+          infoLabel="What team-ups are"
+          right={match.allies.length ? <LinkButton label="Clear" onPress={() => edit(() => ({ allies: [] }))} /> : null}
+        >
+          Your team · {match.allies.length}/{MAX_ALLIES}
+        </SectionHead>
+        {match.allies.length === 0 ? <Text style={st.hint}>Your teammates, as they lock in. Leave yourself out.</Text> : null}
+        <Slots
+          ids={match.allies}
+          max={MAX_ALLIES}
+          idx={idx}
+          tone="ally"
+          onAdd={() => setPicker('allies')}
+          onRemove={(id) => edit((m) => ({ allies: m.allies.filter((x) => x !== id) }))}
+        />
+        {teamNote(allyHeroes, myRole) ? <Text style={st.teamNote}>{teamNote(allyHeroes, myRole)}</Text> : null}
+
+        <SectionHead right={match.enemies.length ? <LinkButton label="Clear" onPress={() => edit(() => ({ enemies: [] }))} /> : null}>
+          Enemy team · {match.enemies.length}/{MAX_ENEMIES}
+        </SectionHead>
+        {match.enemies.length === 0 ? <Text style={st.hint}>Add enemies as you spot them on the scoreboard.</Text> : null}
+        <Slots
+          ids={match.enemies}
+          max={MAX_ENEMIES}
+          idx={idx}
+          tone="enemy"
+          onAdd={() => setPicker('enemies')}
+          onRemove={(id) => edit((m) => ({ enemies: m.enemies.filter((x) => x !== id) }))}
+        />
+
+        {!started ? (
           <View style={st.empty}>
             <Text style={st.emptyText}>
-              Add the enemy heroes you see in hero select. You get the three best picks for your role and a counter for each
-              enemy.
+              Fill this in as the match goes: bans and your team during hero select, the enemy team once you see the scoreboard.
+              Suggestions update as you go.
             </Text>
             <Pressable
-              onPress={() => {
-                setEnemies(EXAMPLE_TEAM.slice());
-                setExample(true);
-              }}
+              onPress={() => setMatch({ ...EMPTY_MATCH, ...EXAMPLE, bans: { ...EXAMPLE.bans }, example: true })}
               accessibilityRole="button"
               style={st.btn}
             >
-              <Text style={st.btnText}>Try an example team</Text>
+              <Text style={st.btnText}>Try an example match</Text>
             </Pressable>
           </View>
         ) : null}
-        {example && enemies.length > 0 ? (
-          <Text style={st.exampleNote}>Example team. Tap a hero to remove it, or Clear to start your own.</Text>
-        ) : null}
+        {match.example ? <Text style={st.exampleNote}>Example match. Tap a hero to remove it, or New match to start your own.</Text> : null}
 
         {showPicks ? (
           <>
-            <Eyebrow>
-              Best {ROLE_LABEL[myRole]} picks{map && enemies.length === 0 ? ` on ${map.name}` : ''}
-            </Eyebrow>
+            <SectionHead>
+              Best {ROLE_LABEL[myRole]} picks{map && match.enemies.length === 0 ? ` on ${map.name}` : ''}
+            </SectionHead>
+            {result.picks.length === 0 ? <Text style={st.hint}>Every {ROLE_LABEL[myRole]} is banned or taken.</Text> : null}
             <View style={st.list}>
               {result.picks.map((p, i) => {
                 const note = mapNote(p.map);
@@ -228,9 +471,12 @@ export default function DraftScreen({
                     <View style={st.pickBody}>
                       <Text style={st.pickName}>{p.hero.name}</Text>
                       <Text style={st.pickWhy}>{pickReason(p)}</Text>
-                      {note ? (
-                        <Text style={[st.pickMap, { color: p.map.score > 0 ? t.conf.data : t.ban.medium }]}>{note}</Text>
-                      ) : null}
+                      {p.teamUps.map((m) => (
+                        <Text key={m.name + m.partners.map((h) => h.id).join()} style={[st.pickNote, { color: t.accent }]}>
+                          {teamUpLabel(m)}
+                        </Text>
+                      ))}
+                      {note ? <Text style={[st.pickNote, { color: p.map.score > 0 ? t.conf.data : t.ban.medium }]}>{note}</Text> : null}
                     </View>
                     <TierBadge tier={p.tier} size={30} />
                   </Pressable>
@@ -240,55 +486,253 @@ export default function DraftScreen({
           </>
         ) : null}
 
-        {enemies.length > 0 ? (
+        {enemyHeroes.length >= 2 ? (
           <>
-            <Eyebrow>Your counter to each enemy</Eyebrow>
+            <SectionHead onInfo={() => setInfo('match')} infoLabel="What focus priority means">
+              Focus first
+            </SectionHead>
             <View style={st.list}>
-              {result.matchups.map((m) => (
+              {focusOrder(enemyHeroes, bracket, platform).map((f, i) => (
                 <Pressable
-                  key={m.enemy.id}
-                  onPress={() => onOpen(m.counter.id)}
+                  key={f.hero.id}
+                  onPress={() => onOpen(f.hero.id)}
                   accessibilityRole="button"
-                  style={({ pressed }) => [st.mu, pressed && { opacity: 0.8 }]}
+                  style={({ pressed }) => [st.focusRow, pressed && { opacity: 0.8 }]}
                 >
-                  <View style={st.muHead}>
-                    <View style={st.muHero}>
-                      <Avatar hero={m.enemy} size={24} />
-                      <Text style={st.muEnemy}>{m.enemy.name}</Text>
+                  <Text style={st.focusN}>{i + 1}</Text>
+                  <Avatar hero={f.hero} size={28} />
+                  <View style={st.flex}>
+                    <View style={st.focusHead}>
+                      <Text style={st.focusName}>{f.hero.name}</Text>
+                      <FocusTag level={f.level} />
                     </View>
-                    <Icon name="arrow" size={15} color={t.ink3} />
-                    <View style={st.muHero}>
-                      <Avatar hero={m.counter} size={24} />
-                      <Text style={st.muCounter}>{m.counter.name}</Text>
-                    </View>
-                  </View>
-                  <Text style={st.muWhy}>{m.pick.reason}</Text>
-                  <View style={st.muFoot}>
-                    <ConfTag confidence={m.pick.confidence} />
-                    {m.pick.note ? <Text style={[st.muNote, m.pick.weak && { color: t.ban.medium }]}>{m.pick.note}</Text> : null}
+                    <Text style={st.focusWhy}>{f.why}</Text>
                   </View>
                 </Pressable>
               ))}
             </View>
           </>
         ) : null}
+
+        {result.matchups.length > 0 ? (
+          <>
+            <SectionHead>Your counter to each enemy</SectionHead>
+            <View style={st.list}>
+              {result.matchups.map((m) => (
+                <MatchupCard key={m.enemy.id} m={m} role={myRole} onOpen={onOpen} />
+              ))}
+            </View>
+          </>
+        ) : null}
       </ScrollView>
 
-      <HeroPicker visible={picking} data={data} selected={enemies} onToggle={toggle} onClose={() => setPicking(false)} />
+      <HeroPicker visible={picker !== null} data={data} onToggle={onPickerToggle} onClose={() => setPicker(null)} {...pickerProps} />
       <MapPicker
         visible={pickingMap}
         maps={maps}
         selected={map ? map.id : null}
-        onSelect={setMapId}
+        onSelect={(mapId) => setMatch((m) => ({ ...m, mapId }))}
         onClose={() => setPickingMap(false)}
       />
-    </>
+      <Overlay visible={!!info} onClose={() => setInfo(null)}>
+        {info ? <InfoCard groupId={info} onClose={() => setInfo(null)} /> : null}
+      </Overlay>
+    </View>
+  );
+}
+
+function BanRow({
+  label,
+  ids,
+  idx,
+  onAdd,
+  onRemove,
+}: {
+  label: string;
+  ids: string[];
+  idx: HeroIndex;
+  onAdd: () => void;
+  onRemove: (id: string) => void;
+}) {
+  const t = useTheme();
+  const st = useStyles(makeStyles);
+  return (
+    <View style={st.banGroup}>
+      <Text style={st.banLabel}>{label}</Text>
+      <View style={st.banRow}>
+        {Array.from({ length: MAX_BANS }, (_, i) => {
+          const hero = idx[ids[i]];
+          return hero ? (
+            <Pressable
+              key={hero.id}
+              onPress={() => onRemove(hero.id)}
+              accessibilityRole="button"
+              accessibilityLabel={`Remove ban on ${hero.name}`}
+              style={[st.banSlot, st.banFilled]}
+            >
+              <Avatar hero={hero} size={22} />
+              <Text style={st.banName} numberOfLines={2}>
+                {hero.name}
+              </Text>
+            </Pressable>
+          ) : (
+            <Pressable
+              key={`empty-${i}`}
+              onPress={onAdd}
+              accessibilityRole="button"
+              accessibilityLabel={`Add a ban for ${label === 'Enemy team' ? 'the enemy team' : 'your team'}`}
+              style={[st.banSlot, st.banEmpty]}
+            >
+              <Icon name="plus" size={13} color={t.ink3} />
+              <Text style={st.banAdd}>Ban</Text>
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function Slots({
+  ids,
+  max,
+  idx,
+  tone,
+  onAdd,
+  onRemove,
+}: {
+  ids: string[];
+  max: number;
+  idx: HeroIndex;
+  tone: 'ally' | 'enemy';
+  onAdd: () => void;
+  onRemove: (id: string) => void;
+}) {
+  const t = useTheme();
+  const st = useStyles(makeStyles);
+  const color = tone === 'enemy' ? t.enemy : t.accent;
+  const who = tone === 'enemy' ? 'the enemy team' : 'your team';
+  return (
+    <View style={st.slots}>
+      {Array.from({ length: max }, (_, i) => {
+        const hero: Hero | undefined = idx[ids[i]];
+        return hero ? (
+          <Pressable
+            key={hero.id}
+            onPress={() => onRemove(hero.id)}
+            accessibilityRole="button"
+            accessibilityLabel={`Remove ${hero.name} from ${who}`}
+            style={[st.slot, { borderWidth: 1, borderColor: alpha(color, 0.45), backgroundColor: alpha(color, 0.09) }]}
+          >
+            <View style={st.slotX}>
+              <Icon name="close" size={11} color={t.ink3} />
+            </View>
+            <Avatar hero={hero} size={30} />
+            <Text style={st.slotName} numberOfLines={2}>
+              {hero.name}
+            </Text>
+          </Pressable>
+        ) : (
+          <Pressable
+            key={`empty-${i}`}
+            onPress={onAdd}
+            accessibilityRole="button"
+            accessibilityLabel={`Add a hero to ${who}`}
+            style={[st.slot, st.slotEmpty]}
+          >
+            <Icon name="plus" size={18} color={t.ink3} />
+            <Text style={st.slotAdd}>Add</Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+function MatchupCard({ m, role, onOpen }: { m: Matchup; role: RoleId; onOpen: (heroId: string) => void }) {
+  const t = useTheme();
+  const st = useStyles(makeStyles);
+  const note =
+    m.status === 'ally'
+      ? `${m.counter.name} is already on your team.`
+      : m.status === 'banned'
+        ? `${m.counter.name} is banned, and no other ${ROLE_LABEL[role]} is listed. Lean on your team.`
+        : m.instead
+          ? `${m.instead.name} is banned, so ${m.counter.name} stands in.`
+          : null;
+  return (
+    <Pressable
+      onPress={() => onOpen(m.status === 'banned' ? m.enemy.id : m.counter.id)}
+      accessibilityRole="button"
+      style={({ pressed }) => [st.mu, pressed && { opacity: 0.8 }]}
+    >
+      <View style={st.muHead}>
+        <View style={st.muHero}>
+          <Avatar hero={m.enemy} size={24} />
+          <Text style={st.muEnemy}>{m.enemy.name}</Text>
+        </View>
+        <Icon name="arrow" size={15} color={t.ink3} />
+        <View style={[st.muHero, m.status === 'banned' && { opacity: 0.5 }]}>
+          <Avatar hero={m.counter} size={24} />
+          <Text style={[st.muCounter, m.status === 'banned' && st.struck]}>{m.counter.name}</Text>
+        </View>
+        {m.status === 'ally' ? <Text style={[st.muTag, { color: t.accent }]}>ON YOUR TEAM</Text> : null}
+        {m.status === 'banned' ? <Text style={[st.muTag, { color: t.ban.high }]}>BANNED</Text> : null}
+      </View>
+      <Text style={st.muWhy}>{m.pick.reason}</Text>
+      <View style={st.muFoot}>
+        <ConfTag confidence={m.pick.confidence} />
+        {m.pick.note ? <Text style={[st.muNote, m.pick.weak && { color: t.ban.medium }]}>{m.pick.note}</Text> : null}
+      </View>
+      {note ? <Text style={[st.muNote, m.status === 'banned' && { color: t.ban.medium }]}>{note}</Text> : null}
+    </Pressable>
   );
 }
 
 const makeStyles = (t: Theme) =>
   StyleSheet.create({
+    fill: { flex: 1 },
+    flex: { flex: 1, minWidth: 0 },
     content: { paddingHorizontal: 16, paddingBottom: 28 },
+    hint: { marginBottom: 8, color: t.ink3, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
+    search: {
+      height: 44,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    input: { flex: 1, height: '100%', color: t.ink, fontFamily: FONT.body, fontSize: 15 },
+    results: { marginTop: 6, gap: 4 },
+    resultRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      paddingRight: 8,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    resultMain: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 8, paddingLeft: 10 },
+    resultName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
+    resultSub: { color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },
+    resultTag: { color: t.enemy, fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 0.8 },
+    addEnemy: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: 10,
+      paddingVertical: 7,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: alpha(t.enemy, 0.45),
+    },
+    addEnemyText: { color: t.enemy, fontFamily: FONT.bodySemi, fontSize: 13 },
     roleRow: { flexDirection: 'row', gap: 6 },
     roleBtn: {
       flex: 1,
@@ -304,8 +748,63 @@ const makeStyles = (t: Theme) =>
     },
     roleBtnOn: { borderColor: t.accent, backgroundColor: t.surface2, borderBottomWidth: 3 },
     roleText: { color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 14 },
-    between: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
     link: { color: t.accent, fontFamily: FONT.bodySemi, fontSize: 14 },
+    mapBtn: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    mapName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
+    mapMeta: { color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
+    sideRow: { flexDirection: 'row', marginTop: 8 },
+    banGroup: { gap: 5, marginBottom: 10 },
+    banRow: { flexDirection: 'row', gap: 6 },
+    banLabel: { color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 13 },
+    banSlot: {
+      flex: 1,
+      minWidth: 0,
+      minHeight: 44,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+      paddingHorizontal: 6,
+      borderRadius: 9,
+    },
+    banFilled: { justifyContent: 'flex-start', borderWidth: 1, borderColor: alpha(t.ban.high, 0.45), backgroundColor: alpha(t.ban.high, 0.08) },
+    banEmpty: { borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line },
+    banName: { flexShrink: 1, color: t.ink, fontFamily: FONT.bodySemi, fontSize: 12.5, lineHeight: 15 },
+    banAdd: { color: t.ink3, fontFamily: FONT.bodySemi, fontSize: 12.5 },
+    protect: { marginTop: 6, gap: 8, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
+    protectHead: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+    protectLabel: { color: t.ink3, fontFamily: FONT.displayBold, fontSize: 11.5, letterSpacing: 1.1 },
+    protectHero: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    protectName: { flex: 1, color: t.ink2, fontFamily: FONT.body, fontSize: 14, lineHeight: 19 },
+    protectStrong: { color: t.ink, fontFamily: FONT.bodyBold },
+    banIdea: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingTop: 8, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: t.line },
+    banIdeaName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 14 },
+    banIdeaWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
+    banBtn: { paddingHorizontal: 12, paddingVertical: 7, borderRadius: 8, borderWidth: 1, borderColor: alpha(t.ban.high, 0.5) },
+    banBtnText: { color: t.ban.high, fontFamily: FONT.bodyBold, fontSize: 13 },
+    protectBtn: {
+      marginTop: 6,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    protectBtnTitle: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
     slots: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
     slot: {
       width: '31.9%',
@@ -317,16 +816,16 @@ const makeStyles = (t: Theme) =>
       paddingHorizontal: 6,
       borderRadius: 10,
     },
-    slotFilled: { borderWidth: 1, borderColor: alpha(t.enemy, 0.45), backgroundColor: alpha(t.enemy, 0.09) },
     slotEmpty: { borderWidth: 1.5, borderStyle: 'dashed', borderColor: t.line },
     slotX: { position: 'absolute', top: 7, right: 7 },
     slotName: { color: t.ink, fontFamily: FONT.bodySemi, fontSize: 12.5, lineHeight: 15, textAlign: 'center' },
     slotAdd: { color: t.ink3, fontFamily: FONT.bodySemi, fontSize: 12.5 },
+    teamNote: { marginTop: 8, color: t.ink2, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
     empty: { marginTop: 18, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
     emptyText: { marginBottom: 12, color: t.ink2, fontFamily: FONT.body, fontSize: 15, lineHeight: 21 },
     btn: { alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 9, borderRadius: 9, backgroundColor: t.accent },
     btnText: { color: t.onAccent, fontFamily: FONT.bodyBold, fontSize: 14 },
-    exampleNote: { marginTop: 8, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },
+    exampleNote: { marginTop: 10, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },
     list: { gap: 6 },
     pick: {
       flexDirection: 'row',
@@ -344,27 +843,30 @@ const makeStyles = (t: Theme) =>
     pickBody: { flex: 1, gap: 2 },
     pickName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15.5 },
     pickWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13 },
-    pickMap: { fontFamily: FONT.bodySemi, fontSize: 12.5 },
-    mapBtn: {
+    pickNote: { fontFamily: FONT.bodySemi, fontSize: 12.5 },
+    focusRow: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 10,
-      paddingVertical: 10,
-      paddingHorizontal: 12,
+      paddingVertical: 9,
+      paddingLeft: 10,
+      paddingRight: 12,
       borderRadius: 12,
       borderWidth: 1,
       borderColor: t.line,
       backgroundColor: t.surface,
     },
-    mapBody: { flex: 1, gap: 2 },
-    mapName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
-    mapMeta: { color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },
-    sideRow: { flexDirection: 'row', marginTop: 8 },
+    focusN: { width: 16, color: t.ink3, fontFamily: FONT.display, fontSize: 18, textAlign: 'center' },
+    focusHead: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
+    focusName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 14.5 },
+    focusWhy: { marginTop: 2, color: t.ink2, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
     mu: { gap: 6, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
     muHead: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
     muHero: { flexDirection: 'row', alignItems: 'center', gap: 6 },
     muEnemy: { color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 14 },
     muCounter: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 14 },
+    struck: { textDecorationLine: 'line-through' },
+    muTag: { fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 0.8 },
     muWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13.5, lineHeight: 18 },
     muFoot: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
     muNote: { flexShrink: 1, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5 },

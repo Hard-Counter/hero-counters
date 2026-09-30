@@ -24,6 +24,23 @@ export interface GameMap {
   note: string;
 }
 
+export type FocusLevel = 'high' | 'medium' | 'low';
+
+export interface Quirk {
+  text: string;
+  /** Date it was last checked against the patch notes, 'YYYY-MM-DD'. */
+  asOf: string;
+}
+
+export interface HeroTips {
+  /** Playing against this hero. */
+  against: string[];
+  /** Playing as this hero. */
+  as: string[];
+  /** Mechanics the in-game text doesn't explain, known bugs, outdated advice. */
+  quirks?: Quirk[];
+}
+
 export interface CounterPick {
   hero: string;
   confidence: Confidence;
@@ -52,6 +69,10 @@ export interface Hero {
   variant?: boolean;
   /** Play styles for map matching. Missing or empty means no map nudge either way. */
   styles?: HeroStyle[];
+  /** Optional tips. Heroes without them simply show none. */
+  tips?: HeroTips;
+  /** How high a priority this hero is when they're on the enemy team. */
+  focus?: { level: FocusLevel; why: string };
   counters: {
     overall: CounterPick;
     vanguard: CounterPick;
@@ -67,7 +88,9 @@ export interface CompSlot {
 }
 
 export interface TeamUp {
+  /** Can be empty when the in-game name isn't confirmed. */
   name: string;
+  /** Heroes who must all be on the same team. */
   heroes: string[];
   note?: string;
 }
@@ -107,4 +130,6 @@ export interface Dataset {
   comps: Comp[];
   /** Ranked map pool. Optional so older data files still load. */
   maps?: GameMap[];
+  /** Team-ups active this season. Optional so older data files still load. */
+  teamUps?: TeamUp[];
 }
