@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 5,
+  "revision": 6,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
@@ -1847,7 +1847,7 @@
           {
             "name": "Reality Erasure",
             "kind": "ultimate",
-            "text": "Rises with bonus health and channels chaos energy that drags at and damages enemies near her, then releases a huge blast. The longer she channels, the bigger the damage."
+            "text": "Rises with bonus health and channels chaos energy that pulls in and damages enemies near her, then releases a huge blast."
           }
         ]
       }
@@ -4030,7 +4030,7 @@
           {
             "name": "Imperative: Firewall",
             "kind": "ability",
-            "text": "Gives himself and nearby allies bonus health, then heals him for a few seconds."
+            "text": "Cast on his Patch target: he, the target and allies near them get bonus health, and the target gets a speed and damage boost. He then heals for a few seconds."
           },
           {
             "name": "Dynamic Flight",

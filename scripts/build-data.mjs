@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 5;
+const REVISION = 6;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -1255,7 +1255,7 @@ const ABILITIES = {
     ['Mystic Projection', 'ability', 'Becomes a phased projection that flies freely with a speed boost. She can end it early.'],
     ['Telekinesis', 'passive', 'Can fall slowly.'],
     ['Chaos Mark', 'passive', 'Part of the damage she deals to marked enemies becomes bonus health for her.'],
-    ['Reality Erasure', 'ultimate', 'Rises with bonus health and channels chaos energy that drags at and damages enemies near her, then releases a huge blast. The longer she channels, the bigger the damage.'],
+    ['Reality Erasure', 'ultimate', 'Rises with bonus health and channels chaos energy that pulls in and damages enemies near her, then releases a huge blast.'],
   ]],
   hela: ['2026-10-01', [
     ['Nightsword Thorn', 'attack', 'Long-range thorn shots that reward critical hits.'],
@@ -1466,7 +1466,7 @@ const ABILITIES = {
   ultron: ['2026-10-01', [
     ['Encephalo-Ray', 'attack', 'A continuous burning energy beam.'],
     ['Imperative: Patch', 'ability', 'Sends up to two healing drones to follow allies, healing everyone around them and the chosen ally most.'],
-    ['Imperative: Firewall', 'ability', 'Gives himself and nearby allies bonus health, then heals him for a few seconds.'],
+    ['Imperative: Firewall', 'ability', 'Cast on his Patch target: he, the target and allies near them get bonus health, and the target gets a speed and damage boost. He then heals for a few seconds.'],
     ['Dynamic Flight', 'ability', 'Flies quickly in the direction he is moving, then keeps a speed boost.'],
     ['Rage of Ultron', 'ultimate', 'Summons drones that rain Encephalo-Rays around his target, damaging enemies or healing allies. Extra damage against bonus health.'],
   ]],
