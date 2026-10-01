@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 6;
+const REVISION = 7;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -723,7 +723,6 @@ const TIPS = {
     focus: ['h', 'Low health for a Vanguard after Season 10 and no hard crowd control. He goes down fast once his parry is used.'],
     against: [
       'Bait out Mantle of Oblivion, his short parry, before you commit burst or an ultimate. Season 10 gave it a longer cooldown.',
-      'He can’t parry while in Half-Demon form. That form hits hardest, but it’s also your window to burst him.',
       'His veil only weakens projectiles that pass through it, and less so since Season 10. Walk around it or use damage that isn’t a projectile.',
       'His ultimate fires piercing shots and turns damage into bonus health. Don’t line up, and break line of sight so he can’t farm health.',
       'He plays more like a Duelist than a tank, so focusing him pays off more than focusing most Vanguards.',
@@ -735,7 +734,6 @@ const TIPS = {
       'Fight up close. Your pistols lose damage with distance.',
       'Pair him with a real main tank. He can’t hold a point alone, especially with less health since Season 10.',
     ],
-    quirks: [['Demonic Energy doesn’t drain while you’re out of Half-Demon form, so you can carry it into the next fight.', '2026-10-01']],
   },
   gorr: {
     focus: ['h', 'Snowballs off kills, since each one spawns a Berserker that heals him and gives him an escape. Clear his Berserkers, then catch him after his surge.'],
@@ -823,7 +821,7 @@ const TIPS = {
     focus: ['h', 'Picks off your healers from long range. Pressure her position and make her use her crow escape before you commit.'],
     against: [
       'She wins long-range duels. Cross open lanes behind cover or shields, and come at her from corners and flanks.',
-      'Her crow form, Astral Flock, is her escape, and she can’t be hurt during it. Don’t waste burst on the crows. Commit once it’s used.',
+      'Her crow form, Astral Flock, is her escape, but it doesn’t make her invulnerable. Keep shooting the flock, and commit fully once it’s used.',
       'Her other defense is Soul Drainer, a lobbed orb with a short stun. Dodge or bait it, then commit.',
       'When she gets a kill, move away from the body. A crow explodes there a moment later.',
       'During her ultimate she hovers in the open for a long time. Spread out, use overhead cover, and shoot her down with hitscan or flyers.',
@@ -880,14 +878,13 @@ const TIPS = {
       'Firewall is how he survives burst. Since Season 10 it gives less bonus health but also heals him for a few seconds, so burst him before he casts it.',
       'Punish him while his dash, Dynamic Flight, is on cooldown.',
       'His drone heals everyone around its target, so focus enemies away from it.',
-      'He can’t be crowd-controlled during his ultimate. Don’t waste stuns on him then.',
     ],
     as: [
       'Keep your Patch drone on the ally under the most pressure, or on one standing in a group.',
       'Use Firewall against enemy burst and ultimates. Since Season 10 it also heals you.',
       'Use height and cover, and don’t hover in open sightlines. Save your dash for escaping divers.',
       'Add beam damage when nobody needs healing.',
-      'Use your ultimate to answer an enemy engage. You can’t be crowd-controlled during it.',
+      'Use your ultimate to answer an enemy engage.',
     ],
     quirks: [['Older guides say he can’t heal himself. Since Season 10, Firewall also heals him for a few seconds.', '2026-10-01']],
   },
@@ -1086,7 +1083,7 @@ const ABILITIES = {
     ['Gamma Burst', 'attack', 'A short-range gamma blast with two charges. Hits shorten Indestructible Guard’s cooldown.'],
     ['Incredible Leap', 'ability', 'A charged leap. Landing near flying enemies knocks them down.'],
     ['Indestructible Guard', 'ability', 'Gives Hulk and nearby allies gamma shields. Damage they absorb charges Hulk Smash!'],
-    ['Radioactive Lockdown', 'ability', 'Locks nearby enemies in place. They can’t act, but abilities can’t hurt them either until it ends. His own punches or Gamma Burst end it early.'],
+    ['Radioactive Lockdown', 'ability', 'Locks nearby enemies in place and makes them immune to all abilities until it ends, so nobody can hurt them. His own punches or Gamma Burst end it early.'],
     ['Hulk Smash!', 'ultimate', 'Turns Hero Hulk into Monster Hulk for a while: more health, punches that launch, and immunity to being launched or knocked back.'],
     ['World Breaker', 'ability', 'Monster Hulk grabs an enemy and slams them into the ground.'],
   ]],
@@ -1274,7 +1271,7 @@ const ABILITIES = {
     ['Infernal Fury', 'ability', 'Spends Fury on Devil’s Chain (a strike whose damage becomes bonus health) or Devil’s Throw (a bouncing club that slows enemies).'],
     ['Sonic Pursuit', 'ability', 'Locks onto an enemy, gaining speed and taking less damage, then dashes to them to blind them and restore Fury.'],
     ['Blind Ascent', 'passive', 'Runs along walls and springs off them.'],
-    ['Radar Sense', 'passive', 'Senses enemy movement around him, even through walls.'],
+    ['Radar Sense', 'passive', 'Senses enemy movement around him.'],
     ['Let the Devil Out', 'ultimate', 'Enemies in his line of sight take growing damage and a growing blind. He keeps gaining Fury while it lasts.'],
   ]],
   'iron-fist': ['2026-10-01', [
@@ -1292,7 +1289,7 @@ const ABILITIES = {
     ['Stretch Punch', 'attack', 'Long-reach stretching punches.'],
     ['Distended Grip', 'ability', 'Grabs an enemy with stretched arms and drags them toward him, then holds them in place for a moment.'],
     ['Reflexive Rubber', 'ability', 'Stretches his body to soak up incoming damage, then fires it back in the direction he aims.'],
-    ['Flexible Elongation', 'ability', 'Gains a shield and stretches to a target. Where he lands, enemies take damage, are knocked back and slowed, and allies get a shield.'],
+    ['Flexible Elongation', 'ability', 'Gains a shield and stretches to a target. Where he lands, enemies take damage and are knocked back, and allies get a shield.'],
     ['Elastic Strength', 'passive', 'Using abilities builds Elasticity. When it is full he inflates for a while: more max health (with a heal) and more damage.'],
     ['Brainiac Bounce', 'ultimate', 'Leaps up and smashes down, damaging and slowing enemies. Landing a hit lets him bounce again.'],
   ]],
@@ -1369,7 +1366,7 @@ const ABILITIES = {
   'winter-soldier': ['2026-10-01', [
     ['Roterstern', 'attack', 'Explosive rounds that also hit enemies behind the target.'],
     ['Bionic Hook', 'ability', 'A charged hook that reels in the first enemy hit and those behind them.'],
-    ['Trooper’s Fist', 'ability', 'Dashes forward grabbing enemies and launches them up at the end. The second strike stops them using movement abilities for a moment.'],
+    ['Trooper’s Fist', 'ability', 'Dashes forward grabbing enemies and launches them up at the end of the dash.'],
     ['Tainted Voltage', 'ability', 'A charged electric punch that damages and slows enemies and knocks flying heroes down. Two charges.'],
     ['Ceaseless Charge', 'passive', 'His bionic-arm abilities reload his gun and give him bonus health.'],
     ['Kraken Impact', 'ultimate', 'Leaps and slams down, instantly finishing enemies below a health threshold. A knockout lets him use it again for a short time.'],
@@ -1529,7 +1526,7 @@ const ABILITIES = {
     ['Force Physics', 'ability', 'Pushes or pulls enemies in front of her.'],
     ['Psionic Vortex', 'ability', 'Throws a ball of psionic energy that erupts into a vortex, pulling enemies in and damaging them.'],
     ['Agile Strike', 'ability', 'A three-hit combo. The third hit launches enemies in front of her.'],
-    ['Veiled Step', 'ability', 'Launches herself off a force field into invisibility. For the first moment, damage can’t break it.'],
+    ['Veiled Step', 'ability', 'Launches herself off a force field into invisibility. For the first second she can’t be damaged, so hits can’t break it.'],
     ['Covert Advance', 'passive', 'Turns invisible after leaving combat and heals over time.'],
     ['Invisible Boundary', 'ultimate', 'Creates a force field over an area. Allies inside are hidden from enemies and heal over time, and enemies inside are slowed.'],
   ]],

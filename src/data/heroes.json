@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 6,
+  "revision": 7,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
@@ -333,7 +333,6 @@
       "tips": {
         "against": [
           "Bait out Mantle of Oblivion, his short parry, before you commit burst or an ultimate. Season 10 gave it a longer cooldown.",
-          "He can’t parry while in Half-Demon form. That form hits hardest, but it’s also your window to burst him.",
           "His veil only weakens projectiles that pass through it, and less so since Season 10. Walk around it or use damage that isn’t a projectile.",
           "His ultimate fires piercing shots and turns damage into bonus health. Don’t line up, and break line of sight so he can’t farm health.",
           "He plays more like a Duelist than a tank, so focusing him pays off more than focusing most Vanguards."
@@ -344,12 +343,6 @@
           "Open fights with Void Walk. It damages enemies where you land and builds energy.",
           "Fight up close. Your pistols lose damage with distance.",
           "Pair him with a real main tank. He can’t hold a point alone, especially with less health since Season 10."
-        ],
-        "quirks": [
-          {
-            "text": "Demonic Energy doesn’t drain while you’re out of Half-Demon form, so you can carry it into the next fight.",
-            "asOf": "2026-10-01"
-          }
         ]
       },
       "focus": {
@@ -476,7 +469,7 @@
           {
             "name": "Radioactive Lockdown",
             "kind": "ability",
-            "text": "Locks nearby enemies in place. They can’t act, but abilities can’t hurt them either until it ends. His own punches or Gamma Burst end it early."
+            "text": "Locks nearby enemies in place and makes them immune to all abilities until it ends, so nobody can hurt them. His own punches or Gamma Burst end it early."
           },
           {
             "name": "Hulk Smash!",
@@ -1898,7 +1891,7 @@
       "tips": {
         "against": [
           "She wins long-range duels. Cross open lanes behind cover or shields, and come at her from corners and flanks.",
-          "Her crow form, Astral Flock, is her escape, and she can’t be hurt during it. Don’t waste burst on the crows. Commit once it’s used.",
+          "Her crow form, Astral Flock, is her escape, but it doesn’t make her invulnerable. Keep shooting the flock, and commit fully once it’s used.",
           "Her other defense is Soul Drainer, a lobbed orb with a short stun. Dodge or bait it, then commit.",
           "When she gets a kill, move away from the body. A crow explodes there a moment later.",
           "During her ultimate she hovers in the open for a long time. Spread out, use overhead cover, and shoot her down with hitscan or flyers."
@@ -2041,7 +2034,7 @@
           {
             "name": "Radar Sense",
             "kind": "passive",
-            "text": "Senses enemy movement around him, even through walls."
+            "text": "Senses enemy movement around him."
           },
           {
             "name": "Let the Devil Out",
@@ -2198,7 +2191,7 @@
           {
             "name": "Flexible Elongation",
             "kind": "ability",
-            "text": "Gains a shield and stretches to a target. Where he lands, enemies take damage, are knocked back and slowed, and allies get a shield."
+            "text": "Gains a shield and stretches to a target. Where he lands, enemies take damage and are knocked back, and allies get a shield."
           },
           {
             "name": "Elastic Strength",
@@ -2944,7 +2937,7 @@
           {
             "name": "Trooper’s Fist",
             "kind": "ability",
-            "text": "Dashes forward grabbing enemies and launches them up at the end. The second strike stops them using movement abilities for a moment."
+            "text": "Dashes forward grabbing enemies and launches them up at the end of the dash."
           },
           {
             "name": "Tainted Voltage",
@@ -3993,15 +3986,14 @@
           "He’s a fragile flyer. Long-range hitscan and flying heroes are the reliable answers. Melee divers struggle unless he comes down low.",
           "Firewall is how he survives burst. Since Season 10 it gives less bonus health but also heals him for a few seconds, so burst him before he casts it.",
           "Punish him while his dash, Dynamic Flight, is on cooldown.",
-          "His drone heals everyone around its target, so focus enemies away from it.",
-          "He can’t be crowd-controlled during his ultimate. Don’t waste stuns on him then."
+          "His drone heals everyone around its target, so focus enemies away from it."
         ],
         "as": [
           "Keep your Patch drone on the ally under the most pressure, or on one standing in a group.",
           "Use Firewall against enemy burst and ultimates. Since Season 10 it also heals you.",
           "Use height and cover, and don’t hover in open sightlines. Save your dash for escaping divers.",
           "Add beam damage when nobody needs healing.",
-          "Use your ultimate to answer an enemy engage. You can’t be crowd-controlled during it."
+          "Use your ultimate to answer an enemy engage."
         ],
         "quirks": [
           {
@@ -4559,7 +4551,7 @@
           {
             "name": "Veiled Step",
             "kind": "ability",
-            "text": "Launches herself off a force field into invisibility. For the first moment, damage can’t break it."
+            "text": "Launches herself off a force field into invisibility. For the first second she can’t be damaged, so hits can’t break it."
           },
           {
             "name": "Covert Advance",
