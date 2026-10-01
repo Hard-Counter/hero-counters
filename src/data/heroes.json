@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "revision": 4,
+  "revision": 5,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
-  "patch": "Sept 11 balance patch, Sept 17 fix and Sept 24 update (cosmetic only)",
-  "updated": "2026-09-26",
+  "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
+  "updated": "2026-10-01",
   "nextReview": "2026-10-03",
   "brackets": [
     {
@@ -34,9 +34,10 @@
     "Each hero lists the best counter overall and the best counter in every role, so you can answer a threat without leaving your role.",
     "Data-backed counters are supported by public matchup data. Kit-based counters come from how the heroes’ abilities interact. Consensus picks come from community play.",
     "Bans happen at Gold III and above: each team bans three heroes, and a banned hero can’t be picked by either team. Heroes marked as often banned may not be available.",
-    "The draft helper leaves out banned heroes and heroes your teammates already picked, and nudges close calls toward picks that form a team-up with your team.",
+    "The draft helper leaves out banned heroes and heroes your teammates already picked. Since Season 9 each hero picks one of two team-up abilities that works alone and gets stronger with a named partner, so the helper only gives a small nudge to picks that power up a team-up with your team.",
     "Picking a map in the draft helper nudges close calls toward heroes whose play style suits its layout, mode and side. A real counter always outweighs the map.",
     "Hero tips are our own advice, written from official patch notes and current guides. Each quirk shows the date it was last checked.",
+    "Ability breakdowns are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows when their kit was last checked.",
     "The meta shifts with every patch. The data is reviewed weekly and after each balance update."
   ],
   "seasonNotes": [
@@ -47,6 +48,7 @@
     "Season 10.5 arrives October 9."
   ],
   "changelog": [
+    "Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.",
     "Tips for 12 heroes: how to play against them, how to play them, and quirks the game doesn’t explain. Plus a glossary, and a draft helper that tracks bans and both teams.",
     "Weekly review, Sep 26: no tier or counter changes. The Sept 24 update was cosmetic only (new God Quarry map in Quick Match, a Devil Dinosaur KO-feed fix); no ranked map pool change yet.",
     "Draft helper: pick a map (and your side) to nudge suggestions by layout. Covers the 17 ranked maps.",
@@ -99,9 +101,9 @@
       },
       "tips": {
         "against": [
-          "Break her Spider-Nest first. It spreads the webs that heal her, speed her up and hide her mines.",
+          "Break her Spider-Nest first. It spreads the webs that heal her team, speed them up and hide her mines.",
           "Treat webbed ground as mined. Mines placed on her webs are invisible to you.",
-          "Her web snare roots you for a moment. If you play a diver, bait it out before you commit.",
+          "Her snare’s first hit only slows and marks you. Back off or break line of sight before a second hit roots you in place.",
           "During her mech ultimate she is much tougher and faster. Spread out and kite until it ends instead of trading with her.",
           "Since Season 10 she no longer slows down while firing, so expect her to keep moving while she shoots."
         ],
@@ -109,23 +111,72 @@
           "Place the nest where it covers the objective or a choke but sits out of long sightlines, then fight on your webs for healing and speed.",
           "Drop mines on your webs so enemies can’t see them.",
           "Since Season 10 you move at full speed while firing. Strafe and use cover instead of standing still.",
-          "Keep your web swing and wall climbing for escaping or taking high ground, and save the snare for divers.",
-          "Spider-Man’s and Black Panther’s team-ups with you got shorter cooldowns in Season 10, so both pair well."
+          "Fire both snare charges at one diver: the first hit slows and marks, the second roots.",
+          "Keep Cyber-Bond and wall climbing for escaping or taking high ground."
         ],
         "quirks": [
           {
+            "text": "Guides from before August 2026 say her snare roots on the first hit. Now the first hit slows and marks, and only a second hit while marked roots.",
+            "asOf": "2026-10-01"
+          },
+          {
             "text": "Her snare’s cooldown used to start the moment it was cast, so it came back early. The Sept 11 patch fixed that, so it now takes its full cooldown.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           },
           {
             "text": "Webs laid during her mech ultimate disappear when it ends.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "medium",
         "why": "Tough and heals on her own webs. Break her nest, then catch her off her webs."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Cyber-Web Cluster",
+            "kind": "attack",
+            "text": "Rapid web shots with a short travel time. Her main damage, and it can land critical hits."
+          },
+          {
+            "name": "Cyber-Web Snare",
+            "kind": "attack",
+            "text": "A web shot that slows and marks an enemy. A second hit while the mark lasts (about 5 seconds) immobilizes them briefly. Holds two charges. Shots that hit a surface leave a Cyber-Web."
+          },
+          {
+            "name": "Cyber-Webs",
+            "kind": "passive",
+            "text": "Her webs heal Peni and her allies over time and speed them up. Healing past full health turns into a little bonus health."
+          },
+          {
+            "name": "Bionic Spider-Nest",
+            "kind": "ability",
+            "text": "Places a nest that spreads webs and keeps sending out spider-drones that chase enemies, explode and slow them. Destroy the nest to stop the drones."
+          },
+          {
+            "name": "Arachno-Mine",
+            "kind": "ability",
+            "text": "Lays mines that blow up when enemies get close. Several charges. Mines sitting on a web are invisible to enemies."
+          },
+          {
+            "name": "Cyber-Bond",
+            "kind": "ability",
+            "text": "Attaches a web line to a spot or web. Moving away stretches it until it slings her back toward the anchor. Her way to reposition or escape."
+          },
+          {
+            "name": "Wall Crawl",
+            "kind": "passive",
+            "text": "Climbs walls."
+          },
+          {
+            "name": "Spider-Sweeper",
+            "kind": "ultimate",
+            "text": "Her mech becomes much faster and gains a large pool of bonus health. Enemies it runs into are launched up, and it scatters mines, drones and webs as it goes."
+          }
+        ]
       }
     },
     {
@@ -154,7 +205,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "kit",
-          "reason": "Web zone punishes a big melee body."
+          "reason": "Mines, drones and snares punish a big melee body."
         },
         "duelist": {
           "hero": "phoenix",
@@ -187,13 +238,58 @@
         "quirks": [
           {
             "text": "He takes reduced damage from critical hits, so headshots do less to him than usual.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "low",
         "why": "Very tough, and gains bonus health from his bleeds and bites. Pressure his backline, and burst him only after his barrier and Frenzied Feast are used."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Primal Bite",
+            "kind": "attack",
+            "text": "A close-range bite that makes the target bleed: damage over time based on their max health."
+          },
+          {
+            "name": "Impact Beam",
+            "kind": "attack",
+            "text": "An energy beam that makes enemies bleed and slows them."
+          },
+          {
+            "name": "Buddy Barrier",
+            "kind": "ability",
+            "text": "A heart-shaped generator raises a dome shield around him that blocks damage. Enemies inside the dome are slowed."
+          },
+          {
+            "name": "Savage Predation",
+            "kind": "ability",
+            "text": "A pouncing bite that makes the target bleed. If they were already bleeding, he clamps down and hurls them away."
+          },
+          {
+            "name": "Frenzied Feast",
+            "kind": "ability",
+            "text": "A flurry of bites that turns damage dealt into bonus health. Bleeding targets take extra damage."
+          },
+          {
+            "name": "Apex Advantage",
+            "kind": "passive",
+            "text": "Gains bonus health whenever he makes enemies bleed."
+          },
+          {
+            "name": "Prehistoric Plating",
+            "kind": "passive",
+            "text": "Takes less damage from critical hits and can’t be launched, knocked back or moved. Damaging or healing him builds less ultimate charge than usual."
+          },
+          {
+            "name": "Devil-Beast Rampage",
+            "kind": "ultimate",
+            "text": "Charges around at high speed. His stomps launch enemies and make them bleed, and his roars slow them."
+          }
+        ]
       }
     },
     {
@@ -252,13 +348,53 @@
         "quirks": [
           {
             "text": "Demonic Energy doesn’t drain while you’re out of Half-Demon form, so you can carry it into the next fight.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "Low health for a Vanguard after Season 10 and no hard crowd control. He goes down fast once his parry is used."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Accursed Pistols",
+            "kind": "attack",
+            "text": "Dual pistols that lose damage at range. Hits build Demonic Energy, and above half energy he fires faster."
+          },
+          {
+            "name": "Mantle of Oblivion",
+            "kind": "ability",
+            "text": "Wraps his cloak into a barrier around himself that blocks incoming attacks for about a second. Blocked damage builds Demonic Energy, and the barrier grows above half energy."
+          },
+          {
+            "name": "Abyssal Veil",
+            "kind": "ability",
+            "text": "Throws a sphere that raises a dark veil. His shots through it build extra energy, enemy shots through it lose damage and healing, and enemies who walk through take damage and are blinded."
+          },
+          {
+            "name": "Void Walk",
+            "kind": "ability",
+            "text": "Vanishes into the Void and flies freely for a moment, then reappears with a fading speed boost, damaging enemies nearby."
+          },
+          {
+            "name": "Ruinous Pact",
+            "kind": "passive",
+            "text": "At full Demonic Energy he automatically enters Half-Demon State (Leaded Transformation)."
+          },
+          {
+            "name": "Leaded Transformation",
+            "kind": "ability",
+            "text": "In Half-Demon State his arms become rifles that fire very fast without reloading, and hits heal him."
+          },
+          {
+            "name": "Demon of the End",
+            "kind": "ultimate",
+            "text": "Becomes a full demon with a large health pool and fires up to six shots that pierce enemies and barriers. Hits give him and nearby allies bonus health. The last shot hits hardest."
+          }
+        ]
       }
     },
     {
@@ -298,6 +434,61 @@
           "confidence": "kit",
           "reason": "Knockback and shields peel a big diver off your team."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Gamma Ray Gun",
+            "kind": "attack",
+            "text": "Bruce Banner’s gun. He is fragile in this form and meant to transform quickly."
+          },
+          {
+            "name": "Gamma Grenade",
+            "kind": "ability",
+            "text": "Banner throws a grenade that damages and launches up enemies."
+          },
+          {
+            "name": "Puny Banner",
+            "kind": "ability",
+            "text": "Banner turns into Hero Hulk once his gamma meter is full."
+          },
+          {
+            "name": "Heavy Blow",
+            "kind": "attack",
+            "text": "Hero Hulk’s punches. As Monster Hulk they also launch enemies up."
+          },
+          {
+            "name": "Gamma Burst",
+            "kind": "attack",
+            "text": "A short-range gamma blast with two charges. Hits shorten Indestructible Guard’s cooldown."
+          },
+          {
+            "name": "Incredible Leap",
+            "kind": "ability",
+            "text": "A charged leap. Landing near flying enemies knocks them down."
+          },
+          {
+            "name": "Indestructible Guard",
+            "kind": "ability",
+            "text": "Gives Hulk and nearby allies gamma shields. Damage they absorb charges Hulk Smash!"
+          },
+          {
+            "name": "Radioactive Lockdown",
+            "kind": "ability",
+            "text": "Locks nearby enemies in place. They can’t act, but abilities can’t hurt them either until it ends. His own punches or Gamma Burst end it early."
+          },
+          {
+            "name": "Hulk Smash!",
+            "kind": "ultimate",
+            "text": "Turns Hero Hulk into Monster Hulk for a while: more health, punches that launch, and immunity to being launched or knocked back."
+          },
+          {
+            "name": "World Breaker",
+            "kind": "ability",
+            "text": "Monster Hulk grabs an enemy and slams them into the ground."
+          }
+        ]
       }
     },
     {
@@ -337,6 +528,46 @@
           "confidence": "kit",
           "reason": "Sleep shuts down the dive."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Mjölnir Bash",
+            "kind": "attack",
+            "text": "Hammer swings. While awakened, each swing also sends out a wave of lightning."
+          },
+          {
+            "name": "Hammer Throw",
+            "kind": "ability",
+            "text": "Throws Mjölnir, which flies back to him. Each enemy hit gives Thorforce, and landing it gives him some bonus health."
+          },
+          {
+            "name": "Storm Surge",
+            "kind": "ability",
+            "text": "Spins Mjölnir, then dashes forward, knocking back enemies he runs into. He can steer the dash."
+          },
+          {
+            "name": "Lightning Realm",
+            "kind": "ability",
+            "text": "Calls lightning around him that damages enemies and gives Thorforce for each one hit. Enemies who leave it are slowed and grounded (can’t fly) for a short time."
+          },
+          {
+            "name": "Awakening Rune",
+            "kind": "ability",
+            "text": "Spends Thorforce to enter an awakened state with bonus health and stronger swings."
+          },
+          {
+            "name": "Thorforce",
+            "kind": "passive",
+            "text": "His resource. Hitting enemies builds it, and his awakened state spends it."
+          },
+          {
+            "name": "God of Thunder",
+            "kind": "ultimate",
+            "text": "Rises, charges up, then slams down, damaging and stunning enemies in a wide area. He can’t be crowd-controlled while it is active."
+          }
+        ]
       }
     },
     {
@@ -377,6 +608,46 @@
           "confidence": "kit",
           "reason": "Sleep stops a shield-up dive."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Sentinel Strike",
+            "kind": "attack",
+            "text": "A melee combo: two strikes, then four shield throws that ricochet between enemies."
+          },
+          {
+            "name": "Living Legend",
+            "kind": "ability",
+            "text": "Raises his shield to block attacks. Projectiles that hit it bounce away in random directions."
+          },
+          {
+            "name": "Leading Dash",
+            "kind": "ability",
+            "text": "Sprints faster and lets him make a high Fearless Leap."
+          },
+          {
+            "name": "Super-Soldier Slam",
+            "kind": "ability",
+            "text": "Slams down from the air onto a spot, launching up enemies there."
+          },
+          {
+            "name": "Vibranium Energy Saw",
+            "kind": "ability",
+            "text": "Hurls his charged shield. It cuts through enemies in its path and bounces between targets without losing damage."
+          },
+          {
+            "name": "Liberty Rush",
+            "kind": "ability",
+            "text": "Charges forward with his shield raised, slamming into enemies in the way."
+          },
+          {
+            "name": "Freedom Charge",
+            "kind": "ultimate",
+            "text": "Carves a path forward with his shield held high. He and allies along it get bonus health, a speed boost and faster ultimate charge."
+          }
+        ]
       }
     },
     {
@@ -424,6 +695,46 @@
           "confidence": "kit",
           "reason": "Sleep shuts down the dive."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Power Surge Punch",
+            "kind": "attack",
+            "text": "Close-range punches."
+          },
+          {
+            "name": "Defensive Stance",
+            "kind": "ability",
+            "text": "Braces to absorb nearby projectiles and take less damage. What she absorbs powers up her next Southern Brawl."
+          },
+          {
+            "name": "Southern Brawl",
+            "kind": "ability",
+            "text": "From Defensive Stance, dashes in and slams the ground, damaging enemies around her. Hits harder after absorbing damage."
+          },
+          {
+            "name": "Ability Absorption",
+            "kind": "ability",
+            "text": "Dashes into an enemy, knocks them down and steals one of their abilities for a while (or refreshes Fatal Attraction). She also gains health and a boost based on the victim’s role."
+          },
+          {
+            "name": "Chrono Kick Combo",
+            "kind": "ability",
+            "text": "A kick that launches an enemy up; use it again to knock down enemies nearby. Her next two punches then reach further, pierce and give bonus health."
+          },
+          {
+            "name": "Fatal Attraction",
+            "kind": "ability",
+            "text": "Dashes in and releases a burst of energy that damages over time, then pulls every enemy caught in it toward her after a short delay."
+          },
+          {
+            "name": "Heartbreaker",
+            "kind": "ultimate",
+            "text": "Drains ultimate charge from nearby enemies and steals a boost based on each one’s role."
+          }
+        ]
       }
     },
     {
@@ -463,6 +774,46 @@
           "confidence": "kit",
           "reason": "Damage-boost ultimate helps your team break the shield."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Daggers of Denak",
+            "kind": "attack",
+            "text": "Throws a spread of magic daggers. Hits build Dark Magic."
+          },
+          {
+            "name": "Shield of the Seraphim",
+            "kind": "ability",
+            "text": "Raises a large barrier in front of him that blocks damage."
+          },
+          {
+            "name": "Maelstrom of Madness",
+            "kind": "ability",
+            "text": "Releases his stored Dark Magic as a burst that damages every enemy around him. The more he has stored, the harder it hits."
+          },
+          {
+            "name": "Pentagram of Farallah",
+            "kind": "ability",
+            "text": "Opens a pair of portals between where he stands and a far spot. Anyone can walk through, enemies included."
+          },
+          {
+            "name": "Cloak of Levitation",
+            "kind": "ability",
+            "text": "Rises and then flies for a short time. Using it again ends the flight early and keeps his momentum."
+          },
+          {
+            "name": "Price of Magic",
+            "kind": "passive",
+            "text": "Hits build Dark Magic. If it stays full for too long he is cursed and can’t be healed, so he needs to spend it."
+          },
+          {
+            "name": "Eye of Agamotto",
+            "kind": "ultimate",
+            "text": "Pulls the souls out of nearby enemies. Damage dealt to a soul passes to its body, so hitting the clustered souls hurts the whole group."
+          }
+        ]
       }
     },
     {
@@ -506,7 +857,7 @@
       "tips": {
         "against": [
           "His Metallic Curtain only blocks projectiles. Use beams, hitscan or melee, walk around it, or wait for its energy to run out.",
-          "His ally shield and self shield share one cooldown. Once he shields a teammate he can’t shield himself for a while, so burst him then.",
+          "His self shield and ally shield have separate cooldowns, so shielding a teammate doesn’t leave him open. Burst him right after his own shield breaks.",
           "Season 10 cut his health and shield strength, so focused burst takes him down much faster than before.",
           "When he charges his meteor ultimate, leave the impact area or break line of sight. Projectiles fired into it make it hit harder.",
           "Watch the rings floating behind him. At three, his cannon hits hardest and knocks you back."
@@ -521,13 +872,57 @@
         "quirks": [
           {
             "text": "His meteor can overload and cancel if it absorbs too many projectiles.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
+          },
+          {
+            "text": "Guides that say his two shields share a cooldown are out of date. They have been separate since late 2025.",
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "medium",
         "why": "Hard to hurt through his curtain and shields, but since Season 10 he drops fast once his shield is on cooldown."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Iron Volley",
+            "kind": "attack",
+            "text": "Fires magnetic orbs that explode. The explosion grows the further they fly."
+          },
+          {
+            "name": "Mag-Cannon",
+            "kind": "attack",
+            "text": "Launches a heavy metal mass. Rings gathered from his shields add damage, and at full rings it also knocks enemies back."
+          },
+          {
+            "name": "Metallic Curtain",
+            "kind": "ability",
+            "text": "Raises a magnetic curtain that blocks incoming enemy projectiles."
+          },
+          {
+            "name": "Iron Bulwark",
+            "kind": "ability",
+            "text": "Shields himself. Damage the shield takes becomes rings for Mag-Cannon."
+          },
+          {
+            "name": "Metal Bulwark",
+            "kind": "ability",
+            "text": "Shields an ally. Damage the shield takes becomes rings for Mag-Cannon. Has its own cooldown, separate from Iron Bulwark."
+          },
+          {
+            "name": "Magnetic Descent",
+            "kind": "passive",
+            "text": "Can fall slowly."
+          },
+          {
+            "name": "Meteor M",
+            "kind": "ultimate",
+            "text": "Gathers metal into a meteor and hurls it for huge damage where it lands. Absorbing enemy projectiles while forming it makes it stronger."
+          }
+        ]
       }
     },
     {
@@ -566,6 +961,46 @@
           "confidence": "kit",
           "reason": "Sleep catches him mid-dive."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Dark Predation",
+            "kind": "attack",
+            "text": "Close-range tendril strikes."
+          },
+          {
+            "name": "Cellular Corrosion",
+            "kind": "ability",
+            "text": "Grabs nearby enemies with tendrils and slows them. Anyone who doesn’t get out of reach in time takes damage."
+          },
+          {
+            "name": "Venom Swing",
+            "kind": "ability",
+            "text": "Swings on a web line in the direction he aims."
+          },
+          {
+            "name": "Symbiotic Resilience",
+            "kind": "ability",
+            "text": "Gains bonus health. The lower his health, the more he gets."
+          },
+          {
+            "name": "Frenzied Arrival",
+            "kind": "ability",
+            "text": "From high up, dives onto a spot, damaging enemies where he lands and knocking them up."
+          },
+          {
+            "name": "Alien Biology",
+            "kind": "passive",
+            "text": "Climbs walls and can sprint along them."
+          },
+          {
+            "name": "Feast of the Abyss",
+            "kind": "ultimate",
+            "text": "Burrows underground and moves freely, then bursts up to devour enemies. Damage is based on their current health, he gains it as bonus health, and their healing is reduced."
+          }
+        ]
       }
     },
     {
@@ -606,6 +1041,51 @@
           "confidence": "kit",
           "reason": "Sleep shuts down the dive."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Spear of Ichors",
+            "kind": "attack",
+            "text": "A spear lunge that gets stronger with her attack charge. Fully charged, it launches enemies."
+          },
+          {
+            "name": "Axes of Ichors",
+            "kind": "attack",
+            "text": "Twin-axe strikes. Damage grows with her charge, and every fourth strike dashes forward."
+          },
+          {
+            "name": "Shielded Stance",
+            "kind": "ability",
+            "text": "Turns her weapon into a shield. Damage it absorbs builds her attack charge."
+          },
+          {
+            "name": "Assassin’s Charge",
+            "kind": "ability",
+            "text": "A fast flying dash. Enemies hit head-on are carried along with her."
+          },
+          {
+            "name": "Divine Judgement",
+            "kind": "ability",
+            "text": "Dives to the ground, switches to axes and creates a zone where she gets speed and bonus health."
+          },
+          {
+            "name": "Wingblade Ascent",
+            "kind": "ability",
+            "text": "Takes back to the sky and switches back to the spear."
+          },
+          {
+            "name": "Seraphic Soar",
+            "kind": "passive",
+            "text": "Flies freely. Time in the air builds her attack charge."
+          },
+          {
+            "name": "Heven’s Retribution",
+            "kind": "ultimate",
+            "text": "Hurls her spear, binding enemies near the impact with ribbons. She then leaps to it, damaging enemies and creating a Divine Judgement zone."
+          }
+        ]
       }
     },
     {
@@ -635,7 +1115,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines slow him before he reaches you."
+          "reason": "Snares, drones and mines slow him before he reaches you."
         },
         "duelist": {
           "hero": "the-punisher",
@@ -647,6 +1127,46 @@
           "confidence": "kit",
           "reason": "Keeps your team healed while staying out of his reach."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Rocky Jab",
+            "kind": "attack",
+            "text": "Fast punches."
+          },
+          {
+            "name": "Stone Haymaker",
+            "kind": "ability",
+            "text": "A heavy punch that deals extra damage based on the target’s max health and gives him bonus health. Knocks flying enemies to the ground."
+          },
+          {
+            "name": "Yancy Street Charge",
+            "kind": "ability",
+            "text": "Charges forward, knocking enemies up, and leaves a zone where enemies can’t use movement abilities."
+          },
+          {
+            "name": "Embattled Leap",
+            "kind": "ability",
+            "text": "Leaps to an ally. He and allies near the landing spot take less damage for a while."
+          },
+          {
+            "name": "Battle Blitz",
+            "kind": "ability",
+            "text": "Leaps at enemies. Enemies near the landing spot take extra damage for a while."
+          },
+          {
+            "name": "Unyielding Will",
+            "kind": "passive",
+            "text": "Can’t be launched, knocked back or moved by enemy abilities."
+          },
+          {
+            "name": "Clobberin’ Time",
+            "kind": "ultimate",
+            "text": "A huge strike that launches every enemy in front of him into the air."
+          }
+        ]
       }
     },
     {
@@ -686,6 +1206,51 @@
           "confidence": "kit",
           "reason": "Mobile healer who keeps your team up through the pressure."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Telepathic Pulse",
+            "kind": "attack",
+            "text": "A psionic beam whose damage ramps up the longer it stays on one target."
+          },
+          {
+            "name": "Mind’s Aegis",
+            "kind": "ability",
+            "text": "Places a floating barrier wherever she aims. It recovers when it isn’t taking damage."
+          },
+          {
+            "name": "Psychic Spear",
+            "kind": "ability",
+            "text": "Pulls a crystal copy of an enemy’s mind out of them. Damage to the crystal passes to their body, and shattering it deals extra damage."
+          },
+          {
+            "name": "Diamond Form",
+            "kind": "ability",
+            "text": "Turns to diamond for a while: she takes less damage, can’t be crowd-controlled and switches to heavy melee moves."
+          },
+          {
+            "name": "Faceted Fury",
+            "kind": "attack",
+            "text": "Diamond Form’s double-fisted punches."
+          },
+          {
+            "name": "Crystal Kick",
+            "kind": "ability",
+            "text": "Diamond Form’s flying kick. Knocks enemies back, with extra damage if they hit a wall."
+          },
+          {
+            "name": "Carbon Crush",
+            "kind": "ability",
+            "text": "Diamond Form’s grab: lunges, seizes an enemy and slams them down behind her."
+          },
+          {
+            "name": "Psionic Seduction",
+            "kind": "ultimate",
+            "text": "Sends out psychic waves. Enemies caught are stunned and can’t use ultimates, and those who stay in them are drawn toward her."
+          }
+        ]
       }
     },
     {
@@ -722,8 +1287,48 @@
         "strategist": {
           "hero": "cloak-and-dagger",
           "confidence": "kit",
-          "reason": "Vulnerability speeds up breaking his walls."
+          "reason": "Terror Cape’s vulnerability helps your team burn him down."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Vine Strike",
+            "kind": "attack",
+            "text": "Lashes vines at enemies at mid range."
+          },
+          {
+            "name": "Spore Bomb",
+            "kind": "ability",
+            "text": "Throws a bomb that splits into smaller exploding spores."
+          },
+          {
+            "name": "Furious Flora",
+            "kind": "ability",
+            "text": "A three-hit arm combo. The third hit lightly knocks enemies up."
+          },
+          {
+            "name": "Thornlash Wall",
+            "kind": "ability",
+            "text": "Grows a wall. Once awakened, it lashes at nearby enemies that Groot or his allies attack."
+          },
+          {
+            "name": "Ironwood Wall",
+            "kind": "ability",
+            "text": "Grows a sturdy wall. Once awakened, damage it takes gives Groot bonus health, and he can’t be crowd-controlled near it."
+          },
+          {
+            "name": "Flora Colossus",
+            "kind": "passive",
+            "text": "His walls awaken with extra effects when he is near them, and he can add extra segments while building one."
+          },
+          {
+            "name": "Strangling Prison",
+            "kind": "ultimate",
+            "text": "Fires a giant vine cluster that pulls nearby enemies to its center and traps them."
+          }
+        ]
       }
     },
     {
@@ -761,6 +1366,66 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Dual Desert Eagles",
+            "kind": "attack",
+            "text": "Rapid pistol fire that loses damage at range."
+          },
+          {
+            "name": "Kick@$$ Katana",
+            "kind": "attack",
+            "text": "A three-hit sword combo at close range. He swaps between guns and katanas, and each set changes his other moves."
+          },
+          {
+            "name": "Magical Unicorn Shield!",
+            "kind": "ability",
+            "text": "With guns: summons a plush unicorn barrier that blocks attacks for a few seconds."
+          },
+          {
+            "name": "Hazardous Hijinks",
+            "kind": "ability",
+            "text": "With katanas: a dashing slash that knocks enemies down. Hitting someone refreshes it, up to three dashes in a row."
+          },
+          {
+            "name": "Deadpool In Your Area",
+            "kind": "ability",
+            "text": "Taunts nearby enemies so they have to attack him, blurs their vision and burns them, while he attacks faster."
+          },
+          {
+            "name": "Bunny Bounce",
+            "kind": "ability",
+            "text": "A midair double jump. Stomping on an enemy’s head or jumping off a wall resets it."
+          },
+          {
+            "name": "Upgrade!",
+            "kind": "ability",
+            "text": "Earns XP in combat. When the bar fills, he picks one ability to upgrade into a stronger version."
+          },
+          {
+            "name": "Healing Factor",
+            "kind": "passive",
+            "text": "Regenerates health after a few seconds out of combat. A burst of heavy damage triggers a stronger emergency regeneration, which then has a long cooldown."
+          },
+          {
+            "name": "Maximum Flair",
+            "kind": "passive",
+            "text": "Instead of charging normally, landing abilities raises his Style Rating; at S rank he can use his ultimate. Being knocked out resets it."
+          },
+          {
+            "name": "The Ban Hammer",
+            "kind": "ultimate",
+            "text": "With guns: taunts one chosen enemy. He gains bonus health and healing, and every ability that enemy misses hurts them and gives him more bonus health."
+          },
+          {
+            "name": "The Big Test",
+            "kind": "ultimate",
+            "text": "With katanas: starts a timed challenge that gives him speed, healing, extra dashes and extra health for nearby allies. Completing it strengthens the buffs."
+          }
+        ]
       }
     },
     {
@@ -784,7 +1449,7 @@
         "overall": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines stall her dives.",
+          "reason": "Snares and mines stall her dives.",
           "alt": [
             "the-thing"
           ]
@@ -792,7 +1457,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines stall her dives.",
+          "reason": "Snares and mines stall her dives.",
           "alt": [
             "the-thing"
           ]
@@ -827,17 +1492,62 @@
         "quirks": [
           {
             "text": "Each enemy hit by Magik Slash takes a second off your portal cooldown.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           },
           {
             "text": "Eldritch Whirl and Demon’s Rage can only be used for a short time after a portal.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "Deletes isolated backliners and is hard to pin down while she has portals. Punish her once her portals and dash are spent."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Soulsword",
+            "kind": "attack",
+            "text": "Close-range sword slashes."
+          },
+          {
+            "name": "Magik Slash",
+            "kind": "ability",
+            "text": "Sends a piercing slash through the air. Each enemy it hits shortens Stepping Discs’ cooldown."
+          },
+          {
+            "name": "Stepping Discs",
+            "kind": "ability",
+            "text": "Teleports a short way in the direction she is moving and can’t be hurt while traveling. Right after, her attack becomes Eldritch Whirl and her slash becomes Demon’s Rage."
+          },
+          {
+            "name": "Eldritch Whirl",
+            "kind": "attack",
+            "text": "After Stepping Discs: a spinning sword attack."
+          },
+          {
+            "name": "Demon’s Rage",
+            "kind": "ability",
+            "text": "After Stepping Discs: summons a Limbo demon that attacks nearby enemies."
+          },
+          {
+            "name": "Umbral Incursion",
+            "kind": "ability",
+            "text": "Dashes forward and knocks enemies up."
+          },
+          {
+            "name": "Limbo’s Might",
+            "kind": "passive",
+            "text": "Damage she deals becomes bonus health."
+          },
+          {
+            "name": "Darkchild",
+            "kind": "ultimate",
+            "text": "Transforms into Darkchild for a while, strengthening all of her abilities."
+          }
+        ]
       }
     },
     {
@@ -861,7 +1571,7 @@
         "overall": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines stall his melee push.",
+          "reason": "Snares, drones and mines stall his melee push.",
           "alt": [
             "devil-dinosaur"
           ]
@@ -869,7 +1579,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines stall his melee push.",
+          "reason": "Snares, drones and mines stall his melee push.",
           "alt": [
             "devil-dinosaur"
           ]
@@ -904,17 +1614,57 @@
         "quirks": [
           {
             "text": "Kills don’t turn enemies into copies of themselves. Each kill spawns an ordinary Berserker where the enemy fell.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           },
           {
             "text": "Berserkers shoot from range, but fight in melee when you pull them in with Necro-Power.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "Snowballs off kills, since each one spawns a Berserker that heals him and gives him an escape. Clear his Berserkers, then catch him after his surge."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "All-Black",
+            "kind": "attack",
+            "text": "A four-hit Necrosword combo with long reach."
+          },
+          {
+            "name": "Necro-Power",
+            "kind": "ability",
+            "text": "Throws a symbiote mass that slows the target and brings a Black Berserker to them, moving a nearby one or creating one. Arriving Berserkers strike twice in melee."
+          },
+          {
+            "name": "Black Berserker",
+            "kind": "ability",
+            "text": "Lobs a symbiote that becomes a Black Berserker for a few seconds, shooting the nearest enemy. Two charges."
+          },
+          {
+            "name": "Shadow Harvest",
+            "kind": "ability",
+            "text": "Warps to one of his Berserkers and sacrifices it for bonus health and an explosion, unlocking Shadow Scythe strikes that can fire a piercing shockwave."
+          },
+          {
+            "name": "Living Abyss",
+            "kind": "ability",
+            "text": "Surges forward and can’t be hurt while doing it, leaving a Berserker behind and sending his Berserkers into a faster frenzy. Creates a damaging zone whose damage becomes bonus health."
+          },
+          {
+            "name": "Berserker Swarm",
+            "kind": "passive",
+            "text": "Damage from his Berserkers gives him bonus health, and every enemy he kills leaves a new Berserker behind."
+          },
+          {
+            "name": "Twilight of the Gods",
+            "kind": "ultimate",
+            "text": "All-Black becomes the Annihilablade for a while: huge, long-reach slashes, plus a spreading zone that spawns a Berserker next to each enemy caught in it."
+          }
+        ]
       }
     },
     {
@@ -937,23 +1687,53 @@
         "overall": {
           "hero": "black-widow",
           "confidence": "data",
-          "reason": "Hitscan punishes a flyer. Less reliable on controller."
+          "reason": "Her rifle punishes a flyer. Less reliable on controller."
         },
         "vanguard": {
           "hero": "thor",
           "confidence": "kit",
-          "reason": "Mobile enough to chase flyers."
+          "reason": "Lightning Realm grounds flyers who try to leave it, and his dash chases them."
         },
         "duelist": {
           "hero": "black-widow",
           "confidence": "data",
-          "reason": "Hitscan punishes a flyer. Less reliable on controller."
+          "reason": "Her rifle punishes a flyer. Less reliable on controller."
         },
         "strategist": {
           "hero": "ultron",
           "confidence": "kit",
           "reason": "Fights her in the air."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Wind Blade",
+            "kind": "attack",
+            "text": "Throws piercing wind blades. She flies freely."
+          },
+          {
+            "name": "Bolt Rush",
+            "kind": "ability",
+            "text": "Fires a lightning bolt that explodes on impact."
+          },
+          {
+            "name": "Weather Control",
+            "kind": "ability",
+            "text": "Switches between Tornado (allies near her move faster) and Thunder (allies near her deal more damage). Under Tornado her hits give her bonus health; under Thunder, Wind Blade hits shorten Bolt Rush’s cooldown."
+          },
+          {
+            "name": "Goddess Boost",
+            "kind": "ability",
+            "text": "Empowers herself with the current weather: Tornado speeds her up and slows enemies, Thunder boosts her damage and calls lightning on enemies."
+          },
+          {
+            "name": "Omega Hurricane",
+            "kind": "ultimate",
+            "text": "Becomes a hurricane that pulls in nearby enemies and damages them, with bonus health that drains after it ends."
+          }
+        ]
       }
     },
     {
@@ -982,7 +1762,7 @@
         "vanguard": {
           "hero": "doctor-strange",
           "confidence": "kit",
-          "reason": "His big shield soaks Chaos Control."
+          "reason": "His big shield soaks her damage while your team closes in."
         },
         "duelist": {
           "hero": "squirrel-girl",
@@ -993,38 +1773,83 @@
         "strategist": {
           "hero": "invisible-woman",
           "confidence": "kit",
-          "reason": "Shields soak her beam."
+          "reason": "Shields soak her damage."
         }
       },
       "tips": {
         "against": [
           "Her Chaos Marks are the key. Scarlet Hex (a long line in front of her) and Dark Seal mark you, and her beam then hits every marked enemy at once. Don’t line up, and break line of sight once marked.",
-          "Fight her from beyond about 20 meters, the reach of her marks and her multi-target beam.",
+          "Fight her from beyond about 20 meters, the reach of her marks and of Chaos Control.",
           "Dark Seal now stuns only once, briefly, when it goes off. Walk out of the field instead of waiting in it.",
-          "Burst her instead of trading slowly. Her self-healing is small and only comes from hitting marked targets, and her escape is slower since Season 10.",
+          "Burst her instead of trading slowly. Her only sustain is bonus health from hitting marked targets, and her escape is slower since Season 10.",
           "During her ultimate wind-up, get more than 15 meters away or kill her. Keep shooting, since Sept 17 she rarely becomes immune during it."
         ],
         "as": [
           "Mark, then beam. Open with Scarlet Hex down a corridor or Dark Seal on a group, then hold Chaos Control to hit every marked enemy in front of you.",
           "Keep marked enemies within about 20 meters and in front of you. The beam covers a wide cone but has a range limit.",
-          "Your healing only comes from hitting marked targets, so keep marks up.",
+          "Your bonus health only comes from hitting marked targets, so keep marks up.",
           "Use Dark Seal to mark and slow, not to hold a diver. Its stun is very short now.",
           "Don’t count on ultimate immunity. Ult from cover or after the enemy has committed."
         ],
         "quirks": [
           {
             "text": "Her ultimate wind-up can still randomly make her immune to damage, but since the Sept 17 patch it rarely happens. The odds were never published.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           },
           {
             "text": "Advice about Dark Seal stunning over and over is out of date. Since the Season 10 rework it stuns once.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "medium",
         "why": "Squishy, and her escape is slower since her rework. Raise her priority when several of your team are marked or her ultimate is ready."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Chaos Control",
+            "kind": "attack",
+            "text": "Chaos magic that damages every Chaos-Marked enemy in a wide cone in front of her at once, and restores her Chaos Energy. She needs to mark enemies first."
+          },
+          {
+            "name": "Chthonian Burst",
+            "kind": "attack",
+            "text": "Spends Chaos Energy to fire explosive magic missiles."
+          },
+          {
+            "name": "Scarlet Hex",
+            "kind": "ability",
+            "text": "A shockwave in a long strip in front of her that damages and Chaos-Marks every enemy it hits."
+          },
+          {
+            "name": "Dark Seal",
+            "kind": "ability",
+            "text": "Throws a seal that stuns enemies briefly when it lands, then leaves a field that damages, slows and keeps marking enemies inside. Can be cast during Mystic Projection."
+          },
+          {
+            "name": "Mystic Projection",
+            "kind": "ability",
+            "text": "Becomes a phased projection that flies freely with a speed boost. She can end it early."
+          },
+          {
+            "name": "Telekinesis",
+            "kind": "passive",
+            "text": "Can fall slowly."
+          },
+          {
+            "name": "Chaos Mark",
+            "kind": "passive",
+            "text": "Part of the damage she deals to marked enemies becomes bonus health for her."
+          },
+          {
+            "name": "Reality Erasure",
+            "kind": "ultimate",
+            "text": "Rises with bonus health and channels chaos energy that drags at and damages enemies near her, then releases a huge blast. The longer she channels, the bigger the damage."
+          }
+        ]
       }
     },
     {
@@ -1088,13 +1913,53 @@
         "quirks": [
           {
             "text": "Guides from before Season 9 are out of date. Her damage, range falloff and crow-form flight all changed then.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "Picks off your healers from long range. Pressure her position and make her use her crow escape before you commit."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Nightsword Thorn",
+            "kind": "attack",
+            "text": "Long-range thorn shots that reward critical hits."
+          },
+          {
+            "name": "Piercing Night",
+            "kind": "ability",
+            "text": "Fires a spread of thorns that stick and detonate after a short delay."
+          },
+          {
+            "name": "Soul Drainer",
+            "kind": "ability",
+            "text": "Throws an explosive sphere that stuns nearby enemies and pulls them into the blast."
+          },
+          {
+            "name": "Astral Flock",
+            "kind": "ability",
+            "text": "Turns into a flock of crows and flies freely in any direction, gaining bonus health when it ends."
+          },
+          {
+            "name": "Nastrond Crowstorm",
+            "kind": "passive",
+            "text": "Enemies she knocks out leave a crow behind that explodes after a short time."
+          },
+          {
+            "name": "Hel’s Descent",
+            "kind": "passive",
+            "text": "Can fall slowly."
+          },
+          {
+            "name": "Goddess of Death",
+            "kind": "ultimate",
+            "text": "Rises into the sky and fires exploding crows from both hands at will."
+          }
+        ]
       }
     },
     {
@@ -1134,6 +1999,56 @@
           "confidence": "kit",
           "reason": "Sleep shuts down the dive."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Justice Jab",
+            "kind": "attack",
+            "text": "Billy-club swings. Hits build Fury."
+          },
+          {
+            "name": "Righteous Cross",
+            "kind": "attack",
+            "text": "Briefly unlocked after Devil’s Latch or Infernal Fury: a lunging cross strike that builds Fury."
+          },
+          {
+            "name": "Objection!",
+            "kind": "ability",
+            "text": "A short guard that blocks damage from the front, reflects projectiles and builds Fury from what it blocks."
+          },
+          {
+            "name": "Devil’s Latch",
+            "kind": "ability",
+            "text": "A grappling line that pulls him and his target together. Builds Fury."
+          },
+          {
+            "name": "Infernal Fury",
+            "kind": "ability",
+            "text": "Spends Fury on Devil’s Chain (a strike whose damage becomes bonus health) or Devil’s Throw (a bouncing club that slows enemies)."
+          },
+          {
+            "name": "Sonic Pursuit",
+            "kind": "ability",
+            "text": "Locks onto an enemy, gaining speed and taking less damage, then dashes to them to blind them and restore Fury."
+          },
+          {
+            "name": "Blind Ascent",
+            "kind": "passive",
+            "text": "Runs along walls and springs off them."
+          },
+          {
+            "name": "Radar Sense",
+            "kind": "passive",
+            "text": "Senses enemy movement around him, even through walls."
+          },
+          {
+            "name": "Let the Devil Out",
+            "kind": "ultimate",
+            "text": "Enemies in his line of sight take growing damage and a growing blind. He keeps gaining Fury while it lasts."
+          }
+        ]
       }
     },
     {
@@ -1156,12 +2071,12 @@
         "overall": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines stall his combos."
+          "reason": "Snares and mines stall his combos."
         },
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "data",
-          "reason": "Webs and mines stall his combos."
+          "reason": "Snares and mines stall his combos."
         },
         "duelist": {
           "hero": "mister-fantastic",
@@ -1173,6 +2088,56 @@
           "confidence": "kit",
           "reason": "Knockback breaks up his combos."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Jeet Kune Do",
+            "kind": "attack",
+            "text": "A punch combo whose last strike knocks enemies up. Every hit shortens Dragon’s Defense’s cooldown."
+          },
+          {
+            "name": "Yat Jee Chung Kuen",
+            "kind": "ability",
+            "text": "Dashes after an enemy and unleashes a flurry of punches that also deal damage based on the target’s max health."
+          },
+          {
+            "name": "Dragon’s Defense",
+            "kind": "ability",
+            "text": "A blocking stance that cuts incoming damage. Leaving it gives bonus health and lets him strike back with Yat Jee Chung Kuen."
+          },
+          {
+            "name": "K’un-Lun Kick",
+            "kind": "ability",
+            "text": "A dashing flying kick. It deals more damage the lower the enemy’s health."
+          },
+          {
+            "name": "Harmony Recovery",
+            "kind": "ability",
+            "text": "Channels chi to heal himself. Extra healing becomes bonus health that drains away afterwards."
+          },
+          {
+            "name": "Crane Leap",
+            "kind": "ability",
+            "text": "Up to three jumps in a row in midair."
+          },
+          {
+            "name": "Wall Runner",
+            "kind": "passive",
+            "text": "Runs along walls."
+          },
+          {
+            "name": "Chi Absorption",
+            "kind": "passive",
+            "text": "Gains bonus health from enemies he defeats."
+          },
+          {
+            "name": "Living Chi",
+            "kind": "ultimate",
+            "text": "For a while he moves faster, hits harder and reaches further, and Dragon’s Defense recharges faster."
+          }
+        ]
       }
     },
     {
@@ -1211,6 +2176,41 @@
           "confidence": "kit",
           "reason": "Sleep takes him out of the fight."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Stretch Punch",
+            "kind": "attack",
+            "text": "Long-reach stretching punches."
+          },
+          {
+            "name": "Distended Grip",
+            "kind": "ability",
+            "text": "Grabs an enemy with stretched arms and drags them toward him, then holds them in place for a moment."
+          },
+          {
+            "name": "Reflexive Rubber",
+            "kind": "ability",
+            "text": "Stretches his body to soak up incoming damage, then fires it back in the direction he aims."
+          },
+          {
+            "name": "Flexible Elongation",
+            "kind": "ability",
+            "text": "Gains a shield and stretches to a target. Where he lands, enemies take damage, are knocked back and slowed, and allies get a shield."
+          },
+          {
+            "name": "Elastic Strength",
+            "kind": "passive",
+            "text": "Using abilities builds Elasticity. When it is full he inflates for a while: more max health (with a heal) and more damage."
+          },
+          {
+            "name": "Brainiac Bounce",
+            "kind": "ultimate",
+            "text": "Leaps up and smashes down, damaging and slowing enemies. Landing a hit lets him bounce again."
+          }
+        ]
       }
     },
     {
@@ -1252,6 +2252,36 @@
           "confidence": "kit",
           "reason": "Sleep takes her out of the fight."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Psionic Crossbow",
+            "kind": "attack",
+            "text": "Rapid crossbow bolts. Hits shorten all of her cooldowns."
+          },
+          {
+            "name": "Wing Shurikens",
+            "kind": "ability",
+            "text": "Throws shurikens that stick in enemies and give her bonus health. She can recall them for more damage."
+          },
+          {
+            "name": "Psi-Blade Dash",
+            "kind": "ability",
+            "text": "Dashes forward, slicing every enemy in her path."
+          },
+          {
+            "name": "Psychic Stealth",
+            "kind": "ability",
+            "text": "Turns invisible and moves faster for a few seconds."
+          },
+          {
+            "name": "Dance of the Butterfly",
+            "kind": "ultimate",
+            "text": "Slashes every nearby enemy over and over with a psionic katana for heavy damage. Shields and barriers on enemies can absorb it."
+          }
+        ]
       }
     },
     {
@@ -1315,12 +2345,62 @@
           "Loop tag, pull, uppercut, air melee, then tag again. The Season 10 cooldown cut lets you uppercut again much sooner.",
           "Keep a web-swing charge to get out instead of spending them all to get in.",
           "Ult in melee range of several enemies. The bonus health covers your dive.",
-          "With Peni Parker on your team, throw her spider-bomb often. Its cooldown was cut in Season 10."
+          "Throw Parker Power-Up’s spider-bomb often; Season 10 cut its cooldown. With Peni Parker on your team, its tracers also give you bonus health."
         ]
       },
       "focus": {
         "level": "high",
         "why": "Fragile but deadly to backliners. Focus him the moment he commits, and don’t chase when he swings away."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Spider-Power",
+            "kind": "attack",
+            "text": "Punches. Extra damage to enemies carrying a Spider-Tracer."
+          },
+          {
+            "name": "Web-Cluster",
+            "kind": "ability",
+            "text": "A web shot that damages and tags the enemy with a Spider-Tracer."
+          },
+          {
+            "name": "Web-Swing",
+            "kind": "ability",
+            "text": "Swings on a web line to move quickly."
+          },
+          {
+            "name": "Get Over Here!",
+            "kind": "ability",
+            "text": "A web line that pulls an enemy to him, or pulls him to an enemy tagged with a Spider-Tracer."
+          },
+          {
+            "name": "Amazing Combo",
+            "kind": "ability",
+            "text": "Knocks an enemy up into the air. Extra damage against tagged enemies."
+          },
+          {
+            "name": "Wall Crawl",
+            "kind": "passive",
+            "text": "Climbs walls and can run along them."
+          },
+          {
+            "name": "Thwip and Flip",
+            "kind": "passive",
+            "text": "Double jump."
+          },
+          {
+            "name": "Spider-Sense",
+            "kind": "passive",
+            "text": "Warns him about enemies near him."
+          },
+          {
+            "name": "Spectacular Spin",
+            "kind": "ultimate",
+            "text": "Fires webs all around him, damaging and stunning enemies in range."
+          }
+        ]
       }
     },
     {
@@ -1363,7 +2443,7 @@
       },
       "tips": {
         "against": [
-          "His attack runs on marks. A spear or spinning kick marks you, then dashing through a marked target resets his dash and heals him. A mark on your backline means he’s coming.",
+          "His attack runs on marks. A spear or spinning kick marks you, then dashing through a marked target resets his dash and gives him bonus health. A mark on your backline means he’s coming.",
           "When a dash doesn’t reset, it’s on a long cooldown and he has little way out. Turn on him and burst him.",
           "Crowd control breaks the chain: Mantis’s sleep, Hela’s stun, or a Vanguard peeling. Healers should stay near their tanks.",
           "Part of his health is a shield that refills if he goes a few seconds without taking damage. Keep hitting him as he backs off.",
@@ -1379,13 +2459,53 @@
         "quirks": [
           {
             "text": "Guides that list his health as a flat 275 are out of date. Since Season 9 part of it is a shield that refills when he avoids damage for a few seconds.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "The biggest threat to your healers. Track him all fight and punish him when his dash resets fail."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Vibranium Claws",
+            "kind": "attack",
+            "text": "Close-range claw swipes."
+          },
+          {
+            "name": "Spinning Kick",
+            "kind": "ability",
+            "text": "A spinning kick that travels in any direction and puts Vibranium Marks on enemies it hits."
+          },
+          {
+            "name": "Spirit Rend",
+            "kind": "ability",
+            "text": "Lunges at an enemy. Hitting a marked enemy gives him bonus health and refreshes the lunge, so he can chain it."
+          },
+          {
+            "name": "Spear Toss",
+            "kind": "ability",
+            "text": "Throws a vibranium spear that creates a field marking every enemy in it."
+          },
+          {
+            "name": "Subtle Step",
+            "kind": "passive",
+            "text": "Runs on walls and jumps off them."
+          },
+          {
+            "name": "Panther’s Cunning",
+            "kind": "passive",
+            "text": "Deals more damage when his health is low."
+          },
+          {
+            "name": "Bast’s Descent",
+            "kind": "ultimate",
+            "text": "Summons Bast, who pounces forward, damaging and marking enemies and refreshing Spirit Rend. He takes less damage while it starts."
+          }
+        ]
       }
     },
     {
@@ -1424,6 +2544,41 @@
           "confidence": "kit",
           "reason": "Shields and knockback peel the dive off your team."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Ancestral Sword",
+            "kind": "attack",
+            "text": "Close-range sword slashes."
+          },
+          {
+            "name": "Hunter’s Shotgun",
+            "kind": "attack",
+            "text": "A shotgun for mid range. He swaps between it and the sword."
+          },
+          {
+            "name": "Scarlet Shroud",
+            "kind": "ability",
+            "text": "A parry: for a moment he can’t be crowd-controlled, takes less damage from the front, and Daywalker Dash recharges faster."
+          },
+          {
+            "name": "Daywalker Dash",
+            "kind": "ability",
+            "text": "Dashes forward. With the shotgun it slows enemies hit; with the sword it cuts through them and reduces their healing."
+          },
+          {
+            "name": "Bloodline Awakening",
+            "kind": "ability",
+            "text": "Speeds up his slashes, adds a Whirlwind Slash and gives him lifesteal (extra becomes bonus health). He receives less healing while it is active."
+          },
+          {
+            "name": "Thousand-Fold Slash",
+            "kind": "ultimate",
+            "text": "Charges and dashes with the Sword of Dracula for one big strike, then leaves a zone that keeps slashing enemies and cuts their healing. He lifesteals during it."
+          }
+        ]
       }
     },
     {
@@ -1463,6 +2618,41 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Repulsor Blast",
+            "kind": "attack",
+            "text": "Pulse cannon shots. He can fly."
+          },
+          {
+            "name": "Unibeam",
+            "kind": "attack",
+            "text": "A continuous beam from his chest."
+          },
+          {
+            "name": "Hyper-Velocity",
+            "kind": "ability",
+            "text": "Flies forward at high speed."
+          },
+          {
+            "name": "Armor Overdrive",
+            "kind": "ability",
+            "text": "Boosts Repulsor Blast and Unibeam damage and gives bonus health. Knockouts extend it."
+          },
+          {
+            "name": "Micro-Missile Barrage",
+            "kind": "ability",
+            "text": "During Hyper-Velocity or Armor Overdrive, rains a missile barrage on an area."
+          },
+          {
+            "name": "Invincible Pulse Cannon",
+            "kind": "ultimate",
+            "text": "Fires a huge pulse cannon blast that deals heavy damage where it lands."
+          }
+        ]
       }
     },
     {
@@ -1490,7 +2680,7 @@
         "vanguard": {
           "hero": "thor",
           "confidence": "kit",
-          "reason": "Mobile enough to chase flyers."
+          "reason": "Lightning Realm grounds flyers who try to leave it, and his dash chases them."
         },
         "duelist": {
           "hero": "spider-man",
@@ -1502,6 +2692,41 @@
           "confidence": "kit",
           "reason": "Mobile healer who keeps your team up through the pressure."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Fire Cluster",
+            "kind": "attack",
+            "text": "Fireballs that split apart as they fly."
+          },
+          {
+            "name": "Blazing Blast",
+            "kind": "ability",
+            "text": "A fireball that damages on a direct hit or, aimed at the ground, leaves a Flame Field that burns enemies inside."
+          },
+          {
+            "name": "Pyro-Prison",
+            "kind": "ability",
+            "text": "Links two or more Flame Fields into walls of fire that hurt enemies passing through and keep burning anyone trapped inside."
+          },
+          {
+            "name": "Plasma Body",
+            "kind": "ability",
+            "text": "Dashes forward, then rises quickly into flight. Two charges."
+          },
+          {
+            "name": "Flaming Meteor",
+            "kind": "ability",
+            "text": "Dives down, damaging enemies and setting off any Flame Fields it hits. Gives him bonus health."
+          },
+          {
+            "name": "Supernova",
+            "kind": "ultimate",
+            "text": "Explodes around him, then for a while Blazing Blast becomes a Flame Tornado and Plasma Body recharges."
+          }
+        ]
       }
     },
     {
@@ -1530,7 +2755,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "kit",
-          "reason": "Webs slow him so you can kite the melee."
+          "reason": "Snares and drones slow him so you can kite the melee."
         },
         "duelist": {
           "hero": "iron-man",
@@ -1542,6 +2767,46 @@
           "confidence": "kit",
           "reason": "Sleep stops the leap."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Savage Claw",
+            "kind": "attack",
+            "text": "Claw slashes. After Feral Leap they become stronger Berserk Claw Strikes."
+          },
+          {
+            "name": "Vicious Rampage",
+            "kind": "ability",
+            "text": "Dashes forward into a claw strike."
+          },
+          {
+            "name": "Feral Leap",
+            "kind": "ability",
+            "text": "Leaps and grabs the first enemy he hits, smashing them to the ground. Strengthens his next attacks."
+          },
+          {
+            "name": "Undying Animal",
+            "kind": "ability",
+            "text": "A howl that briefly cuts the damage he takes."
+          },
+          {
+            "name": "Berserker Rage",
+            "kind": "passive",
+            "text": "Attacking and taking hits builds Rage, which makes his claw strikes hit harder."
+          },
+          {
+            "name": "Regenerative Healing Factor",
+            "kind": "passive",
+            "text": "Heals him, gives bonus health and shakes off debuffs. Bonus health left at the end turns into a heal, and his Rage resets. Assists shorten its cooldown."
+          },
+          {
+            "name": "Last Stand",
+            "kind": "ultimate",
+            "text": "Launches enemies ahead into the air, then spirals through them for a devastating impact. Hits harder with more Rage."
+          }
+        ]
       }
     },
     {
@@ -1578,6 +2843,51 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Double-Barrel Blaster",
+            "kind": "attack",
+            "text": "A shotgun that can land critical hits and loses damage at range."
+          },
+          {
+            "name": "Monster-Piercer",
+            "kind": "attack",
+            "text": "After a dash, her next shot becomes piercing elephant-gun rounds that add damage based on the target’s max health."
+          },
+          {
+            "name": "Living Bullet",
+            "kind": "ability",
+            "text": "A round that splits into seeking bullets on impact and marks targets. Hitting marked targets speeds her up. Extra damage to shields and bonus health."
+          },
+          {
+            "name": "Ruthless Pursuit",
+            "kind": "ability",
+            "text": "Dashes forward, launching enemies it hits, then fires a blast that pushes her back and slows enemies. Gives bonus health and empowers her next shot."
+          },
+          {
+            "name": "Helix Advance",
+            "kind": "ability",
+            "text": "A short dash that gives bonus health and empowers her next shot."
+          },
+          {
+            "name": "Smoky Snare",
+            "kind": "ability",
+            "text": "Throws a hidden trap. An enemy who triggers it is held in place and damaged until they destroy it, and she can dash straight to a triggered trap."
+          },
+          {
+            "name": "Inherited Instinct",
+            "kind": "passive",
+            "text": "Dealing damage and knocking enemies out builds Instinct, which shortens Helix Advance’s cooldown. She loses some when knocked out."
+          },
+          {
+            "name": "Apex Predator",
+            "kind": "ultimate",
+            "text": "Summons the monster Glartrox, which charges forward and seizes enemies so they can’t use abilities. She can recall it for a heavy bite."
+          }
+        ]
       }
     },
     {
@@ -1617,6 +2927,41 @@
           "confidence": "data",
           "reason": "Shields block the shots; knockback breaks the angle."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Roterstern",
+            "kind": "attack",
+            "text": "Explosive rounds that also hit enemies behind the target."
+          },
+          {
+            "name": "Bionic Hook",
+            "kind": "ability",
+            "text": "A charged hook that reels in the first enemy hit and those behind them."
+          },
+          {
+            "name": "Trooper’s Fist",
+            "kind": "ability",
+            "text": "Dashes forward grabbing enemies and launches them up at the end. The second strike stops them using movement abilities for a moment."
+          },
+          {
+            "name": "Tainted Voltage",
+            "kind": "ability",
+            "text": "A charged electric punch that damages and slows enemies and knocks flying heroes down. Two charges."
+          },
+          {
+            "name": "Ceaseless Charge",
+            "kind": "passive",
+            "text": "His bionic-arm abilities reload his gun and give him bonus health."
+          },
+          {
+            "name": "Kraken Impact",
+            "kind": "ultimate",
+            "text": "Leaps and slams down, instantly finishing enemies below a health threshold. A knockout lets him use it again for a short time."
+          }
+        ]
       }
     },
     {
@@ -1656,6 +3001,66 @@
           "confidence": "kit",
           "reason": "Shields and knockback peel the dive off your team."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Feline Fury",
+            "kind": "attack",
+            "text": "Close-range claw swipes."
+          },
+          {
+            "name": "Claw Whip",
+            "kind": "attack",
+            "text": "Whips tethered claws in a wide arc, hitting every enemy in range and giving her bonus health per hit."
+          },
+          {
+            "name": "Fortune’s Favor",
+            "kind": "ability",
+            "text": "Spends Fortune on either Claw Whip or Phantom Pursuit."
+          },
+          {
+            "name": "Turn of Fortune",
+            "kind": "ability",
+            "text": "A grappling hook that damages the first enemy hit and steals Fortune."
+          },
+          {
+            "name": "Phantom Pursuit",
+            "kind": "ability",
+            "text": "Dashes to an enemy, claws them in a quick flurry and flashes back to where she started. She takes much less damage and can’t be crowd-controlled during it."
+          },
+          {
+            "name": "Cat’s Cradle",
+            "kind": "ability",
+            "text": "A lunging dash that slices enemies in her path."
+          },
+          {
+            "name": "Gilded Deal",
+            "kind": "ability",
+            "text": "Spends Fortune on stolen relics, such as a gamble for more Fortune, a few seconds of invisibility with a speed boost (enemies can still spot her trail) or a cleanse of crowd control."
+          },
+          {
+            "name": "Sticky Paws",
+            "kind": "passive",
+            "text": "Her hits steal Fortune. She loses half of it when knocked out."
+          },
+          {
+            "name": "Malkin Misfortune",
+            "kind": "passive",
+            "text": "Her hits jinx enemies. Jinxed enemies sometimes lose the bonus damage of their critical hits on her."
+          },
+          {
+            "name": "Thieving Grace",
+            "kind": "passive",
+            "text": "Double jump, and she can climb walls."
+          },
+          {
+            "name": "Calling Card",
+            "kind": "ultimate",
+            "text": "Marks every enemy, then for a while dashes to any enemy in sight and range to claw them. Knockouts extend it."
+          }
+        ]
       }
     },
     {
@@ -1683,7 +3088,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "kit",
-          "reason": "Webs and mines stall his flanks."
+          "reason": "Mines and drones stall his flanks."
         },
         "duelist": {
           "hero": "hela",
@@ -1695,6 +3100,36 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Element Guns",
+            "kind": "attack",
+            "text": "Fast-firing twin pistols that lose damage at range."
+          },
+          {
+            "name": "Stellar Shift",
+            "kind": "ability",
+            "text": "A quick dodge that reloads his guns. He can’t be hurt or crowd-controlled during it."
+          },
+          {
+            "name": "Rocket Propulsion",
+            "kind": "ability",
+            "text": "Jet boots: flies forward with a speed boost."
+          },
+          {
+            "name": "Blaster Barrage",
+            "kind": "ability",
+            "text": "Fires a frenzy of shots at every enemy around him. Best up close."
+          },
+          {
+            "name": "Galactic Legend",
+            "kind": "ultimate",
+            "text": "Flies freely while his guns lock onto enemies in sight automatically."
+          }
+        ]
       }
     },
     {
@@ -1710,7 +3145,7 @@
       },
       "banRisk": "low",
       "consoleShift": -1,
-      "platformNote": "Hitscan sniper: noticeably weaker on controller.",
+      "platformNote": "Aim-heavy rifle: noticeably weaker on controller.",
       "patchNote": "Nerfed this season.",
       "styles": [
         "long-range"
@@ -1729,13 +3164,53 @@
         "duelist": {
           "hero": "spider-man",
           "confidence": "kit",
-          "reason": "Dives the sniper before they can line up shots."
+          "reason": "Gets on top of her before her rifle can wear your team down."
         },
         "strategist": {
           "hero": "invisible-woman",
           "confidence": "data",
           "reason": "Shields block the shots; knockback breaks the angle."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Red Room Rifle",
+            "kind": "attack",
+            "text": "A fast-firing rifle without a scope."
+          },
+          {
+            "name": "Electric Batons",
+            "kind": "attack",
+            "text": "Close-range electric baton strikes."
+          },
+          {
+            "name": "Electro-Plasma Blast",
+            "kind": "ability",
+            "text": "Fires a plasma round that explodes on impact and slows enemies."
+          },
+          {
+            "name": "Fleet Foot",
+            "kind": "ability",
+            "text": "Dashes forward and readies a powerful jump."
+          },
+          {
+            "name": "Widow’s Bite Slam",
+            "kind": "ability",
+            "text": "Leaps to a spot and slams the ground, damaging enemies nearby."
+          },
+          {
+            "name": "Edge Dancer",
+            "kind": "ability",
+            "text": "A spinning kick that launches enemies up. If it lands, she can zip to the target with her grappling hook for a second kick."
+          },
+          {
+            "name": "Assassin’s Focus",
+            "kind": "ultimate",
+            "text": "Switches her rifle to a sniper mode for a while: up to six piercing shots that hit harder."
+          }
+        ]
       }
     },
     {
@@ -1776,6 +3251,51 @@
           "confidence": "kit",
           "reason": "Shields block his arrows."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Piercing Arrow",
+            "kind": "attack",
+            "text": "Charged bow shots with a long range."
+          },
+          {
+            "name": "Blast Arrow",
+            "kind": "ability",
+            "text": "Fires three explosive arrows at once."
+          },
+          {
+            "name": "Hypersonic Arrow",
+            "kind": "ability",
+            "text": "An arrow that hits enemies in its path twice and slows them. Knocks flying heroes down."
+          },
+          {
+            "name": "Crescent Slash",
+            "kind": "ability",
+            "text": "A katana slash that launches enemies up."
+          },
+          {
+            "name": "Ronin Slash",
+            "kind": "ability",
+            "text": "A sword swing that deflects incoming projectiles from the front while it lasts."
+          },
+          {
+            "name": "Skyward Leap",
+            "kind": "ability",
+            "text": "A double jump in the direction he is moving."
+          },
+          {
+            "name": "Archer’s Focus",
+            "kind": "passive",
+            "text": "Keeping his aim on enemies builds focus, which makes Piercing Arrow hit harder."
+          },
+          {
+            "name": "Hunter’s Sight",
+            "kind": "ultimate",
+            "text": "Captures afterimages of the enemies in view. Damage dealt to an afterimage passes to that enemy."
+          }
+        ]
       }
     },
     {
@@ -1817,6 +3337,41 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Trident of Neptune",
+            "kind": "attack",
+            "text": "Throws his trident. Hits shorten Aquatic Dominion’s cooldown, and critical hits send his Monstro Spawns into a faster frenzy."
+          },
+          {
+            "name": "Wrath of the Seven Seas",
+            "kind": "ability",
+            "text": "Hurls the trident to damage enemies around the impact and sends all his Monstro Spawns after the enemy it hit."
+          },
+          {
+            "name": "Aquatic Dominion",
+            "kind": "ability",
+            "text": "Places a Monstro Spawn, a small turret that attacks enemies on its own."
+          },
+          {
+            "name": "Blessing of the Deep",
+            "kind": "ability",
+            "text": "Rises into the air inside a protective water barrier."
+          },
+          {
+            "name": "Tide Fall",
+            "kind": "passive",
+            "text": "Can fall slowly."
+          },
+          {
+            "name": "Horn of Proteus",
+            "kind": "ultimate",
+            "text": "Summons the giant Giganto to slam down on enemies in range, damaging them and stopping them from using movement abilities."
+          }
+        ]
       }
     },
     {
@@ -1855,6 +3410,51 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Crescent Dart",
+            "kind": "attack",
+            "text": "Throws darts that bounce between enemies and Ankhs."
+          },
+          {
+            "name": "Moon Blade",
+            "kind": "ability",
+            "text": "Throws a blade that bounces between enemies and Ankhs, giving him bonus health for each enemy hit. Two charges."
+          },
+          {
+            "name": "Ancient Ankh",
+            "kind": "ability",
+            "text": "Fires an Ankh that pulls nearby enemies toward its center, knocking them up. His darts and blades bounce off it to hit more enemies."
+          },
+          {
+            "name": "Moonlight Hook",
+            "kind": "ability",
+            "text": "A grappling hook that pulls him to where it lands."
+          },
+          {
+            "name": "Triple Eclipse",
+            "kind": "ability",
+            "text": "A three-strike truncheon combo. The third strike lightly knocks enemies up."
+          },
+          {
+            "name": "Night Glider",
+            "kind": "passive",
+            "text": "Glides through the air."
+          },
+          {
+            "name": "Rising Leap",
+            "kind": "passive",
+            "text": "Double jump."
+          },
+          {
+            "name": "Hand of Khonshu",
+            "kind": "ultimate",
+            "text": "Opens a portal from which Khonshu rains talons on an area, hitting hardest at the center."
+          }
+        ]
       }
     },
     {
@@ -1893,6 +3493,46 @@
           "confidence": "data",
           "reason": "Shields block the shots; knockback breaks the angle."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Adjudication",
+            "kind": "attack",
+            "text": "An automatic rifle for mid to long range."
+          },
+          {
+            "name": "Deliverance",
+            "kind": "attack",
+            "text": "A shotgun for close range. He swaps between it and the rifle."
+          },
+          {
+            "name": "Scourge Grenade",
+            "kind": "ability",
+            "text": "Throws a smoke grenade that blocks enemy vision while he leaps backward."
+          },
+          {
+            "name": "Vantage Connection",
+            "kind": "ability",
+            "text": "Fires a hook that sets up a zip line for fast movement."
+          },
+          {
+            "name": "Culling Turret",
+            "kind": "ability",
+            "text": "Mounts a turret that blocks damage from the front and deals heavy damage, but keeps him in place."
+          },
+          {
+            "name": "Warrior’s Gaze",
+            "kind": "passive",
+            "text": "Keeps seeing enemies for a short time after they leave his view."
+          },
+          {
+            "name": "Final Judgement",
+            "kind": "ultimate",
+            "text": "Unleashes two gatling guns and a missile barrage."
+          }
+        ]
       }
     },
     {
@@ -1936,6 +3576,66 @@
           "confidence": "kit",
           "reason": "Mobile healer who keeps your team up through the pressure."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Dual Desert Eagles",
+            "kind": "attack",
+            "text": "Rapid pistol fire, stronger than his other versions, that loses damage at range."
+          },
+          {
+            "name": "Kick@$$ Katana",
+            "kind": "attack",
+            "text": "A three-hit sword combo with high damage per hit. He swaps between guns and katanas, and each set changes his other moves."
+          },
+          {
+            "name": "Headshot!",
+            "kind": "ability",
+            "text": "With guns: throws his own head like a boomerang, hitting enemies on the way out and back and leaving a small damaging zone."
+          },
+          {
+            "name": "Hazardous Hijinks",
+            "kind": "ability",
+            "text": "With katanas: a dashing slash that can be repeated when it hits an enemy."
+          },
+          {
+            "name": "Deadpool In Your Area",
+            "kind": "ability",
+            "text": "Taunts nearby enemies so they have to attack him, blurs their vision and damages them over time, while he takes less damage."
+          },
+          {
+            "name": "Bunny Hop",
+            "kind": "ability",
+            "text": "A midair double jump. Landing on an enemy damages them and gives him bonus health; head stomps and wall jumps reset it."
+          },
+          {
+            "name": "Upgrade!",
+            "kind": "ability",
+            "text": "Earns XP in combat. When the bar fills, he picks one ability to upgrade into a stronger version."
+          },
+          {
+            "name": "Healing Factor",
+            "kind": "passive",
+            "text": "Regenerates health after a few seconds out of combat. A burst of heavy damage triggers a stronger emergency regeneration, which then has a long cooldown."
+          },
+          {
+            "name": "Maximum Flair",
+            "kind": "passive",
+            "text": "Instead of charging normally, landing abilities raises his Style Rating; at S rank he can use his ultimate. Being knocked out resets it."
+          },
+          {
+            "name": "Skill Issue",
+            "kind": "ultimate",
+            "text": "With guns: taunts one chosen enemy. Every ability they miss while it lasts damages them."
+          },
+          {
+            "name": "Pop Quiz!",
+            "kind": "ultimate",
+            "text": "With katanas: a timed challenge that gives him speed and self-healing right away, roughly doubled if he completes it."
+          }
+        ]
       }
     },
     {
@@ -1974,6 +3674,46 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Optic Blast",
+            "kind": "attack",
+            "text": "Bursts of kinetic force. Hits charge Ricochet Force faster."
+          },
+          {
+            "name": "Concussive Beam",
+            "kind": "attack",
+            "text": "A continuous beam that bounces between enemies and walls. Hits charge Ricochet Force faster."
+          },
+          {
+            "name": "Ricochet Force",
+            "kind": "ability",
+            "text": "Fires a beam that splits off terrain and tracks nearby enemies. Gives him bonus health."
+          },
+          {
+            "name": "Propulsion Burst",
+            "kind": "ability",
+            "text": "A beam that pushes him and the target apart, slowing the target."
+          },
+          {
+            "name": "Optic Ascent",
+            "kind": "ability",
+            "text": "Fires a beam downward to launch himself up, knocking back and slowing enemies hit."
+          },
+          {
+            "name": "Kinetic Hover",
+            "kind": "passive",
+            "text": "Falls slowly while firing Concussive Beam in the air."
+          },
+          {
+            "name": "Ruby Rage",
+            "kind": "ultimate",
+            "text": "Takes off his visor and fires a huge sweeping beam that destroys barriers, leaving energy that erupts in a second explosion."
+          }
+        ]
       }
     },
     {
@@ -2012,6 +3752,36 @@
           "confidence": "data",
           "reason": "Airborne and hard to hit with her bouncing shots."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Burst Acorn",
+            "kind": "attack",
+            "text": "Throws acorns that bounce and explode."
+          },
+          {
+            "name": "Squirrel Blockade",
+            "kind": "ability",
+            "text": "Launches an acorn that summons squirrel guards around the first enemy hit, trapping them in place."
+          },
+          {
+            "name": "Tail Bounce",
+            "kind": "ability",
+            "text": "Bounces high into the air on her tail."
+          },
+          {
+            "name": "Mammal Bond",
+            "kind": "ability",
+            "text": "Reloads her acorns and, for a short time, lets her use one ability without waiting for its cooldown."
+          },
+          {
+            "name": "Unbeatable Squirrel Tsunami",
+            "kind": "ultimate",
+            "text": "Sends a horde of squirrels charging forward. They bounce off walls toward the nearest enemies."
+          }
+        ]
       }
     },
     {
@@ -2035,7 +3805,7 @@
         "vanguard": {
           "hero": "peni-parker",
           "confidence": "kit",
-          "reason": "Webs and mines hold space against her pressure."
+          "reason": "Mines and drones hold space against her pressure."
         },
         "duelist": {
           "hero": "spider-man",
@@ -2047,6 +3817,36 @@
           "confidence": "data",
           "reason": "Wins this matchup consistently in public data."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Cosmic Flames",
+            "kind": "attack",
+            "text": "Fiery projectiles that put Sparks on enemies (two on a critical hit). At three Sparks they explode, adding a Spark and healing her over time."
+          },
+          {
+            "name": "Psionic Detonation",
+            "kind": "ability",
+            "text": "Marks an area: the first blast stuns enemies and two more slow them. Each blast adds a Spark."
+          },
+          {
+            "name": "Telepathic Illusion",
+            "kind": "ability",
+            "text": "Leaves an illusion behind and teleports, then the illusion explodes, adding a Spark to enemies hit."
+          },
+          {
+            "name": "Dark Ascent",
+            "kind": "ability",
+            "text": "Merges with the Phoenix force to fly freely with a speed boost."
+          },
+          {
+            "name": "Endsong Inferno",
+            "kind": "ultimate",
+            "text": "Soars up and crashes down on an area, destroying summons and shields. The shockwave adds a Spark to enemies hit."
+          }
+        ]
       }
     },
     {
@@ -2090,25 +3890,65 @@
           "If a teammate gets slept, shoot the Mantis illusion that appears near them to wake them early.",
           "Keep up steady pressure. Her heals and buffs spend Life Orbs, which refill more slowly since Season 10.",
           "During her ultimate, back off and re-engage when it ends, or take out Mantis herself.",
-          "If Adam Warlock is on her team, a kill may not stick. Their team-up turns her into a soul that can fly and revive."
+          "If she runs her Vitality Pact team-up, a kill may not stick: she lingers as a soul that heals her team and can reform her body."
         ],
         "as": [
           "Land critical hits for extra Life Orbs. It matters more now that orbs refill more slowly.",
           "Before fights, put Healing Flower on your frontline and Allied Inspiration on your best damage dealer.",
           "Save your sleep for divers like Black Panther. Any damage wakes them, so reposition or line up one big hit.",
           "Stay behind your tanks. Apart from your speed boost, you have no escape.",
-          "Adam Warlock is your stronger team-up partner now. Star-Lord’s team-up got weaker in Season 10."
+          "Adam Warlock is your better team-up partner now. Star Blossom, the Star-Lord team-up, lost healing in Season 10."
         ],
         "quirks": [
           {
             "text": "Guides that say she makes a Life Orb every 3 seconds are out of date. Since Season 10 it’s every 4.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "A top healer who also boosts her team’s damage. Easy to kill once her sleep is baited out."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Life Energy Blast",
+            "kind": "attack",
+            "text": "Energy thorns. Critical hits give back a Life Orb."
+          },
+          {
+            "name": "Healing Flower",
+            "kind": "ability",
+            "text": "Spends Life Orbs to heal an ally over time. Recasting adds to the duration."
+          },
+          {
+            "name": "Allied Inspiration",
+            "kind": "ability",
+            "text": "Spends Life Orbs to give an ally a damage and speed boost."
+          },
+          {
+            "name": "Natural Anger",
+            "kind": "ability",
+            "text": "Spends Life Orbs to boost her own damage."
+          },
+          {
+            "name": "Spore Slumber",
+            "kind": "ability",
+            "text": "Throws a spore that puts the nearest enemy to sleep."
+          },
+          {
+            "name": "Nature’s Favor",
+            "kind": "passive",
+            "text": "Moves faster while she isn’t taking damage, and heals over time when she spends Life Orbs."
+          },
+          {
+            "name": "Soul Resurgence",
+            "kind": "ultimate",
+            "text": "Releases healing energy as she moves, healing allies around her over time and speeding them up. Extra healing becomes bonus health."
+          }
+        ]
       }
     },
     {
@@ -2135,7 +3975,7 @@
         "vanguard": {
           "hero": "thor",
           "confidence": "kit",
-          "reason": "Mobile enough to chase flyers."
+          "reason": "Lightning Realm grounds flyers who try to leave it, and his dash chases them."
         },
         "duelist": {
           "hero": "spider-man",
@@ -2166,13 +4006,43 @@
         "quirks": [
           {
             "text": "Older guides say he can’t heal himself. Since Season 10, Firewall also heals him for a few seconds.",
-            "asOf": "2026-09-24"
+            "asOf": "2026-10-01"
           }
         ]
       },
       "focus": {
         "level": "high",
         "why": "Top-tier healing from the air. Hitscan and flyers should focus him, and everyone else should pressure whoever he’s healing."
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Encephalo-Ray",
+            "kind": "attack",
+            "text": "A continuous burning energy beam."
+          },
+          {
+            "name": "Imperative: Patch",
+            "kind": "ability",
+            "text": "Sends up to two healing drones to follow allies, healing everyone around them and the chosen ally most."
+          },
+          {
+            "name": "Imperative: Firewall",
+            "kind": "ability",
+            "text": "Gives himself and nearby allies bonus health, then heals him for a few seconds."
+          },
+          {
+            "name": "Dynamic Flight",
+            "kind": "ability",
+            "text": "Flies quickly in the direction he is moving, then keeps a speed boost."
+          },
+          {
+            "name": "Rage of Ultron",
+            "kind": "ultimate",
+            "text": "Summons drones that rain Encephalo-Rays around his target, damaging enemies or healing allies. Extra damage against bonus health."
+          }
+        ]
       }
     },
     {
@@ -2208,6 +4078,46 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Bombard Mode",
+            "kind": "attack",
+            "text": "Fires energy projectiles at enemies."
+          },
+          {
+            "name": "Repair Mode",
+            "kind": "attack",
+            "text": "Fires bouncing spheres that heal allies around them. Direct hits heal more."
+          },
+          {
+            "name": "Jetpack Dash",
+            "kind": "ability",
+            "text": "Dashes forward with his jetpack."
+          },
+          {
+            "name": "B.R.B.",
+            "kind": "ability",
+            "text": "Places a Battle Rebirth Beacon that brings a fallen ally back and drops armor packs and rocket jet packs for the team."
+          },
+          {
+            "name": "Wild Crawl",
+            "kind": "passive",
+            "text": "Runs on walls."
+          },
+          {
+            "name": "Flying Ace",
+            "kind": "passive",
+            "text": "Can fall slowly."
+          },
+          {
+            "name": "C.Y.A.",
+            "kind": "ultimate",
+            "text": "Deploys an amplifier that links to nearby allies, boosting their damage and giving them bonus health."
+          }
+        ]
       }
     },
     {
@@ -2243,6 +4153,41 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Energy Plasmoids",
+            "kind": "attack",
+            "text": "Exploding light blasts that damage enemies and heal allies."
+          },
+          {
+            "name": "Blooming Ball",
+            "kind": "ability",
+            "text": "Launches a homing orb that damages enemies and heals allies near it. Hitting it with her shots charges it, making it bigger and stronger."
+          },
+          {
+            "name": "Dazzling Detonation",
+            "kind": "ability",
+            "text": "Sets off a firework orb that blinds enemies and makes them take more damage. She can send its energy to an ally instead, to heal and speed them up."
+          },
+          {
+            "name": "Sparking Sprint",
+            "kind": "ability",
+            "text": "A speed boost with higher jumps and faster plasmoid fire that costs no energy. When it ends, a burst knocks back enemies and heals allies."
+          },
+          {
+            "name": "Sparkle Mark",
+            "kind": "passive",
+            "text": "Dazzling Detonation and Firework Finale mark enemies. Her plasmoids set the marks off, damaging enemies and giving allies a healing boost and bonus health."
+          },
+          {
+            "name": "Firework Finale",
+            "kind": "ultimate",
+            "text": "Charges a huge ring of fireworks that launches nearby enemies, then leaves a field of circling fireworks that damages enemies and heals allies."
+          }
+        ]
       }
     },
     {
@@ -2279,6 +4224,46 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Kinetic Cards",
+            "kind": "attack",
+            "text": "Throws three charged cards in an arc. Each explodes on impact, damaging an enemy or healing an ally."
+          },
+          {
+            "name": "Bayou Bash",
+            "kind": "ability",
+            "text": "A staff strike and slam whose shockwave damages enemies and heals allies nearby. Two charges."
+          },
+          {
+            "name": "Cajun Charge",
+            "kind": "ability",
+            "text": "A short dash with his staff. Attacking during it turns it into Big Easy Impact, a sprint that sets off three kinetic explosions that heal and damage."
+          },
+          {
+            "name": "Healing Hearts",
+            "kind": "ability",
+            "text": "Spends a card stack to heal himself and switch to his healing deck for a few seconds: cards that bounce between allies to heal them, or exploding cards that heal and cleanse."
+          },
+          {
+            "name": "Breaking Spades",
+            "kind": "ability",
+            "text": "Spends a card stack to boost his damage and switch to his attack deck for a few seconds: exploding cards that cut enemy healing, or a spread that launches enemies up."
+          },
+          {
+            "name": "Sleight of Hand",
+            "kind": "passive",
+            "text": "Card stacks that recharge over time. His two decks spend them."
+          },
+          {
+            "name": "Ragin’ Royal Flush",
+            "kind": "ultimate",
+            "text": "Locks onto an ally and throws Aces that heal and cleanse them both. Both move and jump faster and deal extra explosive damage, and the ally’s ultimate charges faster."
+          }
+        ]
       }
     },
     {
@@ -2315,6 +4300,46 @@
           "confidence": "kit",
           "reason": "Sleep takes them out of the fight at key moments."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Mystical Missile",
+            "kind": "attack",
+            "text": "Magic projectiles that damage enemies or heal allies. Direct hits on allies heal extra."
+          },
+          {
+            "name": "Regeneration Domain",
+            "kind": "ability",
+            "text": "Creates a field that heals allies over time and turns part of the damage they take into more healing."
+          },
+          {
+            "name": "Doppelganger",
+            "kind": "ability",
+            "text": "Places an illusion of himself that copies some of his abilities, including his healing shots."
+          },
+          {
+            "name": "Devious Exchange",
+            "kind": "ability",
+            "text": "Swaps places with one of his illusions."
+          },
+          {
+            "name": "Deception",
+            "kind": "ability",
+            "text": "Turns invisible and leaves an illusion behind to fool enemies."
+          },
+          {
+            "name": "Backstab",
+            "kind": "ability",
+            "text": "Pulls a dagger for a strike that deals extra damage from behind."
+          },
+          {
+            "name": "God of Mischief",
+            "kind": "ultimate",
+            "text": "Transforms into a chosen ally or enemy hero and can use all of their abilities except team-ups."
+          }
+        ]
       }
     },
     {
@@ -2351,6 +4376,51 @@
           "confidence": "kit",
           "reason": "Sleep takes them out of the fight at key moments."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Lightforce Dagger",
+            "kind": "attack",
+            "text": "As Dagger: bouncing light daggers that damage enemies and heal nearby allies."
+          },
+          {
+            "name": "Dagger Storm",
+            "kind": "ability",
+            "text": "As Dagger: throws daggers that create a healing field, with an instant heal for allies inside when it lands."
+          },
+          {
+            "name": "Veil of Lightforce",
+            "kind": "ability",
+            "text": "As Dagger: sends out a veil of light that heals allies it touches and boosts their healing. Shares two charges with Terror Cape."
+          },
+          {
+            "name": "Darkforce Cloak",
+            "kind": "attack",
+            "text": "As Cloak: a continuous beam that damages one enemy."
+          },
+          {
+            "name": "Terror Cape",
+            "kind": "ability",
+            "text": "As Cloak: sends out a veil of darkness that damages enemies, blinds them and makes them take more damage."
+          },
+          {
+            "name": "Dark Teleportation",
+            "kind": "ability",
+            "text": "As Cloak: wraps nearby allies in darkness, making them invisible and untargetable for a short time."
+          },
+          {
+            "name": "Shadow’s Embrace / Light’s Embrace",
+            "kind": "ability",
+            "text": "Swaps between Cloak and Dagger."
+          },
+          {
+            "name": "Eternal Bond",
+            "kind": "ultimate",
+            "text": "Four quick dashes that heal allies and damage enemies along the path, leaving healing zones behind."
+          }
+        ]
       }
     },
     {
@@ -2386,6 +4456,41 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Quantum Magic",
+            "kind": "attack",
+            "text": "Quantum energy shots. Critical hits shorten Avatar Life Stream’s cooldown."
+          },
+          {
+            "name": "Cosmic Cluster",
+            "kind": "ability",
+            "text": "Charges up and launches a cluster of quantum energy. Each hit shortens Avatar Life Stream’s cooldown."
+          },
+          {
+            "name": "Soul Bond",
+            "kind": "ability",
+            "text": "Links nearby allies: they heal over time and share incoming damage across the bond. He can hover and attack while it lasts."
+          },
+          {
+            "name": "Avatar Life Stream",
+            "kind": "ability",
+            "text": "A healing stream that bounces from his target to other allies and back to him."
+          },
+          {
+            "name": "Soaring Surge",
+            "kind": "ability",
+            "text": "Flies forward quickly."
+          },
+          {
+            "name": "Karmic Revival",
+            "kind": "ultimate",
+            "text": "Revives knocked-out allies nearby with part of their health, extra bonus health and a moment of invulnerability."
+          }
+        ]
       }
     },
     {
@@ -2422,6 +4527,51 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Orb Projection",
+            "kind": "attack",
+            "text": "Fires a force orb that passes through heroes, damaging enemies and healing allies, then flies back to her."
+          },
+          {
+            "name": "Guardian Shield",
+            "kind": "ability",
+            "text": "Puts a shield on an ally or herself that blocks damage, heals allies near it and slows enemies passing through."
+          },
+          {
+            "name": "Force Physics",
+            "kind": "ability",
+            "text": "Pushes or pulls enemies in front of her."
+          },
+          {
+            "name": "Psionic Vortex",
+            "kind": "ability",
+            "text": "Throws a ball of psionic energy that erupts into a vortex, pulling enemies in and damaging them."
+          },
+          {
+            "name": "Agile Strike",
+            "kind": "ability",
+            "text": "A three-hit combo. The third hit launches enemies in front of her."
+          },
+          {
+            "name": "Veiled Step",
+            "kind": "ability",
+            "text": "Launches herself off a force field into invisibility. For the first moment, damage can’t break it."
+          },
+          {
+            "name": "Covert Advance",
+            "kind": "passive",
+            "text": "Turns invisible after leaving combat and heals over time."
+          },
+          {
+            "name": "Invisible Boundary",
+            "kind": "ultimate",
+            "text": "Creates a force field over an area. Allies inside are hidden from enemies and heal over time, and enemies inside are slowed."
+          }
+        ]
       }
     },
     {
@@ -2460,6 +4610,61 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Yeowoo Guseul",
+            "kind": "attack",
+            "text": "Fox marbles that bounce off walls and heroes, then home in on nearby targets. They damage enemies, heal allies and restore her Spirit Tail energy."
+          },
+          {
+            "name": "Spectral Surge",
+            "kind": "ability",
+            "text": "Spends a Spirit Tail to send a spectral fox forward that heals allies and makes them briefly invulnerable, and damages and charms enemies. Heals her too."
+          },
+          {
+            "name": "Spirit Sanctuary",
+            "kind": "ability",
+            "text": "Teleports to an ally, healing everyone nearby, and leaves a shield that heals over time."
+          },
+          {
+            "name": "Fox Form Awakening",
+            "kind": "ability",
+            "text": "Grows physical tails for a while, draining Spirit Tail energy: she heals nearby allies constantly (more when she hits enemies) and switches to close-range moves."
+          },
+          {
+            "name": "Claw Strike",
+            "kind": "attack",
+            "text": "While awakened: a flurry of claw slashes."
+          },
+          {
+            "name": "Tail Sweep",
+            "kind": "ability",
+            "text": "While awakened: sweeps her tails to launch enemies up."
+          },
+          {
+            "name": "Predatory Pounce",
+            "kind": "ability",
+            "text": "While awakened: a dash. Hitting an enemy slows them and allows a second, longer dash that knocks enemies back."
+          },
+          {
+            "name": "Kumiho Unleashed",
+            "kind": "ultimate",
+            "text": "Becomes the full Nine-Tailed Fox with a large separate health pool, healing allies around her constantly, though others can’t heal her. Allies nearby are blessed when it starts."
+          },
+          {
+            "name": "Ninefold Slam",
+            "kind": "attack",
+            "text": "As the Nine-Tailed Fox: a ground slam whose shockwave heals her and nearby allies when it hits."
+          },
+          {
+            "name": "Blessed by the Nine",
+            "kind": "ability",
+            "text": "As the Nine-Tailed Fox: gives an ally healing over time, lifesteal and immunity to crowd control for a short time."
+          }
+        ]
       }
     },
     {
@@ -2495,6 +4700,51 @@
           "confidence": "kit",
           "reason": "Flies out of reach and out-pokes them."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Light & Dark Ice",
+            "kind": "attack",
+            "text": "Ice shots that damage enemies or heal allies."
+          },
+          {
+            "name": "Absolute Zero",
+            "kind": "ability",
+            "text": "Throws ice that freezes the enemy hit in place and heals her. A hit gives her bonus health."
+          },
+          {
+            "name": "Ice Arts",
+            "kind": "ability",
+            "text": "Fires a burst of ice shards for a few seconds that damage enemies or heal allies, healing her too. Knockouts shorten its cooldown."
+          },
+          {
+            "name": "Share the Stage",
+            "kind": "ability",
+            "text": "Attaches Idol Aura to an ally, who heals whenever she heals others."
+          },
+          {
+            "name": "Number One Idol",
+            "kind": "passive",
+            "text": "Boosts her healing, and healing others heals her too."
+          },
+          {
+            "name": "Cryo Heart",
+            "kind": "passive",
+            "text": "Heals her when she casts Ice Arts or Absolute Zero."
+          },
+          {
+            "name": "Smooth Skate",
+            "kind": "passive",
+            "text": "Skates when moving forward and jumps higher."
+          },
+          {
+            "name": "Fate of Both Worlds",
+            "kind": "ultimate",
+            "text": "Dances on the spot, switching between two performances: one heals allies around her, the other boosts their damage."
+          }
+        ]
       }
     },
     {
@@ -2532,6 +4782,66 @@
           "confidence": "kit",
           "reason": "Sleep takes them out of the fight at key moments."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Dual Desert Eagles",
+            "kind": "attack",
+            "text": "Pistol shots that damage enemies and heal allies they hit."
+          },
+          {
+            "name": "Kick@$$ Katana",
+            "kind": "attack",
+            "text": "A three-hit sword combo whose hits also heal allies in a small area. He swaps between guns and katanas, and each set changes his other moves."
+          },
+          {
+            "name": "Bouncing Bobblehead",
+            "kind": "ability",
+            "text": "With guns: throws a bobblehead that damages enemies and heals allies on the way out and back, leaving a healing field."
+          },
+          {
+            "name": "Healing Hijinks",
+            "kind": "ability",
+            "text": "With katanas: a dashing slash with two charges that damages enemies and heals allies along the way."
+          },
+          {
+            "name": "Deadpool In Your Area",
+            "kind": "ability",
+            "text": "Taunts nearby enemies so they have to attack him, blurs their vision and burns them, while healing allies nearby and powering up his weapons."
+          },
+          {
+            "name": "Healing Hop",
+            "kind": "ability",
+            "text": "A midair double jump. Stomping enemies damages them and heals allies, and hits reset it."
+          },
+          {
+            "name": "Upgrade!",
+            "kind": "ability",
+            "text": "Earns XP in combat. When the bar fills, he picks one ability to upgrade into a stronger version."
+          },
+          {
+            "name": "Healing Factor",
+            "kind": "passive",
+            "text": "Regenerates health after a few seconds out of combat. A burst of heavy damage triggers a stronger emergency regeneration, which then has a long cooldown."
+          },
+          {
+            "name": "Maximum Flair",
+            "kind": "passive",
+            "text": "Instead of charging normally, landing abilities raises his Style Rating; at S rank he can use his ultimate. Being knocked out resets it."
+          },
+          {
+            "name": "Pwnage Pound",
+            "kind": "ultimate",
+            "text": "With guns: taunts one chosen enemy and heals allies around him. Each ability the target misses damages them and heals his team more."
+          },
+          {
+            "name": "Final Exam",
+            "kind": "ultimate",
+            "text": "With katanas: a timed challenge that heals allies around him. Completing it raises the healing."
+          }
+        ]
       }
     },
     {
@@ -2568,6 +4878,41 @@
           "confidence": "kit",
           "reason": "Sleep takes them out of the fight at key moments."
         }
+      },
+      "kit": {
+        "checked": "2026-10-01",
+        "abilities": [
+          {
+            "name": "Joyful Splash",
+            "kind": "attack",
+            "text": "A water spray that damages enemies and heals allies."
+          },
+          {
+            "name": "Aqua Burst",
+            "kind": "ability",
+            "text": "A fast water sphere that bursts on impact. Direct hits launch enemies up."
+          },
+          {
+            "name": "Healing Bubble",
+            "kind": "ability",
+            "text": "Spits bubbles that heal the ally who picks them up and speed them up."
+          },
+          {
+            "name": "Hide and Seek",
+            "kind": "ability",
+            "text": "Dives under the ground with just his fin showing, moving faster, healing himself and able to climb walls."
+          },
+          {
+            "name": "Oblivious Cuteness",
+            "kind": "passive",
+            "text": "Takes less damage from critical hits."
+          },
+          {
+            "name": "It’s Jeff!",
+            "kind": "ultimate",
+            "text": "Dives deep, leaving a healing pool for allies, then surfaces to swallow every enemy and ally in range and spits them out a short way ahead."
+          }
+        ]
       }
     }
   ],
@@ -2873,7 +5218,7 @@
           "black-widow",
           "spider-man"
         ],
-        "why": "Black Widow’s hitscan punishes flyers (less reliable on controller), and Spider-Man swings up to reach Ultron and other airborne heroes."
+        "why": "Black Widow’s rifle punishes flyers (less reliable on controller), and Spider-Man swings up to reach Ultron and other airborne heroes."
       }
     },
     {
@@ -3127,186 +5472,1048 @@
   ],
   "teamUps": [
     {
-      "name": "Voltaic Union",
+      "name": "Vibranium Mech",
       "heroes": [
-        "captain-america",
-        "thor"
-      ]
+        "peni-parker",
+        "black-panther"
+      ],
+      "effect": "Puts a vibranium shield in front of her mech and speeds up Cyber-Web Cluster.",
+      "bonus": "The shield is bigger and lasts longer."
     },
     {
-      "name": "Stars Aligned",
+      "name": "Rocket Network",
       "heroes": [
-        "captain-america",
-        "winter-soldier"
-      ]
-    },
-    {
-      "name": "Bloodline Awakening",
-      "heroes": [
-        "blade",
-        "captain-america"
-      ]
+        "peni-parker",
+        "rocket-raccoon"
+      ],
+      "effect": "Places an armored nest that drops spider-drones and armor packs that give bonus health.",
+      "bonus": "The nest repairs itself, and Rocket’s B.R.B. also spreads webs, drones and mines."
     },
     {
       "name": "Primal Punishment",
       "heroes": [
         "devil-dinosaur",
         "the-punisher"
-      ]
+      ],
+      "effect": "Primal Bite becomes two magnetic cannons firing cannonballs that explode and cause bleeding.",
+      "bonus": "The Punisher can ride on his back, sharing the damage."
     },
     {
-      "name": "Smoky Snare",
+      "name": "Surf & Turf",
       "heroes": [
-        "elsa-bloodstone",
-        "devil-dinosaur"
-      ]
+        "devil-dinosaur",
+        "jeff-the-land-shark"
+      ],
+      "effect": "Impact Beam becomes a water spray that damages enemies and heals allies.",
+      "bonus": "Jeff can ride on his head; both take less damage and heal over time."
     },
     {
-      "name": "Gamma Maelstrom",
+      "name": "Chaos Collision",
       "heroes": [
-        "doctor-strange",
-        "hulk"
-      ]
-    },
-    {
-      "name": "Gamma Monstro",
-      "heroes": [
-        "namor",
-        "hulk"
-      ]
-    },
-    {
-      "name": "Metallic Chaos",
-      "heroes": [
-        "magneto",
+        "the-hood",
         "scarlet-witch"
-      ]
-    },
-    {
-      "name": "Favorable Odds",
-      "heroes": [
-        "gambit",
-        "magneto"
-      ]
-    },
-    {
-      "name": "Vibranium Mech",
-      "heroes": [
-        "peni-parker",
-        "black-panther"
-      ]
-    },
-    {
-      "name": "Parker Power-Up",
-      "heroes": [
-        "spider-man",
-        "peni-parker"
-      ]
-    },
-    {
-      "name": "Fortune Synergy",
-      "heroes": [
-        "black-cat",
-        "black-panther"
-      ]
-    },
-    {
-      "name": "Divine Armory",
-      "heroes": [
-        "thor",
-        "angela"
-      ]
-    },
-    {
-      "name": "Two-in-One",
-      "heroes": [
-        "the-thing",
-        "human-torch"
-      ]
-    },
-    {
-      "name": "Clobberin’ Research Dept.",
-      "heroes": [
-        "mister-fantastic",
-        "the-thing"
-      ]
-    },
-    {
-      "name": "Void Pentagram",
-      "heroes": [
-        "magik",
-        "the-hood"
-      ]
+      ],
+      "effect": "Creates an arcane zone that damages enemies and stacks up damage and healing reduction on them. Use it again to teleport to its center.",
+      "bonus": "Teleporting sets off a shockwave that pulls nearby enemies toward him."
     },
     {
       "name": "New Moon’s Shadow",
       "heroes": [
         "the-hood",
         "moon-knight"
-      ]
+      ],
+      "effect": "Abyssal Veil becomes a barrier that blocks projectiles and explodes when broken, cutting enemy damage and healing.",
+      "bonus": "The barrier is tougher, and his shots through it bounce to more enemies."
     },
     {
-      "name": "Frozen Spawn",
+      "name": "Savage Slam",
       "heroes": [
-        "namor",
-        "luna-snow"
-      ]
+        "hulk",
+        "captain-america"
+      ],
+      "effect": "Leaps and smashes the ground. The lower his health, the more it cuts his cooldowns.",
+      "bonus": "The slam also makes enemies take extra damage."
     },
     {
-      "name": "Frozen Haven",
+      "name": "Gamma Fastball",
       "heroes": [
-        "cloak-and-dagger",
-        "luna-snow"
-      ]
+        "hulk",
+        "wolverine"
+      ],
+      "effect": "Enters a furious state with faster movement and attacks, and can turn unstoppable at low health.",
+      "bonus": "Hulk can throw Wolverine at enemies (Fastball Special)."
     },
     {
-      "name": "Ceaseless Charge",
+      "name": "Ragnarok Rebirth",
       "heroes": [
-        "winter-soldier",
-        "elsa-bloodstone"
-      ]
+        "thor",
+        "hela"
+      ],
+      "effect": "Fatal damage gives him a draining pool of bonus health instead. Taking part in a knockout during it brings him back.",
+      "bonus": "A knockout by Thor or Hela revives him at once, with healing over time."
     },
     {
-      "name": "Kinetic Claws",
+      "name": "Divine Armory",
       "heroes": [
-        "wolverine",
-        "cyclops"
-      ]
+        "thor",
+        "angela"
+      ],
+      "effect": "Throws a thunder spear that gives Thorforce for each enemy hit, then lets him leap to where it exploded for a second blast.",
+      "bonus": "The leap also gives him bonus health."
     },
     {
-      "name": "",
+      "name": "Stars Aligned",
       "heroes": [
-        "mantis",
+        "captain-america",
+        "winter-soldier"
+      ],
+      "effect": "Leaps to an ally, giving them bonus health and taking some of the damage aimed at them.",
+      "bonus": "He and Winter Soldier can charge into each other, giving nearby allies bonus health and speed."
+    },
+    {
+      "name": "Voltaic Union",
+      "heroes": [
+        "captain-america",
+        "thor"
+      ],
+      "effect": "Sentinel Strike’s shield throws become lightning shields.",
+      "bonus": "Each lightning shield hit also bursts, damaging enemies around the target."
+    },
+    {
+      "name": "Explosive Entanglement",
+      "heroes": [
+        "rogue",
+        "magneto"
+      ],
+      "effect": "Defensive Stance gets a bigger magnetic field and more damage reduction, and absorbed damage powers Southern Brawl.",
+      "bonus": "Southern Brawl knocks enemies back, with extra damage if they hit a wall."
+    },
+    {
+      "name": "Mr. & Mrs. X",
+      "heroes": [
+        "rogue",
+        "gambit"
+      ],
+      "effect": "Enters a state where every attack sets off a kinetic explosion that damages enemies and heals nearby allies.",
+      "bonus": "The state never ends."
+    },
+    {
+      "name": "Gamma Maelstrom",
+      "heroes": [
+        "doctor-strange",
+        "hulk"
+      ],
+      "effect": "Maelstrom of Madness becomes Gamma Maelstrom: it builds energy much faster and removes the can’t-be-healed curse.",
+      "bonus": "He keeps some energy after releasing it, and stored energy no longer fades."
+    },
+    {
+      "name": "Psionic Vortex",
+      "heroes": [
+        "doctor-strange",
+        "invisible-woman"
+      ],
+      "effect": "Maelstrom of Madness becomes a vortex that pulls enemies toward him and strengthens his shield.",
+      "bonus": "Its damage also gives him bonus health."
+    },
+    {
+      "name": "Metallic Chaos",
+      "heroes": [
+        "magneto",
+        "scarlet-witch"
+      ],
+      "effect": "Swings a giant Chaos Greatsword that damages enemies in front of him.",
+      "bonus": "Mag-Cannon becomes a charged attack that fires greatswords and launches enemies."
+    },
+    {
+      "name": "Magnetic Resonance",
+      "heroes": [
+        "magneto",
+        "emma-frost"
+      ],
+      "effect": "Creates a magnetic copy of himself that mimics his moves and abilities.",
+      "bonus": "The copy gets much more health and lasts until destroyed."
+    },
+    {
+      "name": "Blood Leech",
+      "heroes": [
+        "venom",
+        "blade"
+      ],
+      "effect": "Tethers to enemies and drains their health over time.",
+      "bonus": "Some of his abilities also give him a burst of healing."
+    },
+    {
+      "name": "Abyssal Flames",
+      "heroes": [
+        "venom",
+        "phoenix"
+      ],
+      "effect": "Dark Predation becomes a sweeping flame slash.",
+      "bonus": "Hits stack sparks on enemies, and three stacks detonate."
+    },
+    {
+      "name": "Asgardians of the Galaxy",
+      "heroes": [
+        "angela",
         "star-lord"
-      ]
+      ],
+      "effect": "Reveals enemies in an area, then slams down, grounding the enemies hit.",
+      "bonus": "Gains bonus health for each enemy hit."
     },
     {
-      "name": "",
+      "name": "Odin’s Unacknowledged",
       "heroes": [
-        "mantis",
-        "adam-warlock"
-      ]
+        "angela",
+        "loki"
+      ],
+      "effect": "Sends an illusion of herself out with Assassin’s Charge, carrying enemies it hits.",
+      "bonus": "The ability gets two charges."
     },
     {
-      "name": "",
+      "name": "Two-In-One",
       "heroes": [
-        "scarlet-witch",
-        "jubilee"
-      ]
+        "the-thing",
+        "human-torch"
+      ],
+      "effect": "Flaming fists: Rocky Jab splashes damage and Stone Haymaker explodes.",
+      "bonus": "Human Torch can lift him and slam him down, stunning enemies."
+    },
+    {
+      "name": "Unbreakable Forces",
+      "heroes": [
+        "the-thing",
+        "invisible-woman"
+      ],
+      "effect": "Psionic armor gives him bonus health based on how much health he is missing.",
+      "bonus": "The armor also pulses healing when he takes damage."
+    },
+    {
+      "name": "Iced Out Diamond",
+      "heroes": [
+        "emma-frost",
+        "luna-snow"
+      ],
+      "effect": "Releases icy energy that damages and slows enemies.",
+      "bonus": "Diamond Form moves and Telepathic Pulse also slow enemies."
+    },
+    {
+      "name": "Spirit Breaker",
+      "heroes": [
+        "emma-frost",
+        "mantis"
+      ],
+      "effect": "Damage dealt to a Psychic Spear crystal gives her bonus health.",
+      "bonus": "Shattering a crystal gives bonus health and shortens Psychic Spear’s cooldown."
+    },
+    {
+      "name": "Wild Wall",
+      "heroes": [
+        "groot",
+        "mantis"
+      ],
+      "effect": "Grows a wall that heals nearby allies and gives them bonus health.",
+      "bonus": "After healing enough, the wall evolves and heals more."
+    },
+    {
+      "name": "Bubble Buddies",
+      "heroes": [
+        "groot",
+        "jeff-the-land-shark"
+      ],
+      "effect": "Hides in an invincible bubble shield and heals himself.",
+      "bonus": "Heals more, and extra healing becomes bonus health."
+    },
+    {
+      "name": "Gumbo Chimichangas",
+      "heroes": [
+        "deadpool-vanguard",
+        "gambit"
+      ],
+      "effect": "A kinetic leap forward that scatters charged chimichangas.",
+      "bonus": "The chimichangas also stun."
+    },
+    {
+      "name": "Gumbo Chimichangas",
+      "heroes": [
+        "deadpool-duelist",
+        "gambit"
+      ],
+      "effect": "A kinetic leap forward that scatters charged chimichangas.",
+      "bonus": "The chimichangas also stun."
+    },
+    {
+      "name": "Gumbo Chimichangas",
+      "heroes": [
+        "deadpool-strategist",
+        "gambit"
+      ],
+      "effect": "A kinetic leap forward that scatters charged chimichangas.",
+      "bonus": "The chimichangas also stun."
+    },
+    {
+      "name": "Hel-Yeah, Honey",
+      "heroes": [
+        "deadpool-vanguard",
+        "hela"
+      ],
+      "effect": "Gives an extra upgrade to his guns or his katanas.",
+      "bonus": "Both weapon sets get the extra upgrade."
+    },
+    {
+      "name": "Hel-Yeah, Honey",
+      "heroes": [
+        "deadpool-duelist",
+        "hela"
+      ],
+      "effect": "Gives an extra upgrade to his guns or his katanas.",
+      "bonus": "Both weapon sets get the extra upgrade."
+    },
+    {
+      "name": "Hel-Yeah, Honey",
+      "heroes": [
+        "deadpool-strategist",
+        "hela"
+      ],
+      "effect": "Gives an extra upgrade to his guns or his katanas.",
+      "bonus": "Both weapon sets get the extra upgrade."
+    },
+    {
+      "name": "Chain of Cyttorak",
+      "heroes": [
+        "magik",
+        "doctor-strange"
+      ],
+      "effect": "Tethers two enemies and drags them together.",
+      "bonus": "Can tether more enemies and pull the whole group to one spot."
+    },
+    {
+      "name": "Void Pentagram",
+      "heroes": [
+        "magik",
+        "the-hood"
+      ],
+      "effect": "Creates a magic circle where Stepping Discs refund energy and summon Limbo demons.",
+      "bonus": "The demons get more health and reach."
     },
     {
       "name": "Ragnarök",
       "heroes": [
         "gorr",
         "hela"
-      ]
+      ],
+      "effect": "Turns All-Black into a scythe for a sweeping strike that grounds enemies.",
+      "bonus": "Shadow Scythe reaches further, and its hits give Gorr and nearby allies bonus health."
     },
     {
       "name": "Hive Mind",
       "heroes": [
         "gorr",
         "venom"
-      ]
+      ],
+      "effect": "Fires a piercing symbiote claw that pulls enemies toward him as it retracts.",
+      "bonus": "His Berserkers deal more damage and slow enemies."
+    },
+    {
+      "name": "Gods of Thunder",
+      "heroes": [
+        "storm",
+        "thor"
+      ],
+      "effect": "Wind Blade becomes a lightning beam that hits instantly and bursts on impact.",
+      "bonus": "Bolt Rush becomes chain lightning that jumps between enemies."
+    },
+    {
+      "name": "Jaws of Fate",
+      "heroes": [
+        "storm",
+        "jeff-the-land-shark"
+      ],
+      "effect": "Calls a downpour that heals her and nearby allies.",
+      "bonus": "During Omega Hurricane, Jeff can swim in it to form a Jeff-nado."
+    },
+    {
+      "name": "Sorcerers Supreme",
+      "heroes": [
+        "scarlet-witch",
+        "doctor-strange"
+      ],
+      "effect": "Chthonian Burst becomes Mystic Burst for a while: rapid magic missiles that cost no energy.",
+      "bonus": "Mystic Burst becomes a toggle she can switch on and off."
+    },
+    {
+      "name": "Hex Fireworks",
+      "heroes": [
+        "scarlet-witch",
+        "jubilee"
+      ],
+      "effect": "Dark Seal becomes a Plasmoid Seal with a second explosion that makes enemies take more damage.",
+      "bonus": "She heals steadily during Mystic Projection."
+    },
+    {
+      "name": "Hel Tendrils",
+      "heroes": [
+        "hela",
+        "venom"
+      ],
+      "effect": "Soul Drainer becomes tendrils that pull and link enemies, slowing their escape.",
+      "bonus": "Piercing Night fires symbiote thorns, and direct hits heal her."
+    },
+    {
+      "name": "Deep Wrath",
+      "heroes": [
+        "hela",
+        "namor"
+      ],
+      "effect": "Knockouts she takes part in raise an undead Monstro that her Piercing Night directs.",
+      "bonus": "Hits during Goddess of Death also spawn Monstros."
+    },
+    {
+      "name": "Comprehensive Defense",
+      "heroes": [
+        "daredevil",
+        "iron-fist"
+      ],
+      "effect": "Objection! blocks projectiles from every direction and damages enemies; deflecting builds Fury.",
+      "bonus": "He also heals while it lasts."
+    },
+    {
+      "name": "Devilish Affair",
+      "heroes": [
+        "daredevil",
+        "black-widow"
+      ],
+      "effect": "Devil’s Chain swings in a criss-cross, damaging and slowing enemies.",
+      "bonus": "Wider area, and hits restore Fury."
+    },
+    {
+      "name": "Kumiho Palm",
+      "heroes": [
+        "iron-fist",
+        "white-fox"
+      ],
+      "effect": "Yat Jee Chung Kuen hits heal nearby allies.",
+      "bonus": "Yat Jee Chung Kuen can lock on from much further away."
+    },
+    {
+      "name": "Iron & Stone",
+      "heroes": [
+        "iron-fist",
+        "the-thing"
+      ],
+      "effect": "A powerful uppercut that launches enemies and chains into a sweeping kick.",
+      "bonus": "The kick follow-up deals more damage."
+    },
+    {
+      "name": "Fantastic Amplifier",
+      "heroes": [
+        "mister-fantastic",
+        "rocket-raccoon"
+      ],
+      "effect": "An amplifier raises his max Elasticity and lets him inflate when he chooses.",
+      "bonus": "Brainiac Bounce launches the enemies it hits."
+    },
+    {
+      "name": "Clobberin’ Research Dept.",
+      "heroes": [
+        "mister-fantastic",
+        "the-thing"
+      ],
+      "effect": "A brawler stance he can switch on and off: Stretch Punch becomes a charged punch that gives bonus health.",
+      "bonus": "Distended Grip becomes a charged hammer that launches enemies at full charge."
+    },
+    {
+      "name": "Light & Dark Darts",
+      "heroes": [
+        "psylocke",
+        "cloak-and-dagger"
+      ],
+      "effect": "Releases a ring of light darts that heal allies and leaves a shadow zone that lets her re-enter stealth.",
+      "bonus": "Bigger shadow zone, and re-entering stealth fires the darts again."
+    },
+    {
+      "name": "Mental Projection",
+      "heroes": [
+        "psylocke",
+        "emma-frost"
+      ],
+      "effect": "Sends an illusion of herself dashing forward while she turns invisible.",
+      "bonus": "She can swap places with the illusion."
+    },
+    {
+      "name": "Symbiote Bond",
+      "heroes": [
+        "spider-man",
+        "venom"
+      ],
+      "effect": "Turns symbiote matter into exploding spikes that damage and push enemies back.",
+      "bonus": "Extra tendrils tether and damage enemies."
+    },
+    {
+      "name": "Parker Power-Up",
+      "heroes": [
+        "spider-man",
+        "peni-parker"
+      ],
+      "effect": "Throws a sticky spider-bomb that damages enemies and tags them with Spider-Tracers.",
+      "bonus": "Detonating tracers gives him bonus health."
+    },
+    {
+      "name": "Damisa-Yao",
+      "heroes": [
+        "black-panther",
+        "storm"
+      ],
+      "effect": "Calls on elemental power to damage, slow and mark enemies around him.",
+      "bonus": "Enemies in range are launched toward him."
+    },
+    {
+      "name": "Dimensional Shortcut",
+      "heroes": [
+        "black-panther",
+        "magik"
+      ],
+      "effect": "Teleports back to where he was a few seconds ago, gaining bonus health. The portal damages nearby enemies when it closes.",
+      "bonus": "He can cancel the teleport midway."
+    },
+    {
+      "name": "Blade of Khonshu",
+      "heroes": [
+        "blade",
+        "moon-knight"
+      ],
+      "effect": "A heavy dashing cleave, then fast slashes that send Darkmoon blades bouncing between enemies.",
+      "bonus": "Whirlwind Slash throws an extra Darkmoon blade."
+    },
+    {
+      "name": "Bleed for Battle",
+      "heroes": [
+        "blade",
+        "captain-america"
+      ],
+      "effect": "Damage he takes builds Bloodline Awakening stacks, and he can hold more of them.",
+      "bonus": "Taking a critical hit triggers Bloodline Awakening at once."
+    },
+    {
+      "name": "Gamma Charge",
+      "heroes": [
+        "iron-man",
+        "hulk"
+      ],
+      "effect": "Armor Overdrive becomes Gamma Overdrive, adding a gamma shield and stronger blasts.",
+      "bonus": "His ultimate also gives a gamma shield and hits harder."
+    },
+    {
+      "name": "Thunder Overdrive",
+      "heroes": [
+        "iron-man",
+        "thor"
+      ],
+      "effect": "Unibeam gains a lightning ring that deals extra damage near its edge.",
+      "bonus": "Armor Overdrive’s cooldown is much shorter."
+    },
+    {
+      "name": "Fiery Sparks",
+      "heroes": [
+        "human-torch",
+        "jubilee"
+      ],
+      "effect": "Automatically launches tracking firework sparks at nearby enemies.",
+      "bonus": "Landing a spark gives him bonus health."
+    },
+    {
+      "name": "Storming Ignition",
+      "heroes": [
+        "human-torch",
+        "storm"
+      ],
+      "effect": "Creates a lasting fire vortex that damages and pulls in enemies.",
+      "bonus": "Storm’s ultimate becomes a burning hurricane that turns his Flame Fields into new Flame Tornadoes."
+    },
+    {
+      "name": "Pair of Threes",
+      "heroes": [
+        "wolverine",
+        "gambit"
+      ],
+      "effect": "A kinetic boost to speed and jumping, and his attacks plant particles that explode.",
+      "bonus": "He heals steadily while it lasts."
+    },
+    {
+      "name": "Blast Slash",
+      "heroes": [
+        "wolverine",
+        "cyclops"
+      ],
+      "effect": "His claws reach further, and Vicious Rampage becomes a flurry of slashes.",
+      "bonus": "It stays on permanently."
+    },
+    {
+      "name": "Prehistoric Trap",
+      "heroes": [
+        "elsa-bloodstone",
+        "devil-dinosaur"
+      ],
+      "effect": "Smoky Snare’s monster holds and damages enemies, then releases a damaging gas.",
+      "bonus": "She can store and place two snares."
+    },
+    {
+      "name": "Loudmouth Mercs",
+      "heroes": [
+        "elsa-bloodstone",
+        "deadpool-vanguard"
+      ],
+      "effect": "Living Bullet becomes special rounds that taunt, slow and damage enemies over time, then return to heal her.",
+      "bonus": "She builds Instinct much faster."
+    },
+    {
+      "name": "Loudmouth Mercs",
+      "heroes": [
+        "elsa-bloodstone",
+        "deadpool-duelist"
+      ],
+      "effect": "Living Bullet becomes special rounds that taunt, slow and damage enemies over time, then return to heal her.",
+      "bonus": "She builds Instinct much faster."
+    },
+    {
+      "name": "Loudmouth Mercs",
+      "heroes": [
+        "elsa-bloodstone",
+        "deadpool-strategist"
+      ],
+      "effect": "Living Bullet becomes special rounds that taunt, slow and damage enemies over time, then return to heal her.",
+      "bonus": "She builds Instinct much faster."
+    },
+    {
+      "name": "Timeless Veterans",
+      "heroes": [
+        "winter-soldier",
+        "the-punisher"
+      ],
+      "effect": "His bionic arm releases electricity that damages and knocks back enemies.",
+      "bonus": "It also grounds enemies, with a stronger knockback."
+    },
+    {
+      "name": "Expert Instinct",
+      "heroes": [
+        "winter-soldier",
+        "elsa-bloodstone"
+      ],
+      "effect": "Knockouts he takes part in give stacks that shorten his cooldowns.",
+      "bonus": "Ceaseless Charge gives more bonus health."
+    },
+    {
+      "name": "Feline Alliance",
+      "heroes": [
+        "black-cat",
+        "black-panther"
+      ],
+      "effect": "Taking damage builds vibranium energy she can release as an explosion that damages and knocks back enemies, stealing Fortune.",
+      "bonus": "She can release it at any time."
+    },
+    {
+      "name": "Binding Ties",
+      "heroes": [
+        "black-cat",
+        "spider-man"
+      ],
+      "effect": "Turn of Fortune becomes a two-charge web grapple that steals Fortune and tags enemies with Spider-Tracers.",
+      "bonus": "Hitting a tagged enemy holds them in place briefly."
+    },
+    {
+      "name": "Flora Munitions",
+      "heroes": [
+        "star-lord",
+        "groot"
+      ],
+      "effect": "Tosses thorn seeds that sprout into snares, damaging and rooting enemies who step on them.",
+      "bonus": "More snares, and they hit harder."
+    },
+    {
+      "name": "Star-Soul",
+      "heroes": [
+        "star-lord",
+        "adam-warlock"
+      ],
+      "effect": "Places a beacon he can teleport to from anywhere, and he can respawn at it.",
+      "bonus": "Knockouts he takes part in shorten the beacon’s cooldown."
+    },
+    {
+      "name": "Moonlit Slash",
+      "heroes": [
+        "hawkeye",
+        "cloak-and-dagger"
+      ],
+      "effect": "Crescent Slash sends out a radiant wave that heals allies and makes enemies take more damage.",
+      "bonus": "It becomes a three-hit combo of light blades."
+    },
+    {
+      "name": "Senbonzakura Strike",
+      "heroes": [
+        "hawkeye",
+        "psylocke"
+      ],
+      "effect": "Blast Arrow becomes psionic arrows he can stockpile and fire together.",
+      "bonus": "Faster nocking, and the arrows explode on impact."
+    },
+    {
+      "name": "Chilling Charisma",
+      "heroes": [
+        "namor",
+        "luna-snow"
+      ],
+      "effect": "Sends a frost tide that damages, pushes back and slows enemies, and his Monstro Spawns become Frozen Spawns that slow.",
+      "bonus": "The tide can be charged to crash for area damage at max range."
+    },
+    {
+      "name": "Gamma Monstro",
+      "heroes": [
+        "namor",
+        "hulk"
+      ],
+      "effect": "Summons an extra Gamma Monstro that keeps damaging the nearest enemy.",
+      "bonus": "Blessing of the Deep’s barrier fills with gamma energy, speeding up his cooldowns and boosting damage."
+    },
+    {
+      "name": "Luminous Moon",
+      "heroes": [
+        "moon-knight",
+        "cloak-and-dagger"
+      ],
+      "effect": "A phased dash that sends out a healing wave for him and nearby allies.",
+      "bonus": "Longer dash and wider healing, and he heals over time afterwards."
+    },
+    {
+      "name": "Blood Moon",
+      "heroes": [
+        "moon-knight",
+        "elsa-bloodstone"
+      ],
+      "effect": "Places an Ankh trap that summons a talon, launching enemies toward its center.",
+      "bonus": "Several talons strike the area."
+    },
+    {
+      "name": "Ammo Overload",
+      "heroes": [
+        "the-punisher",
+        "rocket-raccoon"
+      ],
+      "effect": "Throws a device that makes him fire faster.",
+      "bonus": "It also gives unlimited ammo."
+    },
+    {
+      "name": "Bestial Hunt",
+      "heroes": [
+        "the-punisher",
+        "daredevil"
+      ],
+      "effect": "Fires piercing bullets with a damage boost.",
+      "bonus": "The bullets break barriers and shields faster."
+    },
+    {
+      "name": "Slim and Red",
+      "heroes": [
+        "cyclops",
+        "phoenix"
+      ],
+      "effect": "Ricochet Force sets enemies on fire, and hitting burning targets with his blasts sets off extra damage.",
+      "bonus": "Spark explosions shorten Ricochet Force’s cooldown."
+    },
+    {
+      "name": "Kinetic Kin",
+      "heroes": [
+        "cyclops",
+        "gambit"
+      ],
+      "effect": "Releases kinetic energy for a burst of movement speed and jump height.",
+      "bonus": "Optic Blast and Concussive Beam also fire faster."
+    },
+    {
+      "name": "Squirrel Missile",
+      "heroes": [
+        "squirrel-girl",
+        "iron-man"
+      ],
+      "effect": "Sends a squirrel riding a homing missile that explodes on hit.",
+      "bonus": "Squirrel Blockade fires a Squirrel Missile at the same time."
+    },
+    {
+      "name": "ESU Alumnus",
+      "heroes": [
+        "squirrel-girl",
+        "spider-man"
+      ],
+      "effect": "Launches a web bomb that explodes, damaging, slowing and grounding enemies.",
+      "bonus": "It coats the ground in sticky web that slows, grounds and can stun."
+    },
+    {
+      "name": "Circle of Life",
+      "heroes": [
+        "phoenix",
+        "hela"
+      ],
+      "effect": "Psionic Detonation becomes Phoenix Netherfire: a stun, then two blasts that reduce enemy healing.",
+      "bonus": "Each blast adds extra Sparks."
+    },
+    {
+      "name": "Telekinetic Beatdown",
+      "heroes": [
+        "phoenix",
+        "rogue"
+      ],
+      "effect": "Fires a telekinetic shockwave. On a hit she rushes in and strikes nearby enemies, adding Sparks and healing herself.",
+      "bonus": "More Sparks, more healing and more strikes."
+    },
+    {
+      "name": "Vitality Pact",
+      "heroes": [
+        "mantis",
+        "adam-warlock"
+      ],
+      "effect": "When knocked out, she lingers as a soul that heals allies and can reform her body.",
+      "bonus": "As a soul she can bond with allies to share the damage they take."
+    },
+    {
+      "name": "Star Blossom",
+      "heroes": [
+        "mantis",
+        "star-lord"
+      ],
+      "effect": "Recasting Healing Flower on an ally strengthens it and spreads the healing around them.",
+      "bonus": "Healing Flower triggers the stronger, spreading version right away."
+    },
+    {
+      "name": "Stark Protocol",
+      "heroes": [
+        "ultron",
+        "iron-man"
+      ],
+      "effect": "Encephalo-Ray becomes Nano-Ray, firing projectiles that damage enemies and heal allies.",
+      "bonus": "Imperative: Firewall also fires homing missiles at nearby enemies."
+    },
+    {
+      "name": "SP//DR Sync",
+      "heroes": [
+        "ultron",
+        "peni-parker"
+      ],
+      "effect": "Imperative: Patch covers all allies at once.",
+      "bonus": "Imperative: Firewall triggers through every drone at once."
+    },
+    {
+      "name": "Planet X Pals",
+      "heroes": [
+        "rocket-raccoon",
+        "groot"
+      ],
+      "effect": "Bombard Mode launches thorny spores that damage enemies and heal allies.",
+      "bonus": "He can ride on Groot, and the spore field lasts longer."
+    },
+    {
+      "name": "Mammalian Bond",
+      "heroes": [
+        "rocket-raccoon",
+        "squirrel-girl"
+      ],
+      "effect": "Tosses vitality acorns that heal allies and shorten their cooldowns.",
+      "bonus": "More acorn charges."
+    },
+    {
+      "name": "Vampiric Kin",
+      "heroes": [
+        "jubilee",
+        "blade"
+      ],
+      "effect": "Places a vampiric field where allies’ attacks steal health.",
+      "bonus": "Allies inside also heal over time."
+    },
+    {
+      "name": "Hellfire Sparks",
+      "heroes": [
+        "jubilee",
+        "the-hood"
+      ],
+      "effect": "While her attack speed is boosted, her plasmoids become instant-hit shots that can crit and heal her.",
+      "bonus": "She can keep that form indefinitely."
+    },
+    {
+      "name": "Sparkling Staff",
+      "heroes": [
+        "gambit",
+        "jubilee"
+      ],
+      "effect": "Twirls a firework-charged staff that heals allies, damages close enemies and blocks projectiles.",
+      "bonus": "Bayou Bash and Big Easy Impact also leave a healing aura."
+    },
+    {
+      "name": "Favorable Odds",
+      "heroes": [
+        "gambit",
+        "magneto"
+      ],
+      "effect": "Throws two magnetic cards that spin in place, healing allies and damaging enemies, and launch enemies when they detonate.",
+      "bonus": "The cards slam together and explode for extra healing and damage."
+    },
+    {
+      "name": "Vibrant Vitality",
+      "heroes": [
+        "loki",
+        "mantis"
+      ],
+      "effect": "Regeneration Domain also boosts allies’ damage, and its radius can expand.",
+      "bonus": "Placing it sends out a shockwave that damages and launches nearby enemies."
+    },
+    {
+      "name": "Villain’s Illusion",
+      "heroes": [
+        "loki",
+        "hela"
+      ],
+      "effect": "Takes the form of a knocked-out hero for a while, without their ultimate.",
+      "bonus": "The disguise lasts longer, and lethal damage turns him back into Loki instead of knocking him out."
+    },
+    {
+      "name": "Frozen Haven",
+      "heroes": [
+        "cloak-and-dagger",
+        "luna-snow"
+      ],
+      "effect": "Encases them in protective ice with a weak healing aura for allies.",
+      "bonus": "The healing aura is much stronger."
+    },
+    {
+      "name": "Oblivion Shroud",
+      "heroes": [
+        "cloak-and-dagger",
+        "the-hood"
+      ],
+      "effect": "Their veils stop in place: enemies lose damage through the light veil and healing through the dark one.",
+      "bonus": "Wider veils, and allies passing through get a damage boost."
+    },
+    {
+      "name": "Cosmic Cyclone",
+      "heroes": [
+        "adam-warlock",
+        "storm"
+      ],
+      "effect": "Allies in his Soul Bond get a speed boost.",
+      "bonus": "They also get a damage boost."
+    },
+    {
+      "name": "Flawless Design",
+      "heroes": [
+        "adam-warlock",
+        "ultron"
+      ],
+      "effect": "Cosmic Cluster heals allies.",
+      "bonus": "The cluster explodes on impact."
+    },
+    {
+      "name": "United Siblings",
+      "heroes": [
+        "invisible-woman",
+        "human-torch"
+      ],
+      "effect": "Creates a flame shield that blocks damage, heals allies nearby and slows enemies.",
+      "bonus": "A bigger shield with much more health."
+    },
+    {
+      "name": "First Family",
+      "heroes": [
+        "invisible-woman",
+        "mister-fantastic"
+      ],
+      "effect": "Allies near her turn invisible, heal and move faster.",
+      "bonus": "Stronger healing and speed, and longer invisibility."
+    },
+    {
+      "name": "Lucky Loan",
+      "heroes": [
+        "white-fox",
+        "black-cat"
+      ],
+      "effect": "An Orb of Life turns her Spirit Tail energy into an aura that seeks out allies to help and enemies to weaken.",
+      "bonus": "Spirit Tail energy isn’t used up while it lasts."
+    },
+    {
+      "name": "Psionic Fox",
+      "heroes": [
+        "white-fox",
+        "psylocke"
+      ],
+      "effect": "Fox Form Awakening uses no Spirit Tail energy and lasts its full time.",
+      "bonus": "Fox Form Awakening’s cooldown is much shorter."
+    },
+    {
+      "name": "Atlas Bond",
+      "heroes": [
+        "luna-snow",
+        "white-fox"
+      ],
+      "effect": "Sends a spirit fox forward that charms enemies and heals allies in its path.",
+      "bonus": "The fox comes back after reaching its max distance."
+    },
+    {
+      "name": "Duality Dance",
+      "heroes": [
+        "luna-snow",
+        "adam-warlock"
+      ],
+      "effect": "Tethers everyone nearby with a soul bond. Attacking tethered enemies or healing linked allies heals her.",
+      "bonus": "Critical hits shorten Absolute Zero’s and Ice Arts’ cooldowns."
+    },
+    {
+      "name": "Guardian of the Deep",
+      "heroes": [
+        "jeff-the-land-shark",
+        "venom"
+      ],
+      "effect": "Shoots healing tendrils that heal allies over time; extra healing becomes bonus health.",
+      "bonus": "The tendrils also lash enemies for damage over time."
+    },
+    {
+      "name": "Mr. Pool’s Interdimensional Toy Box",
+      "heroes": [
+        "jeff-the-land-shark",
+        "deadpool-vanguard"
+      ],
+      "effect": "Spits out a Deadpool plushie that taunts enemies and heals allies near it.",
+      "bonus": "The taunt deals more damage."
+    },
+    {
+      "name": "Mr. Pool’s Interdimensional Toy Box",
+      "heroes": [
+        "jeff-the-land-shark",
+        "deadpool-duelist"
+      ],
+      "effect": "Spits out a Deadpool plushie that taunts enemies and heals allies near it.",
+      "bonus": "The taunt deals more damage."
+    },
+    {
+      "name": "Mr. Pool’s Interdimensional Toy Box",
+      "heroes": [
+        "jeff-the-land-shark",
+        "deadpool-strategist"
+      ],
+      "effect": "Spits out a Deadpool plushie that taunts enemies and heals allies near it.",
+      "bonus": "The taunt deals more damage."
+    },
+    {
+      "name": "Burning Bullets",
+      "heroes": [
+        "black-widow",
+        "phoenix"
+      ],
+      "effect": "Her rifle fires faster, and Electro-Plasma Blast becomes an instant laser with no charge-up.",
+      "bonus": "Electro-Plasma Blast gets a second charge."
+    },
+    {
+      "name": "Allied Agents",
+      "heroes": [
+        "black-widow",
+        "hawkeye"
+      ],
+      "effect": "Rifle hits build Focus. At three stacks she enters a Focused state with stronger shots.",
+      "bonus": "Critical hits keep her Focused until she misses one."
     }
   ]
 }

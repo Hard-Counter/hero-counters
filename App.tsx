@@ -12,7 +12,7 @@ import { BarlowCondensed_800ExtraBold } from '@expo-google-fonts/barlow-condense
 
 import type { BracketId, Platform, RoleId } from './src/data/types';
 import { useDataset } from './src/data/useDataset';
-import { ROLES, formatDate, indexHeroes } from './src/logic';
+import { HeroTab, ROLES, formatDate, indexHeroes } from './src/logic';
 import { FONT, Theme, useStyles, useTheme } from './src/theme';
 import { usePersisted } from './src/usePersisted';
 import { Segmented, SlantChip } from './src/components/ui';
@@ -25,6 +25,9 @@ import AboutScreen from './src/screens/AboutScreen';
 import HeroDetail from './src/screens/HeroDetail';
 
 type Tab = 'tiers' | 'draft' | 'comps' | 'about';
+
+/** One hero page in the stack, with the tab it shows. */
+type DetailEntry = { id: string; tab: HeroTab };
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'tiers', label: 'Tiers' },
@@ -65,17 +68,25 @@ function Root() {
   const [myRole, setMyRole] = usePersisted<RoleId>('role', 'duelist', ROLES);
   // Bans, teams and the map change every match, so they aren't remembered between launches.
   const [match, setMatch] = useState<MatchState>(EMPTY_MATCH);
-  // Hero pages opened from a hero page stack up, so Back returns to the one before.
-  const [detailStack, setDetailStack] = useState<string[]>([]);
-  const openDetail = useCallback((id: string) => setDetailStack([id]), []);
+  // Hero pages opened from a hero page stack up, so Back returns to the one before, on the tab it showed.
+  const [detailStack, setDetailStack] = useState<DetailEntry[]>([]);
+  const openDetail = useCallback((id: string, tab: HeroTab = 'against') => setDetailStack([{ id, tab }]), []);
   const pushDetail = useCallback(
-    (id: string) => setDetailStack((s) => (s[s.length - 1] === id ? s : [...s, id].slice(-20))),
+    (id: string, tab: HeroTab) =>
+      setDetailStack((s) => (s[s.length - 1]?.id === id ? s : [...s, { id, tab }].slice(-20))),
     [],
   );
   const popDetail = useCallback(() => setDetailStack((s) => s.slice(0, -1)), []);
   const closeDetail = useCallback(() => setDetailStack([]), []);
+  const setDetailTab = useCallback(
+    (tab: HeroTab) => setDetailStack((s) => (s.length ? [...s.slice(0, -1), { ...s[s.length - 1], tab }] : s)),
+    [],
+  );
   const detail = detailStack.length ? detailStack[detailStack.length - 1] : null;
-  const backTo = detailStack.length > 1 ? (idx[detailStack[detailStack.length - 2]]?.name ?? null) : null;
+  const backTo = detailStack.length > 1 ? (idx[detailStack[detailStack.length - 2].id]?.name ?? null) : null;
+  // Tier list and enemy lookups open on Against; comps are about your own team, so Play as.
+  const openAgainst = useCallback((id: string) => openDetail(id, 'against'), [openDetail]);
+  const openPlayAs = useCallback((id: string) => openDetail(id, 'as'), [openDetail]);
 
   const showControls = tab === 'tiers' || tab === 'draft';
 
@@ -119,7 +130,7 @@ function Root() {
       </View>
 
       <View style={st.body}>
-        {tab === 'tiers' ? <TierListScreen data={data} platform={platform} bracket={bracket} onOpen={openDetail} /> : null}
+        {tab === 'tiers' ? <TierListScreen data={data} platform={platform} bracket={bracket} onOpen={openAgainst} /> : null}
         {tab === 'draft' ? (
           <DraftScreen
             data={data}
@@ -133,7 +144,7 @@ function Root() {
             onOpen={openDetail}
           />
         ) : null}
-        {tab === 'comps' ? <CompsScreen data={data} idx={idx} onOpen={openDetail} /> : null}
+        {tab === 'comps' ? <CompsScreen data={data} idx={idx} onOpen={openPlayAs} /> : null}
         {tab === 'about' ? <AboutScreen data={data} source={source} /> : null}
       </View>
 
@@ -161,7 +172,9 @@ function Root() {
       </View>
 
       <HeroDetail
-        heroId={detail}
+        heroId={detail?.id ?? null}
+        tab={detail?.tab ?? 'against'}
+        onTab={setDetailTab}
         backTo={backTo}
         data={data}
         idx={idx}

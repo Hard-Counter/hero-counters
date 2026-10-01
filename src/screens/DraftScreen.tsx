@@ -4,6 +4,7 @@ import type { BracketId, Dataset, Hero, MapSide, Platform, RoleId } from '../dat
 import {
   GlossaryGroupId,
   HeroIndex,
+  HeroTab,
   MAP_MODE_LABEL,
   MAP_SIDES,
   MAP_SIDE_LABEL,
@@ -96,7 +97,8 @@ export default function DraftScreen({
   setMyRole: (r: RoleId) => void;
   match: MatchState;
   setMatch: React.Dispatch<React.SetStateAction<MatchState>>;
-  onOpen: (heroId: string) => void;
+  /** Opens a hero page on the tab that fits: Play as for your picks, Against for enemies. */
+  onOpen: (heroId: string, tab?: HeroTab) => void;
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
@@ -148,7 +150,7 @@ export default function DraftScreen({
   const lookUp = (id: string) => {
     setQuery('');
     Keyboard.dismiss();
-    onOpen(id);
+    onOpen(id, 'against');
   };
 
   const addEnemy = (id: string) => {
@@ -462,7 +464,7 @@ export default function DraftScreen({
                 return (
                   <Pressable
                     key={p.hero.id}
-                    onPress={() => onOpen(p.hero.id)}
+                    onPress={() => onOpen(p.hero.id, 'as')}
                     accessibilityRole="button"
                     style={({ pressed }) => [st.pick, i === 0 && { borderColor: t.accent }, pressed && { opacity: 0.8 }]}
                   >
@@ -495,7 +497,7 @@ export default function DraftScreen({
               {focusOrder(enemyHeroes, bracket, platform).map((f, i) => (
                 <Pressable
                   key={f.hero.id}
-                  onPress={() => onOpen(f.hero.id)}
+                  onPress={() => onOpen(f.hero.id, 'against')}
                   accessibilityRole="button"
                   style={({ pressed }) => [st.focusRow, pressed && { opacity: 0.8 }]}
                 >
@@ -649,7 +651,7 @@ function Slots({
   );
 }
 
-function MatchupCard({ m, role, onOpen }: { m: Matchup; role: RoleId; onOpen: (heroId: string) => void }) {
+function MatchupCard({ m, role, onOpen }: { m: Matchup; role: RoleId; onOpen: (heroId: string, tab?: HeroTab) => void }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
   const note =
@@ -662,7 +664,7 @@ function MatchupCard({ m, role, onOpen }: { m: Matchup; role: RoleId; onOpen: (h
           : null;
   return (
     <Pressable
-      onPress={() => onOpen(m.status === 'banned' ? m.enemy.id : m.counter.id)}
+      onPress={() => (m.status === 'banned' ? onOpen(m.enemy.id, 'against') : onOpen(m.counter.id, 'as'))}
       accessibilityRole="button"
       style={({ pressed }) => [st.mu, pressed && { opacity: 0.8 }]}
     >

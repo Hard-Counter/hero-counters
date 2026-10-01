@@ -664,6 +664,27 @@
   .quirk { padding-left: 10px; border-left: 2px solid var(--line); font-size: 14px; }
   .quirk small { display: block; margin-top: 3px; font-size: 12px; color: var(--ink-3); }
 
+  /* Hero page tabs */
+  .dtabs { position: sticky; top: -4px; z-index: 2; display: flex; margin: 14px -16px 0; padding: 0 8px; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .dtab { flex: 1; display: grid; justify-items: stretch; gap: 10px; padding: 12px 0 0; text-align: center; font: 700 13.5px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+  .dtab::after { content: ""; height: 3px; margin-inline: 10px; border-radius: 2px; background: transparent; }
+  .dtab[aria-selected="true"] { color: var(--ink); }
+  .dtab[aria-selected="true"]::after { background: var(--accent); }
+  .abilities { display: grid; gap: 12px; }
+  .ability b { display: block; font-size: 15px; }
+  .ability b small { font-size: 13.5px; font-weight: 400; color: var(--ink-3); }
+  .ability p { margin-top: 3px; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
+  .ability p em { font-style: normal; font-weight: 600; color: var(--ink); }
+  .lead { margin: 0 0 10px; font-size: 13px; color: var(--ink-3); }
+  .kit-checked { margin-top: 20px; font-size: 12.5px; color: var(--ink-3); }
+  .team-list { display: grid; gap: 6px; }
+  .team-row { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); text-align: left; }
+  .team-row .t { flex: 1; min-width: 0; display: grid; gap: 1px; }
+  .team-row b { font-size: 15px; }
+  .team-row small { font-size: 12.5px; color: var(--ink-3); }
+  .team-row svg { width: 16px; height: 16px; color: var(--ink-3); }
+  .empty-note { margin-top: 18px; font-size: 13.5px; color: var(--ink-3); }
+
   /* Overlay cards: glossary groups and hero quick looks */
   .overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end; }
   .overlay-backdrop { position: absolute; inset: 0; background: var(--scrim); }
@@ -822,6 +843,7 @@
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+    chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
   };
 
   // Tiny element builder. `html` is used only for the trusted icon strings above.
@@ -968,7 +990,7 @@
       );
       if (!heroes.length) continue;
       list.append(
-        h('section', { class: 'tier-row', 'aria-label': `${tier} tier` }, tierChip(tier, 44), h('div', { class: 'tier-heroes' }, heroes.map((x) => heroChip(x, () => openDetail(x.id))))),
+        h('section', { class: 'tier-row', 'aria-label': `${tier} tier` }, tierChip(tier, 44), h('div', { class: 'tier-heroes' }, heroes.map((x) => heroChip(x, () => openDetail(x.id, 'against'))))),
       );
     }
     return h(
@@ -1050,7 +1072,7 @@
   function lookUp(id) {
     state.lookup = '';
     renderView(false);
-    openDetail(id);
+    openDetail(id, 'against');
   }
 
   function banRow(label, side) {
@@ -1241,7 +1263,7 @@
               null,
               h(
                 'button',
-                { type: 'button', class: 'pick' + (i === 0 ? ' top' : ''), onClick: () => openDetail(p.hero.id) },
+                { type: 'button', class: 'pick' + (i === 0 ? ' top' : ''), onClick: () => openDetail(p.hero.id, 'as') },
                 h('span', { class: 'pick-n' }, String(i + 1)),
                 avatar(p.hero, 36),
                 h(
@@ -1270,7 +1292,7 @@
           focusOrder(enemyHeroes, state.bracket, state.platform).map((f, i) =>
             h(
               'button',
-              { type: 'button', class: 'focus-row', onClick: () => openDetail(f.hero.id) },
+              { type: 'button', class: 'focus-row', onClick: () => openDetail(f.hero.id, 'against') },
               h('span', { class: 'focus-n' }, String(i + 1)),
               avatar(f.hero, 28),
               h('span', { class: 'focus-body' }, h('span', { class: 'focus-head' }, h('span', { class: 'focus-name' }, f.hero.name), focusTag(f.level)), h('span', { class: 'focus-why' }, f.why)),
@@ -1337,7 +1359,7 @@
             : null;
     return h(
       'button',
-      { type: 'button', class: 'mu' + (mu.status === 'banned' ? ' banned' : ''), onClick: () => openDetail(mu.status === 'banned' ? mu.enemy.id : mu.counter.id) },
+      { type: 'button', class: 'mu' + (mu.status === 'banned' ? ' banned' : ''), onClick: () => (mu.status === 'banned' ? openDetail(mu.enemy.id, 'against') : openDetail(mu.counter.id, 'as')) },
       h(
         'span',
         { class: 'mu-head' },
@@ -1564,8 +1586,8 @@
 
   /** A quick look at a hero tapped on a hero page, so a stray tap doesn't leave the page. */
   function openPeek(peek) {
-    const stack = state.detailStack;
-    const hero = IDX[stack[stack.length - 1]];
+    const top = state.detailStack[state.detailStack.length - 1];
+    const hero = top && IDX[top.id];
     const other = IDX[peek.heroId];
     if (!hero || !other) return;
     let label;
@@ -1573,6 +1595,8 @@
     if (peek.kind === 'counter') {
       label = `Counters ${hero.name}`;
       pick = peek.pick;
+    } else if (peek.kind === 'teamup') {
+      label = peek.label;
     } else {
       label = `${hero.name} counters ${other.name}`;
       for (const k of [hero.role, 'overall', ...ROLES.filter((r) => r !== hero.role)]) {
@@ -1603,11 +1627,15 @@
               h('span', { class: 'peek-foot' }, confTag(pick.confidence), pick.note ? h('span', { class: 'cc-note' + (pick.weak ? ' warn' : '') }, pick.note) : null),
             )
           : null,
+        peek.kind === 'teamup'
+          ? h('div', { class: 'peek-why' }, h('span', { class: 'peek-label' }, 'Team-up · ' + label), peek.text ? h('span', null, peek.text) : null)
+          : null,
         other.banRisk !== 'low' ? h('ul', { class: 'notes' }, h('li', { class: `ban-${other.banRisk}` }, BAN_LABEL[other.banRisk] + '.')) : null,
         h(
           'div',
           { class: 'peek-buttons' },
-          h('button', { type: 'button', class: 'btn wide', onClick: () => { closeOverlay(); pushDetail(other.id); } }, `Open ${other.name}`),
+          // A counter or team-up partner is someone you'd play; a hero this one beats is an enemy.
+          h('button', { type: 'button', class: 'btn wide', onClick: () => { closeOverlay(); pushDetail(other.id, peek.kind === 'strong' ? 'against' : 'as'); } }, `Open ${other.name}`),
           h('button', { type: 'button', class: 'btn-secondary', onClick: closeOverlay }, 'Close'),
         ),
       ),
@@ -1630,16 +1658,33 @@
     );
   }
 
-  function openDetail(id) {
+  // Each hero page in the stack remembers its tab. Tier list and enemies open on Against,
+  // picks, counters and comps on Play as.
+  function openDetail(id, tab = 'against') {
     if (!IDX[id]) return;
-    state.detailStack = [id];
+    state.detailStack = [{ id, tab }];
     renderDetail();
   }
 
-  function pushDetail(id) {
+  function pushDetail(id, tab = 'against') {
     const s = state.detailStack;
-    if (s[s.length - 1] !== id) state.detailStack = [...s, id].slice(-20);
+    if (!s.length || s[s.length - 1].id !== id) state.detailStack = [...s, { id, tab }].slice(-20);
     renderDetail();
+  }
+
+  function setDetailTab(tab) {
+    const s = state.detailStack;
+    if (!s.length || s[s.length - 1].tab === tab) return;
+    state.detailStack = [...s.slice(0, -1), { ...s[s.length - 1], tab }];
+    const body = $('detail').querySelector('.sheet-body');
+    const anchor = $('detail').querySelector('.dtabs-anchor');
+    // Keep the tab bar where it is and start the new tab from its top. The anchor sits just
+    // above the sticky bar, so its position doesn't move when the bar sticks.
+    const barY = body && anchor ? anchor.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop : 0;
+    const top = body ? Math.min(body.scrollTop, barY) : 0;
+    renderDetail();
+    const nb = $('detail').querySelector('.sheet-body');
+    if (nb) nb.scrollTop = top;
   }
 
   function popDetail() {
@@ -1655,7 +1700,8 @@
 
   function renderDetail(keepScroll) {
     const stack = state.detailStack;
-    const hero = IDX[stack[stack.length - 1]];
+    const top = stack[stack.length - 1];
+    const hero = top && IDX[top.id];
     closeOverlay();
     if (!hero) {
       $('detail').hidden = true;
@@ -1663,9 +1709,15 @@
     }
     const oldBody = $('detail').querySelector('.sheet-body');
     const oldTop = keepScroll && oldBody ? oldBody.scrollTop : 0;
-    const backTo = stack.length > 1 ? IDX[stack[stack.length - 2]] : null;
+    const backTo = stack.length > 1 ? IDX[stack[stack.length - 2].id] : null;
     const tips = tipsFor(hero);
     const focus = focusFor(hero);
+    const kit = kitFor(hero);
+    const ups = heroTeamUps(hero.id, usableTeamUps(DATA, IDX), IDX);
+    const strong = sortHeroes(goodAgainst(DATA, hero.id), state.bracket, state.platform);
+    const hasAbilities = !!kit || !!(tips && tips.quirks.length) || ups.own.length > 0;
+    const tabs = HERO_TABS.filter((k) => k !== 'abilities' || hasAbilities);
+    const active = tabs.includes(top.tab) ? top.tab : 'against';
     const body = h('div', { class: 'sheet-body' });
 
     body.append(sectionHead(`Tier by rank · ${platformName()}`, { info: 'tiers', infoLabel: 'What tiers mean' }));
@@ -1685,33 +1737,100 @@
         hero.platformNote ? h('li', null, 'Console: ' + hero.platformNote) : null,
       ),
     );
-    if (hero.styles && hero.styles.length) {
-      body.append(sectionHead('Play style', { info: 'styles', infoLabel: 'What play styles mean' }));
-      body.append(h('div', { class: 'style-list' }, hero.styles.filter((s) => HERO_STYLE_LABEL[s]).map((s) => h('p', null, h('b', null, HERO_STYLE_LABEL[s] + '. '), HERO_STYLE_INFO[s]))));
-    }
-    body.append(sectionHead('Best counter overall', { info: 'counters', infoLabel: 'What the counter tags mean' }));
-    body.append(counterCard(hero.counters.overall));
-    body.append(sectionHead('Best counter in each role'));
-    for (const r of [state.role, ...ROLES.filter((x) => x !== state.role)]) body.append(counterCard(hero.counters[r], r));
+    body.append(h('div', { class: 'dtabs-anchor' }));
+    body.append(
+      h(
+        'div',
+        { class: 'dtabs', role: 'tablist', 'aria-label': `${hero.name} pages` },
+        tabs.map((k) => h('button', { type: 'button', class: 'dtab', role: 'tab', 'aria-selected': String(k === active), onClick: () => setDetailTab(k) }, HERO_TAB_LABEL[k])),
+      ),
+    );
 
-    if (tips && tips.against.length) {
-      body.append(sectionHead(`Playing against ${hero.name}`, { info: 'match', infoLabel: 'What focus priority means' }));
-      if (!focus.general) body.append(h('div', { class: 'focus-box' }, focusTag(focus.level), h('p', null, focus.why)));
-      body.append(tipList(tips.against));
-    }
-    if (tips && tips.as.length) {
-      body.append(sectionHead(`Playing as ${hero.name}`));
-      body.append(tipList(tips.as));
-    }
-    if (tips && tips.quirks.length) {
-      body.append(sectionHead('Quirks', { info: 'match', infoLabel: 'What quirks are' }));
-      body.append(h('div', { class: 'quirks' }, tips.quirks.map((q) => h('div', { class: 'quirk' }, q.text, h('small', null, `Checked ${formatDate(q.asOf)}`)))));
-    }
+    const peekTeamUp = (u, other) =>
+      openPeek({
+        kind: 'teamup',
+        heroId: other.id,
+        label: u.user.id === hero.id ? u.name : `${u.user.name}’s ${u.name}`,
+        text: u.bonus ? `With ${u.partner.name} on the team: ${u.bonus[0].toLowerCase()}${u.bonus.slice(1)}` : u.effect,
+      });
+    const teamRow = (other, detail, onClick) =>
+      h('button', { type: 'button', class: 'team-row', onClick }, avatar(other, 32), h('span', { class: 't' }, h('b', null, other.name), h('small', null, detail)), icon('chevron'));
 
-    const strong = sortHeroes(goodAgainst(DATA, hero.id), state.bracket, state.platform);
-    if (strong.length) {
-      body.append(sectionHead('Strong against'));
-      body.append(h('div', { class: 'tier-heroes' }, strong.map((x) => heroChip(x, () => openPeek({ kind: 'strong', heroId: x.id })))));
+    if (active === 'against') {
+      if (!focus.general) {
+        body.append(sectionHead('Focus priority', { info: 'match', infoLabel: 'What focus priority means' }));
+        body.append(h('div', { class: 'focus-box' }, focusTag(focus.level), h('p', null, focus.why)));
+      }
+      body.append(sectionHead('Best counter overall', { info: 'counters', infoLabel: 'What the counter tags mean' }));
+      body.append(counterCard(hero.counters.overall));
+      body.append(sectionHead('Best counter in each role'));
+      for (const r of [state.role, ...ROLES.filter((x) => x !== state.role)]) body.append(counterCard(hero.counters[r], r));
+      if (tips && tips.against.length) {
+        body.append(sectionHead(`How to play against ${hero.name}`));
+        body.append(tipList(tips.against));
+      }
+    } else if (active === 'as') {
+      if (hero.styles && hero.styles.length) {
+        body.append(sectionHead('Play style', { info: 'styles', infoLabel: 'What play styles mean' }));
+        body.append(h('div', { class: 'style-list' }, hero.styles.filter((s) => HERO_STYLE_LABEL[s]).map((s) => h('p', null, h('b', null, HERO_STYLE_LABEL[s] + '. '), HERO_STYLE_INFO[s]))));
+      }
+      if (tips && tips.as.length) {
+        body.append(sectionHead(`How to play ${hero.name}`));
+        body.append(tipList(tips.as));
+      }
+      if (ups.own.length || ups.boosts.length) {
+        body.append(sectionHead('Team-up partners', { info: 'match', infoLabel: 'What team-ups are' }));
+        body.append(
+          h(
+            'div',
+            { class: 'team-list' },
+            ups.own.map((u) => teamRow(u.partner, `Makes your ${u.name} stronger`, () => peekTeamUp(u, u.partner))),
+            ups.boosts.map((u) => teamRow(u.user, `You make their ${u.name} stronger`, () => peekTeamUp(u, u.user))),
+          ),
+        );
+      }
+      if (strong.length) {
+        body.append(sectionHead('Strong against'));
+        body.append(h('div', { class: 'tier-heroes' }, strong.map((x) => heroChip(x, () => openPeek({ kind: 'strong', heroId: x.id })))));
+      }
+      if (!(hero.styles && hero.styles.length) && !(tips && tips.as.length) && !ups.own.length && !ups.boosts.length && !strong.length) {
+        body.append(h('p', { class: 'empty-note' }, `No play notes for ${hero.name} yet.`));
+      }
+    } else {
+      if (kit) {
+        kit.groups.forEach((g, i) => {
+          body.append(sectionHead(g.label, i === 0 ? { info: 'abilities', infoLabel: 'What the ability terms mean' } : {}));
+          body.append(h('div', { class: 'abilities' }, g.abilities.map((a) => h('div', { class: 'ability' }, h('b', null, a.name), h('p', null, a.text)))));
+        });
+      }
+      if (ups.own.length) {
+        body.append(sectionHead('Team-up abilities', { info: 'match', infoLabel: 'What team-ups are' }));
+        body.append(h('p', { class: 'lead' }, 'Pick one before the match. Each works alone and gets stronger with its partner on your team.'));
+        body.append(
+          h(
+            'div',
+            { class: 'abilities' },
+            ups.own.map((u) =>
+              h(
+                'div',
+                { class: 'ability' },
+                h('b', null, u.name + ' ', h('small', null, `· with ${u.partner.name}`)),
+                u.effect ? h('p', null, u.effect) : null,
+                u.bonus ? h('p', null, h('em', null, `With ${u.partner.name}: `), u.bonus) : null,
+              ),
+            ),
+          ),
+        );
+      }
+      if (tips && tips.quirks.length) {
+        body.append(sectionHead('Quirks', { info: 'match', infoLabel: 'What quirks are' }));
+        body.append(h('div', { class: 'quirks' }, tips.quirks.map((q) => h('div', { class: 'quirk' }, q.text, h('small', null, `Checked ${formatDate(q.asOf)}`)))));
+      }
+      if (kit && kit.checked) {
+        body.append(
+          h('p', { class: 'kit-checked' }, `Checked against every patch since launch, last on ${formatDate(kit.checked)}. Written in our own words, so in-game names and numbers may differ slightly.`),
+        );
+      }
     }
     $('detail').replaceChildren(
       h(
@@ -1785,7 +1904,7 @@
                   slots.map((s, i) => [
                     i > 0 ? h('span', { class: 'join' }, '+') : null,
                     s.options.length
-                      ? s.options.map((id, j) => [j > 0 ? h('span', { class: 'join' }, 'or') : null, heroChip(IDX[id], () => openDetail(id))])
+                      ? s.options.map((id, j) => [j > 0 ? h('span', { class: 'join' }, 'or') : null, heroChip(IDX[id], () => openDetail(id, 'as'))])
                       : h('span', { class: 'flex-slot' }, `Any ${ROLE_LABEL[r]}`),
                   ]),
                 ),
@@ -1809,7 +1928,7 @@
             { class: 'beat' },
             h('span', { class: 'label' }, 'How to beat it'),
             h('p', { class: 'beat-name' }, c.counter.name),
-            h('div', { class: 'tier-heroes' }, c.counter.heroes.map((id) => heroChip(IDX[id], () => openDetail(id)))),
+            h('div', { class: 'tier-heroes' }, c.counter.heroes.map((id) => heroChip(IDX[id], () => openDetail(id, 'as')))),
             h('p', { class: 'beat-why' }, c.counter.why),
           ),
           h('p', { class: 'evidence' }, c.evidence),

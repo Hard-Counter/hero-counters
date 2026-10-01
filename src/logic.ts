@@ -1,5 +1,7 @@
 // Pure logic shared by the app and the web preview. No React Native imports here.
 import type {
+  Ability,
+  AbilityKind,
   BanRisk,
   BracketId,
   CounterPick,
@@ -216,16 +218,20 @@ export function goodAgainst(data: Dataset, heroId: string): Hero[] {
 
 // ---- Team-ups ----
 
+const text = (x: unknown) => (typeof x === 'string' && x.trim() ? x : undefined);
+
 /** Team-ups from the data file whose heroes this version of the app knows. */
 export function usableTeamUps(data: Dataset, idx: HeroIndex): TeamUp[] {
   if (!Array.isArray(data.teamUps)) return [];
-  return data.teamUps.filter(
-    (t) =>
-      !!t &&
-      Array.isArray(t.heroes) &&
-      t.heroes.length >= 2 &&
-      t.heroes.every((id) => typeof id === 'string' && !!idx[id]),
-  ).map((t) => ({ name: typeof t.name === 'string' ? t.name : '', heroes: t.heroes }));
+  return data.teamUps
+    .filter(
+      (t) =>
+        !!t &&
+        Array.isArray(t.heroes) &&
+        t.heroes.length >= 2 &&
+        t.heroes.every((id) => typeof id === 'string' && !!idx[id]),
+    )
+    .map((t) => ({ name: text(t.name) ?? '', heroes: t.heroes, effect: text(t.effect), bonus: text(t.bonus) }));
 }
 
 export interface TeamUpMatch {
@@ -234,7 +240,7 @@ export interface TeamUpMatch {
   partners: Hero[];
 }
 
-/** Team-ups a hero would complete with the heroes already on your team. */
+/** Team-ups a hero would power up with the heroes already on your team, whichever of them uses it. */
 export function teamUpsWith(heroId: string, allies: readonly string[], teamUps: readonly TeamUp[], idx: HeroIndex): TeamUpMatch[] {
   const out: TeamUpMatch[] = [];
   for (const t of teamUps) {
@@ -247,6 +253,38 @@ export function teamUpsWith(heroId: string, allies: readonly string[], teamUps: 
   return out;
 }
 
+export interface HeroTeamUp {
+  name: string;
+  /** The hero who uses the ability. */
+  user: Hero;
+  /** The hero whose presence makes it stronger. */
+  partner: Hero;
+  effect?: string;
+  bonus?: string;
+}
+
+/**
+ * A hero's own team-up abilities, and other heroes' team-ups this hero powers up as the partner.
+ * Older data files without effect texts still list the pairs.
+ */
+export function heroTeamUps(heroId: string, teamUps: readonly TeamUp[], idx: HeroIndex): { own: HeroTeamUp[]; boosts: HeroTeamUp[] } {
+  const own: HeroTeamUp[] = [];
+  const boosts: HeroTeamUp[] = [];
+  // Deadpool's role versions share their team-ups, so list each one once.
+  const seen = new Set<string>();
+  for (const t of teamUps) {
+    if (t.heroes.length !== 2 || !t.heroes.includes(heroId)) continue;
+    const [user, partner] = t.heroes.map((id) => idx[id]);
+    if (!user || !partner) continue;
+    const key = `${t.name}|${user.name}|${partner.name}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    const view = { name: t.name, user, partner, effect: t.effect, bonus: t.bonus };
+    (user.id === heroId ? own : boosts).push(view);
+  }
+  return { own, boosts };
+}
+
 /** "Metallic Chaos with Magneto", or "Team-up with Magneto" when the name isn't known. */
 export function teamUpLabel(m: TeamUpMatch): string {
   const who = m.partners.map((h) => h.name).join(' and ');
@@ -255,8 +293,10 @@ export function teamUpLabel(m: TeamUpMatch): string {
 
 // ---- Draft ----
 
-const TEAMUP_BONUS = 0.25;
-const TEAMUP_MAX = 0.5;
+// Since Season 9 team-up abilities work alone and a partner only makes them stronger,
+// so completing one is a small tie-breaker.
+const TEAMUP_BONUS = 0.15;
+const TEAMUP_MAX = 0.3;
 
 export interface Suggestion {
   hero: Hero;
@@ -483,9 +523,46 @@ export function teamNote(allies: readonly Hero[], myRole: RoleId): string | null
   return `${list} so far.${gap}`;
 }
 
+// ---- Abilities ----
+
+export const ABILITY_KINDS: AbilityKind[] = ['attack', 'ability', 'ultimate', 'passive'];
+export const ABILITY_KIND_LABEL: Record<AbilityKind, string> = {
+  attack: 'Attacks',
+  ability: 'Abilities',
+  ultimate: 'Ultimate',
+  passive: 'Passives',
+};
+
+export interface KitView {
+  checked: string;
+  groups: { kind: AbilityKind; label: string; abilities: Ability[] }[];
+}
+
+/** A hero's abilities grouped by kind, cleaned up. Null when the data has none. */
+export function kitFor(hero: Hero): KitView | null {
+  const k = hero.kit;
+  if (!k || typeof k !== 'object' || !Array.isArray(k.abilities)) return null;
+  const valid = k.abilities.filter(
+    (a): a is Ability =>
+      !!a && typeof a.name === 'string' && !!a.name.trim() && typeof a.text === 'string' && ABILITY_KINDS.includes(a.kind),
+  );
+  if (!valid.length) return null;
+  const groups = ABILITY_KINDS.map((kind) => ({
+    kind,
+    label: ABILITY_KIND_LABEL[kind],
+    abilities: valid.filter((a) => a.kind === kind),
+  })).filter((g) => g.abilities.length > 0);
+  return { checked: typeof k.checked === 'string' ? k.checked : '', groups };
+}
+
+/** The tabs on a hero page. */
+export type HeroTab = 'against' | 'as' | 'abilities';
+export const HERO_TABS: HeroTab[] = ['against', 'as', 'abilities'];
+export const HERO_TAB_LABEL: Record<HeroTab, string> = { against: 'Against', as: 'Play as', abilities: 'Abilities' };
+
 // ---- Glossary ----
 
-export type GlossaryGroupId = 'roles' | 'tiers' | 'counters' | 'bans' | 'styles' | 'maps' | 'match';
+export type GlossaryGroupId = 'roles' | 'tiers' | 'counters' | 'bans' | 'styles' | 'maps' | 'match' | 'abilities';
 
 export interface GlossaryTerm {
   term: string;
@@ -568,12 +645,42 @@ export const GLOSSARY: GlossaryGroup[] = [
     id: 'match',
     title: 'In a match',
     terms: [
-      { term: 'Team-up', text: 'A bonus ability specific heroes unlock when they’re on the same team.' },
+      {
+        term: 'Team-up',
+        text: 'Each hero picks one of two team-up abilities. It works on its own and gets stronger when its partner hero is on your team.',
+      },
       { term: 'Focus priority', text: 'Who to take out first when a hero is on the enemy team: high, medium or low.' },
       {
         term: 'Quirk',
         text: 'Something the in-game ability text gets wrong or doesn’t explain, a known bug, or advice that went out of date. Each shows when it was last checked.',
       },
+    ],
+  },
+  {
+    id: 'abilities',
+    title: 'Ability terms',
+    intro: 'Words the ability breakdowns use.',
+    terms: [
+      { term: 'Attack', text: 'A hero’s main weapon or melee. Some heroes swap between two.' },
+      { term: 'Ultimate', text: 'A powerful ability that charges over the fight. Every hero has one.' },
+      { term: 'Passive', text: 'Always on, or triggers by itself.' },
+      { term: 'Bonus health', text: 'Extra health on top of the usual maximum. It’s lost first and usually drains away after a few seconds.' },
+      { term: 'Crowd control', text: 'Effects that limit what an enemy can do, like stuns, slows and launches.' },
+      { term: 'Stun', text: 'Can’t move, attack or use abilities for a moment.' },
+      { term: 'Immobilize or root', text: 'Held in place, but can still attack.' },
+      { term: 'Slow', text: 'Moves more slowly for a while.' },
+      { term: 'Launch', text: 'Thrown up into the air.' },
+      { term: 'Knock back', text: 'Pushed away.' },
+      { term: 'Knock down', text: 'Brought to the ground. Flying heroes drop out of the air.' },
+      { term: 'Grounded', text: 'Can’t fly or use movement that leaves the ground for a moment.' },
+      { term: 'Taunt', text: 'Forced to turn toward and attack the hero who taunted them.' },
+      { term: 'Charm', text: 'Walks toward the caster and can’t fight back for a moment.' },
+      { term: 'Blind', text: 'Most of the screen goes dark.' },
+      { term: 'Vulnerability', text: 'Takes extra damage from everything.' },
+      { term: 'Healing reduction', text: 'Gets less healing.' },
+      { term: 'Unstoppable', text: 'Can’t be crowd-controlled.' },
+      { term: 'Invulnerable', text: 'Can’t be damaged.' },
+      { term: 'Team-up ability', text: 'Each hero picks one of two before the match. It works alone and gets stronger with its partner on your team.' },
     ],
   },
 ];

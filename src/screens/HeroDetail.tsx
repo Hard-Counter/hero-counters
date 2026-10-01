@@ -6,14 +6,21 @@ import {
   GlossaryGroupId,
   HERO_STYLE_INFO,
   HERO_STYLE_LABEL,
+  HERO_TABS,
+  HERO_TAB_LABEL,
   HeroIndex,
+  HeroTab,
+  HeroTeamUp,
   ROLES,
   focusFor,
   formatDate,
   goodAgainst,
+  heroTeamUps,
+  kitFor,
   sortHeroes,
   tierFor,
   tipsFor,
+  usableTeamUps,
 } from '../logic';
 import { FONT, Theme, useStyles, useTheme } from '../theme';
 import { Avatar, ConfTag, FocusTag, HeroChip, RoleTag, SectionHead, TierBadge, TipList } from '../components/ui';
@@ -25,21 +32,26 @@ import { InfoCard } from '../components/Glossary';
 /** Why a hero shown in the peek card is on this page. */
 type Peek =
   | { kind: 'counter'; heroId: string; pick: CounterPick }
-  | { kind: 'strong'; heroId: string };
+  | { kind: 'strong'; heroId: string }
+  | { kind: 'teamup'; heroId: string; label: string; text?: string };
 
 export default function HeroDetail({
   heroId,
+  tab,
   backTo,
   data,
   idx,
   platform,
   bracket,
   myRole,
+  onTab,
   onOpen,
   onBack,
   onClose,
 }: {
   heroId: string | null;
+  /** The tab this page shows. Each page in the stack remembers its own. */
+  tab: HeroTab;
   /** Name of the hero you came from, when there is one to go back to. */
   backTo: string | null;
   data: Dataset;
@@ -47,7 +59,8 @@ export default function HeroDetail({
   platform: Platform;
   bracket: BracketId;
   myRole: RoleId;
-  onOpen: (heroId: string) => void;
+  onTab: (tab: HeroTab) => void;
+  onOpen: (heroId: string, tab: HeroTab) => void;
   onBack: () => void;
   onClose: () => void;
 }) {
@@ -55,6 +68,8 @@ export default function HeroDetail({
   const st = useStyles(makeStyles);
   const hero = heroId ? idx[heroId] : undefined;
   const scrollRef = useRef<ScrollView>(null);
+  const scrollY = useRef(0);
+  const tabBarY = useRef(0);
   const [peek, setPeek] = useState<Peek | null>(null);
   const [info, setInfo] = useState<GlossaryGroupId | null>(null);
 
@@ -74,9 +89,33 @@ export default function HeroDetail({
     () => (hero ? sortHeroes(goodAgainst(data, hero.id), bracket, platform) : []),
     [data, hero, bracket, platform],
   );
+  const teamUps = useMemo(
+    () => (hero ? heroTeamUps(hero.id, usableTeamUps(data, idx), idx) : { own: [], boosts: [] }),
+    [data, idx, hero],
+  );
   const tips = hero ? tipsFor(hero) : null;
+  const kit = hero ? kitFor(hero) : null;
   const focus = hero ? focusFor(hero) : null;
   const roleOrder: RoleId[] = [myRole, ...ROLES.filter((r) => r !== myRole)];
+
+  const hasAbilities = !!kit || !!tips?.quirks.length || teamUps.own.length > 0;
+  const tabs = HERO_TABS.filter((k) => k !== 'abilities' || hasAbilities);
+  const active: HeroTab = tabs.includes(tab) ? tab : 'against';
+
+  const selectTab = (next: HeroTab) => {
+    if (next === active) return;
+    onTab(next);
+    // Keep the tab bar where it is and start the new tab from its top.
+    if (scrollY.current > tabBarY.current) scrollRef.current?.scrollTo({ y: tabBarY.current, animated: false });
+  };
+
+  const peekTeamUp = (u: HeroTeamUp, other: Hero) =>
+    setPeek({
+      kind: 'teamup',
+      heroId: other.id,
+      label: u.user.id === hero?.id ? u.name : `${u.user.name}’s ${u.name}`,
+      text: u.bonus ? `With ${u.partner.name} on the team: ${lowerFirst(u.bonus)}` : u.effect,
+    });
 
   // Android's back button: close whatever is on top, then step back a hero, then close the page.
   const onRequestClose = () => {
@@ -115,117 +154,255 @@ export default function HeroDetail({
             </Pressable>
           </View>
 
-          <ScrollView ref={scrollRef} contentContainerStyle={st.body}>
-            <SectionHead onInfo={() => setInfo('tiers')} infoLabel="What tiers mean">
-              Tier by rank · {platform === 'pc' ? 'PC' : 'Console'}
-            </SectionHead>
-            <View style={st.tierGrid}>
-              {data.brackets.map((b) => {
-                const current = b.id === bracket;
+          <ScrollView
+            ref={scrollRef}
+            contentContainerStyle={st.body}
+            stickyHeaderIndices={[1]}
+            scrollEventThrottle={32}
+            onScroll={(e) => {
+              scrollY.current = e.nativeEvent.contentOffset.y;
+            }}
+          >
+            <View
+              style={st.pad}
+              onLayout={(e) => {
+                // The tab bar starts where this block ends. Measured here because the sticky
+                // wrapper around the bar reports its own position as 0.
+                tabBarY.current = e.nativeEvent.layout.y + e.nativeEvent.layout.height;
+              }}
+            >
+              <SectionHead onInfo={() => setInfo('tiers')} infoLabel="What tiers mean">
+                Tier by rank · {platform === 'pc' ? 'PC' : 'Console'}
+              </SectionHead>
+              <View style={st.tierGrid}>
+                {data.brackets.map((b) => {
+                  const current = b.id === bracket;
+                  return (
+                    <View key={b.id} style={[st.tierCell, current && st.tierCellOn]}>
+                      <TierBadge tier={tierFor(hero, b.id, platform)} size={36} />
+                      <Text style={[st.tierLabel, current && { color: t.ink }]}>{b.short}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+
+              <View style={st.notes}>
+                <Note color={t.ban[hero.banRisk]}>{BAN_LABEL[hero.banRisk]}.</Note>
+                {hero.patchNote ? <Note color={t.ink3}>{hero.patchNote}</Note> : null}
+                {hero.platformNote ? <Note color={t.ink3}>Console: {hero.platformNote}</Note> : null}
+              </View>
+            </View>
+
+            <View style={st.tabBar} accessibilityRole="tablist">
+              {tabs.map((k) => {
+                const on = k === active;
                 return (
-                  <View key={b.id} style={[st.tierCell, current && st.tierCellOn]}>
-                    <TierBadge tier={tierFor(hero, b.id, platform)} size={36} />
-                    <Text style={[st.tierLabel, current && { color: t.ink }]}>{b.short}</Text>
-                  </View>
+                  <Pressable
+                    key={k}
+                    onPress={() => selectTab(k)}
+                    accessibilityRole="tab"
+                    accessibilityState={{ selected: on }}
+                    style={({ pressed }) => [st.tabItem, pressed && { opacity: 0.7 }]}
+                  >
+                    <Text style={[st.tabText, on && st.tabTextOn]}>{HERO_TAB_LABEL[k].toUpperCase()}</Text>
+                    <View style={[st.tabLine, on && st.tabLineOn]} />
+                  </Pressable>
                 );
               })}
             </View>
 
-            <View style={st.notes}>
-              <Note color={t.ban[hero.banRisk]}>{BAN_LABEL[hero.banRisk]}.</Note>
-              {hero.patchNote ? <Note color={t.ink3}>{hero.patchNote}</Note> : null}
-              {hero.platformNote ? <Note color={t.ink3}>Console: {hero.platformNote}</Note> : null}
-            </View>
+            <View style={st.pad}>
+              {active === 'against' ? (
+                <>
+                  {focus && !focus.general ? (
+                    <>
+                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What focus priority means">
+                        Focus priority
+                      </SectionHead>
+                      <View style={st.focus}>
+                        <FocusTag level={focus.level} />
+                        <Text style={st.focusWhy}>{focus.why}</Text>
+                      </View>
+                    </>
+                  ) : null}
 
-            {hero.styles && hero.styles.length ? (
-              <>
-                <SectionHead onInfo={() => setInfo('styles')} infoLabel="What play styles mean">
-                  Play style
-                </SectionHead>
-                <View style={st.styles}>
-                  {hero.styles.map((s) =>
-                    HERO_STYLE_LABEL[s] ? (
-                      <Text key={s} style={st.styleText}>
-                        <Text style={st.styleName}>{HERO_STYLE_LABEL[s]}. </Text>
-                        {HERO_STYLE_INFO[s]}
-                      </Text>
-                    ) : null,
-                  )}
-                </View>
-              </>
-            ) : null}
+                  <SectionHead onInfo={() => setInfo('counters')} infoLabel="What the counter tags mean">
+                    Best counter overall
+                  </SectionHead>
+                  <CounterCard
+                    pick={hero.counters.overall}
+                    idx={idx}
+                    onPress={() => setPeek({ kind: 'counter', heroId: hero.counters.overall.hero, pick: hero.counters.overall })}
+                  />
 
-            <SectionHead onInfo={() => setInfo('counters')} infoLabel="What the counter tags mean">
-              Best counter overall
-            </SectionHead>
-            <CounterCard
-              pick={hero.counters.overall}
-              idx={idx}
-              onPress={() => setPeek({ kind: 'counter', heroId: hero.counters.overall.hero, pick: hero.counters.overall })}
-            />
-
-            <SectionHead>Best counter in each role</SectionHead>
-            <View style={st.cards}>
-              {roleOrder.map((r) => (
-                <CounterCard
-                  key={r}
-                  role={r}
-                  mine={r === myRole}
-                  pick={hero.counters[r]}
-                  idx={idx}
-                  onPress={() => setPeek({ kind: 'counter', heroId: hero.counters[r].hero, pick: hero.counters[r] })}
-                />
-              ))}
-            </View>
-
-            {tips && tips.against.length ? (
-              <>
-                <SectionHead onInfo={() => setInfo('match')} infoLabel="What focus priority means">
-                  Playing against {hero.name}
-                </SectionHead>
-                {focus && !focus.general ? (
-                  <View style={st.focus}>
-                    <FocusTag level={focus.level} />
-                    <Text style={st.focusWhy}>{focus.why}</Text>
+                  <SectionHead>Best counter in each role</SectionHead>
+                  <View style={st.cards}>
+                    {roleOrder.map((r) => (
+                      <CounterCard
+                        key={r}
+                        role={r}
+                        mine={r === myRole}
+                        pick={hero.counters[r]}
+                        idx={idx}
+                        onPress={() => setPeek({ kind: 'counter', heroId: hero.counters[r].hero, pick: hero.counters[r] })}
+                      />
+                    ))}
                   </View>
-                ) : null}
-                <TipList items={tips.against} />
-              </>
-            ) : null}
 
-            {tips && tips.as.length ? (
-              <>
-                <SectionHead>Playing as {hero.name}</SectionHead>
-                <TipList items={tips.as} />
-              </>
-            ) : null}
+                  {tips && tips.against.length ? (
+                    <>
+                      <SectionHead>How to play against {hero.name}</SectionHead>
+                      <TipList items={tips.against} />
+                    </>
+                  ) : null}
+                </>
+              ) : null}
 
-            {tips && tips.quirks.length ? (
-              <>
-                <SectionHead onInfo={() => setInfo('match')} infoLabel="What quirks are">
-                  Quirks
-                </SectionHead>
-                <View style={st.quirks}>
-                  {tips.quirks.map((q) => (
-                    <View key={q.text} style={st.quirk}>
-                      <Text style={st.quirkText}>{q.text}</Text>
-                      <Text style={st.quirkDate}>Checked {formatDate(q.asOf)}</Text>
-                    </View>
-                  ))}
-                </View>
-              </>
-            ) : null}
+              {active === 'as' ? (
+                <>
+                  {hero.styles && hero.styles.length ? (
+                    <>
+                      <SectionHead onInfo={() => setInfo('styles')} infoLabel="What play styles mean">
+                        Play style
+                      </SectionHead>
+                      <View style={st.styles}>
+                        {hero.styles.map((s) =>
+                          HERO_STYLE_LABEL[s] ? (
+                            <Text key={s} style={st.styleText}>
+                              <Text style={st.styleName}>{HERO_STYLE_LABEL[s]}. </Text>
+                              {HERO_STYLE_INFO[s]}
+                            </Text>
+                          ) : null,
+                        )}
+                      </View>
+                    </>
+                  ) : null}
 
-            {strongAgainst.length > 0 ? (
-              <>
-                <SectionHead>Strong against</SectionHead>
-                <View style={st.wrap}>
-                  {strongAgainst.map((h) => (
-                    <HeroChip key={h.id} hero={h} onPress={() => setPeek({ kind: 'strong', heroId: h.id })} />
-                  ))}
-                </View>
-              </>
-            ) : null}
+                  {tips && tips.as.length ? (
+                    <>
+                      <SectionHead>How to play {hero.name}</SectionHead>
+                      <TipList items={tips.as} />
+                    </>
+                  ) : null}
+
+                  {teamUps.own.length || teamUps.boosts.length ? (
+                    <>
+                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What team-ups are">
+                        Team-up partners
+                      </SectionHead>
+                      <View style={st.list}>
+                        {teamUps.own.map((u) => (
+                          <TeamUpRow
+                            key={`own-${u.name}-${u.partner.id}`}
+                            other={u.partner}
+                            title={u.partner.name}
+                            detail={`Makes your ${u.name} stronger`}
+                            onPress={() => peekTeamUp(u, u.partner)}
+                          />
+                        ))}
+                        {teamUps.boosts.map((u) => (
+                          <TeamUpRow
+                            key={`boost-${u.name}-${u.user.id}`}
+                            other={u.user}
+                            title={u.user.name}
+                            detail={`You make their ${u.name} stronger`}
+                            onPress={() => peekTeamUp(u, u.user)}
+                          />
+                        ))}
+                      </View>
+                    </>
+                  ) : null}
+
+                  {strongAgainst.length > 0 ? (
+                    <>
+                      <SectionHead>Strong against</SectionHead>
+                      <View style={st.wrap}>
+                        {strongAgainst.map((h) => (
+                          <HeroChip key={h.id} hero={h} onPress={() => setPeek({ kind: 'strong', heroId: h.id })} />
+                        ))}
+                      </View>
+                    </>
+                  ) : null}
+
+                  {!hero.styles?.length && !tips?.as.length && !teamUps.own.length && !teamUps.boosts.length && !strongAgainst.length ? (
+                    <Text style={st.empty}>No play notes for {hero.name} yet.</Text>
+                  ) : null}
+                </>
+              ) : null}
+
+              {active === 'abilities' ? (
+                <>
+                  {kit
+                    ? kit.groups.map((g, i) => (
+                        <View key={g.kind}>
+                          <SectionHead
+                            onInfo={i === 0 ? () => setInfo('abilities') : undefined}
+                            infoLabel={i === 0 ? 'What the ability terms mean' : undefined}
+                          >
+                            {g.label}
+                          </SectionHead>
+                          <View style={st.abilities}>
+                            {g.abilities.map((a) => (
+                              <View key={a.name} style={st.ability}>
+                                <Text style={st.abilityName}>{a.name}</Text>
+                                <Text style={st.abilityText}>{a.text}</Text>
+                              </View>
+                            ))}
+                          </View>
+                        </View>
+                      ))
+                    : null}
+
+                  {teamUps.own.length ? (
+                    <>
+                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What team-ups are">
+                        Team-up abilities
+                      </SectionHead>
+                      <Text style={st.lead}>Pick one before the match. Each works alone and gets stronger with its partner on your team.</Text>
+                      <View style={st.abilities}>
+                        {teamUps.own.map((u) => (
+                          <View key={`${u.name}-${u.partner.id}`} style={st.ability}>
+                            <Text style={st.abilityName}>
+                              {u.name} <Text style={st.abilityWith}>· with {u.partner.name}</Text>
+                            </Text>
+                            {u.effect ? <Text style={st.abilityText}>{u.effect}</Text> : null}
+                            {u.bonus ? (
+                              <Text style={st.abilityText}>
+                                <Text style={st.abilityBonus}>With {u.partner.name}: </Text>
+                                {u.bonus}
+                              </Text>
+                            ) : null}
+                          </View>
+                        ))}
+                      </View>
+                    </>
+                  ) : null}
+
+                  {tips && tips.quirks.length ? (
+                    <>
+                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What quirks are">
+                        Quirks
+                      </SectionHead>
+                      <View style={st.quirks}>
+                        {tips.quirks.map((q) => (
+                          <View key={q.text} style={st.quirk}>
+                            <Text style={st.quirkText}>{q.text}</Text>
+                            <Text style={st.quirkDate}>Checked {formatDate(q.asOf)}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    </>
+                  ) : null}
+
+                  {kit?.checked ? (
+                    <Text style={st.checked}>
+                      Checked against every patch since launch, last on {formatDate(kit.checked)}. Written in our own words, so in-game
+                      names and numbers may differ slightly.
+                    </Text>
+                  ) : null}
+                </>
+              ) : null}
+            </View>
           </ScrollView>
 
           <Overlay visible={!!peek} onClose={() => setPeek(null)}>
@@ -238,8 +415,10 @@ export default function HeroDetail({
                 platform={platform}
                 onOpen={() => {
                   const id = peek.heroId;
+                  // A counter or team-up partner is someone you'd play; a hero this one beats is an enemy.
+                  const next: HeroTab = peek.kind === 'strong' ? 'against' : 'as';
                   setPeek(null);
-                  onOpen(id);
+                  onOpen(id, next);
                 }}
                 onClose={() => setPeek(null)}
               />
@@ -251,6 +430,32 @@ export default function HeroDetail({
         </View>
       ) : null}
     </Sheet>
+  );
+}
+
+function lowerFirst(s: string): string {
+  return s ? s[0].toLowerCase() + s.slice(1) : s;
+}
+
+function TeamUpRow({ other, title, detail, onPress }: { other: Hero; title: string; detail: string; onPress: () => void }) {
+  const t = useTheme();
+  const st = useStyles(makeStyles);
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityHint="Shows a quick look at this hero"
+      style={({ pressed }) => [st.teamRow, pressed && { opacity: 0.8 }]}
+    >
+      <Avatar hero={other} size={32} />
+      <View style={st.teamText}>
+        <Text style={st.teamName} numberOfLines={1}>
+          {title}
+        </Text>
+        <Text style={st.small}>{detail}</Text>
+      </View>
+      <Icon name="chevron" size={16} color={t.ink3} />
+    </Pressable>
   );
 }
 
@@ -278,9 +483,13 @@ function PeekCard({
   // For "strong against", find why this page's hero beats the other one.
   let label: string;
   let pick: CounterPick | undefined;
+  let text: string | undefined;
   if (peek.kind === 'counter') {
     label = `Counters ${hero.name}`;
     pick = peek.pick;
+  } else if (peek.kind === 'teamup') {
+    label = peek.label;
+    text = peek.text;
   } else {
     label = `${hero.name} counters ${other.name}`;
     const keys = [hero.role, 'overall', ...ROLES.filter((r) => r !== hero.role)] as const;
@@ -315,6 +524,13 @@ function PeekCard({
             <ConfTag confidence={pick.confidence} />
             {pick.note ? <Text style={[st.small, st.flexText, pick.weak && { color: t.ban.medium }]}>{pick.note}</Text> : null}
           </View>
+        </View>
+      ) : null}
+
+      {peek.kind === 'teamup' ? (
+        <View style={st.peekWhy}>
+          <Text style={st.peekLabel}>{`TEAM-UP · ${label.toUpperCase()}`}</Text>
+          {text ? <Text style={st.why}>{text}</Text> : null}
         </View>
       ) : null}
 
@@ -413,7 +629,8 @@ const makeStyles = (t: Theme) =>
     roleRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
     newText: { color: t.accent, fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 1 },
     round: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: t.surface2 },
-    body: { paddingHorizontal: 16, paddingTop: 4, paddingBottom: 28 },
+    body: { paddingTop: 4, paddingBottom: 28 },
+    pad: { paddingHorizontal: 16 },
     tierGrid: { flexDirection: 'row', gap: 6 },
     tierCell: {
       flex: 1,
@@ -429,10 +646,22 @@ const makeStyles = (t: Theme) =>
     },
     tierCellOn: { borderColor: t.accent, borderWidth: 2 },
     tierLabel: { color: t.ink2, fontFamily: FONT.body, fontSize: 11.5, textAlign: 'center' },
-    notes: { marginTop: 12, gap: 6 },
+    notes: { marginTop: 12, marginBottom: 14, gap: 6 },
     note: { flexDirection: 'row', gap: 8 },
     noteDot: { width: 6, height: 6, marginTop: 7, borderRadius: 3 },
     noteText: { flex: 1, color: t.ink2, fontFamily: FONT.body, fontSize: 13.5, lineHeight: 19 },
+    tabBar: {
+      flexDirection: 'row',
+      paddingHorizontal: 8,
+      backgroundColor: t.bg,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: t.line,
+    },
+    tabItem: { flex: 1, alignItems: 'center', paddingTop: 12 },
+    tabText: { color: t.ink3, fontFamily: FONT.displayBold, fontSize: 13.5, letterSpacing: 1.1 },
+    tabTextOn: { color: t.ink },
+    tabLine: { alignSelf: 'stretch', height: 3, marginTop: 10, marginHorizontal: 10, borderRadius: 2, backgroundColor: 'transparent' },
+    tabLineOn: { backgroundColor: t.accent },
     styles: { gap: 6 },
     styleText: { color: t.ink2, fontFamily: FONT.body, fontSize: 14, lineHeight: 19 },
     styleName: { color: t.ink, fontFamily: FONT.bodyBold },
@@ -445,8 +674,31 @@ const makeStyles = (t: Theme) =>
     why: { color: t.ink, fontFamily: FONT.body, fontSize: 14, lineHeight: 19 },
     small: { color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
     flexText: { flexShrink: 1 },
-    focus: { gap: 6, marginBottom: 10 },
+    focus: { gap: 6 },
     focusWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13.5, lineHeight: 19 },
+    list: { gap: 6 },
+    teamRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      paddingVertical: 9,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    teamText: { flex: 1, minWidth: 0, gap: 1 },
+    teamName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
+    abilities: { gap: 12 },
+    ability: { gap: 3 },
+    abilityName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
+    abilityWith: { color: t.ink3, fontFamily: FONT.body, fontSize: 13.5 },
+    abilityText: { color: t.ink2, fontFamily: FONT.body, fontSize: 14, lineHeight: 19.5 },
+    abilityBonus: { color: t.ink, fontFamily: FONT.bodySemi },
+    lead: { marginBottom: 10, color: t.ink3, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
+    checked: { marginTop: 20, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
+    empty: { marginTop: 18, color: t.ink3, fontFamily: FONT.body, fontSize: 13.5 },
     quirks: { gap: 10 },
     quirk: { gap: 3, paddingLeft: 10, borderLeftWidth: 2, borderLeftColor: t.line },
     quirkText: { color: t.ink, fontFamily: FONT.body, fontSize: 14, lineHeight: 19 },

@@ -41,6 +41,21 @@ export interface HeroTips {
   quirks?: Quirk[];
 }
 
+export type AbilityKind = 'attack' | 'ability' | 'ultimate' | 'passive';
+
+export interface Ability {
+  name: string;
+  kind: AbilityKind;
+  /** What it does, in plain words. */
+  text: string;
+}
+
+export interface HeroKit {
+  /** Date the kit was last checked against the patch notes, 'YYYY-MM-DD'. */
+  checked: string;
+  abilities: Ability[];
+}
+
 export interface CounterPick {
   hero: string;
   confidence: Confidence;
@@ -73,6 +88,8 @@ export interface Hero {
   tips?: HeroTips;
   /** How high a priority this hero is when they're on the enemy team. */
   focus?: { level: FocusLevel; why: string };
+  /** What each ability does. Optional so older data files still load. */
+  kit?: HeroKit;
   counters: {
     overall: CounterPick;
     vanguard: CounterPick;
@@ -90,8 +107,15 @@ export interface CompSlot {
 export interface TeamUp {
   /** Can be empty when the in-game name isn't confirmed. */
   name: string;
-  /** Heroes who must all be on the same team. */
+  /**
+   * Since Season 9: the hero who uses the team-up ability, then the partner whose presence
+   * makes it stronger. Older data listed heroes who all had to be on the team.
+   */
   heroes: string[];
+  /** What the ability does on its own. */
+  effect?: string;
+  /** What it gains when the partner is on the team. */
+  bonus?: string;
   note?: string;
 }
 
