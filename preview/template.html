@@ -1678,9 +1678,11 @@
     state.detailStack = [...s.slice(0, -1), { ...s[s.length - 1], tab }];
     const body = $('detail').querySelector('.sheet-body');
     const anchor = $('detail').querySelector('.dtabs-anchor');
+    const bar = $('detail').querySelector('.dtabs');
     // Keep the tab bar where it is and start the new tab from its top. The anchor sits just
-    // above the sticky bar, so its position doesn't move when the bar sticks.
-    const barY = body && anchor ? anchor.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop : 0;
+    // above the sticky bar's top margin, so its position doesn't move when the bar sticks.
+    const gap = bar ? parseFloat(getComputedStyle(bar).marginTop) || 0 : 0;
+    const barY = body && anchor ? anchor.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop + gap : 0;
     const top = body ? Math.min(body.scrollTop, barY) : 0;
     renderDetail();
     const nb = $('detail').querySelector('.sheet-body');

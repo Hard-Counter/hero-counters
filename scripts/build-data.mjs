@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 7;
+const REVISION = 8;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -723,6 +723,7 @@ const TIPS = {
     focus: ['h', 'Low health for a Vanguard after Season 10 and no hard crowd control. He goes down fast once his parry is used.'],
     against: [
       'Bait out Mantle of Oblivion, his short parry, before you commit burst or an ultimate. Season 10 gave it a longer cooldown.',
+      'He can’t parry in Half-Demon form. That form hits hardest, but it’s also your window to burst him.',
       'His veil only weakens projectiles that pass through it, and less so since Season 10. Walk around it or use damage that isn’t a projectile.',
       'His ultimate fires piercing shots and turns damage into bonus health. Don’t line up, and break line of sight so he can’t farm health.',
       'He plays more like a Duelist than a tank, so focusing him pays off more than focusing most Vanguards.',
@@ -1072,7 +1073,7 @@ const ABILITIES = {
     ['Abyssal Veil', 'ability', 'Throws a sphere that raises a dark veil. His shots through it build extra energy, enemy shots through it lose damage and healing, and enemies who walk through take damage and are blinded.'],
     ['Void Walk', 'ability', 'Vanishes into the Void and flies freely for a moment, then reappears with a fading speed boost, damaging enemies nearby.'],
     ['Ruinous Pact', 'passive', 'At full Demonic Energy he automatically enters Half-Demon State (Leaded Transformation).'],
-    ['Leaded Transformation', 'ability', 'In Half-Demon State his arms become rifles that fire very fast without reloading, and hits heal him.'],
+    ['Leaded Transformation', 'ability', 'In Half-Demon State both arms become rifles that fire very fast without reloading, and hits heal him. His right hand becomes a second gun, so Mantle of Oblivion is unavailable.'],
     ['Demon of the End', 'ultimate', 'Becomes a full demon with a large health pool and fires up to six shots that pierce enemies and barriers. Hits give him and nearby allies bonus health. The last shot hits hardest.'],
   ]],
   hulk: ['2026-10-01', [

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Platform as RNPlatform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LayoutChangeEvent, Platform as RNPlatform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { BracketId, CounterPick, Dataset, Hero, Platform, RoleId } from '../data/types';
 import {
   BAN_LABEL,
@@ -69,7 +69,11 @@ export default function HeroDetail({
   const hero = heroId ? idx[heroId] : undefined;
   const scrollRef = useRef<ScrollView>(null);
   const scrollY = useRef(0);
+  const viewH = useRef(0);
+  const contentH = useRef(0);
   const tabBarY = useRef(0);
+  // True once the tab bar has scrolled up to the top edge, which shows the pinned copy.
+  const [pinned, setPinned] = useState(false);
   const [peek, setPeek] = useState<Peek | null>(null);
   const [info, setInfo] = useState<GlossaryGroupId | null>(null);
 
@@ -79,9 +83,11 @@ export default function HeroDetail({
     setShownFor(heroId);
     setPeek(null);
     setInfo(null);
+    setPinned(false);
   }
 
   useEffect(() => {
+    scrollY.current = 0;
     scrollRef.current?.scrollTo({ y: 0, animated: false });
   }, [heroId]);
 
@@ -102,11 +108,23 @@ export default function HeroDetail({
   const tabs = HERO_TABS.filter((k) => k !== 'abilities' || hasAbilities);
   const active: HeroTab = tabs.includes(tab) ? tab : 'against';
 
+  // The tab bar pins by drawing a copy over the top of the list rather than as a sticky header,
+  // because a pinned sticky header stops taking taps on Android (react-native issue 51763).
+  const updatePinned = () => {
+    // A shorter tab can leave the list unable to scroll as far as it was.
+    const y = Math.min(scrollY.current, Math.max(0, contentH.current - viewH.current));
+    const next = tabBarY.current > 0 && y >= tabBarY.current;
+    if (next !== pinned) setPinned(next);
+  };
+
   const selectTab = (next: HeroTab) => {
     if (next === active) return;
     onTab(next);
     // Keep the tab bar where it is and start the new tab from its top.
-    if (scrollY.current > tabBarY.current) scrollRef.current?.scrollTo({ y: tabBarY.current, animated: false });
+    if (scrollY.current > tabBarY.current) {
+      scrollY.current = tabBarY.current;
+      scrollRef.current?.scrollTo({ y: tabBarY.current, animated: false });
+    }
   };
 
   const peekTeamUp = (u: HeroTeamUp, other: Hero) =>
@@ -154,256 +172,253 @@ export default function HeroDetail({
             </Pressable>
           </View>
 
-          <ScrollView
-            ref={scrollRef}
-            contentContainerStyle={st.body}
-            stickyHeaderIndices={[1]}
-            scrollEventThrottle={32}
-            onScroll={(e) => {
-              scrollY.current = e.nativeEvent.contentOffset.y;
-            }}
-          >
-            <View
-              style={st.pad}
+          <View style={st.fill}>
+            <ScrollView
+              ref={scrollRef}
+              contentContainerStyle={st.body}
+              scrollEventThrottle={16}
               onLayout={(e) => {
-                // The tab bar starts where this block ends. Measured here because the sticky
-                // wrapper around the bar reports its own position as 0.
-                tabBarY.current = e.nativeEvent.layout.y + e.nativeEvent.layout.height;
+                viewH.current = e.nativeEvent.layout.height;
+                updatePinned();
+              }}
+              onContentSizeChange={(_, h) => {
+                contentH.current = h;
+                updatePinned();
+              }}
+              onScroll={(e) => {
+                scrollY.current = e.nativeEvent.contentOffset.y;
+                updatePinned();
               }}
             >
-              <SectionHead onInfo={() => setInfo('tiers')} infoLabel="What tiers mean">
-                Tier by rank · {platform === 'pc' ? 'PC' : 'Console'}
-              </SectionHead>
-              <View style={st.tierGrid}>
-                {data.brackets.map((b) => {
-                  const current = b.id === bracket;
-                  return (
-                    <View key={b.id} style={[st.tierCell, current && st.tierCellOn]}>
-                      <TierBadge tier={tierFor(hero, b.id, platform)} size={36} />
-                      <Text style={[st.tierLabel, current && { color: t.ink }]}>{b.short}</Text>
-                    </View>
-                  );
-                })}
+              <View style={st.pad}>
+                <SectionHead onInfo={() => setInfo('tiers')} infoLabel="What tiers mean">
+                  Tier by rank · {platform === 'pc' ? 'PC' : 'Console'}
+                </SectionHead>
+                <View style={st.tierGrid}>
+                  {data.brackets.map((b) => {
+                    const current = b.id === bracket;
+                    return (
+                      <View key={b.id} style={[st.tierCell, current && st.tierCellOn]}>
+                        <TierBadge tier={tierFor(hero, b.id, platform)} size={36} />
+                        <Text style={[st.tierLabel, current && { color: t.ink }]}>{b.short}</Text>
+                      </View>
+                    );
+                  })}
+                </View>
+
+                <View style={st.notes}>
+                  <Note color={t.ban[hero.banRisk]}>{BAN_LABEL[hero.banRisk]}.</Note>
+                  {hero.patchNote ? <Note color={t.ink3}>{hero.patchNote}</Note> : null}
+                  {hero.platformNote ? <Note color={t.ink3}>Console: {hero.platformNote}</Note> : null}
+                </View>
               </View>
 
-              <View style={st.notes}>
-                <Note color={t.ban[hero.banRisk]}>{BAN_LABEL[hero.banRisk]}.</Note>
-                {hero.patchNote ? <Note color={t.ink3}>{hero.patchNote}</Note> : null}
-                {hero.platformNote ? <Note color={t.ink3}>Console: {hero.platformNote}</Note> : null}
-              </View>
-            </View>
+              <TabBar
+                tabs={tabs}
+                active={active}
+                onSelect={selectTab}
+                hidden={pinned}
+                onLayout={(e) => {
+                  tabBarY.current = e.nativeEvent.layout.y;
+                  updatePinned();
+                }}
+              />
 
-            <View style={st.tabBar} accessibilityRole="tablist">
-              {tabs.map((k) => {
-                const on = k === active;
-                return (
-                  <Pressable
-                    key={k}
-                    onPress={() => selectTab(k)}
-                    accessibilityRole="tab"
-                    accessibilityState={{ selected: on }}
-                    style={({ pressed }) => [st.tabItem, pressed && { opacity: 0.7 }]}
-                  >
-                    <Text style={[st.tabText, on && st.tabTextOn]}>{HERO_TAB_LABEL[k].toUpperCase()}</Text>
-                    <View style={[st.tabLine, on && st.tabLineOn]} />
-                  </Pressable>
-                );
-              })}
-            </View>
-
-            <View style={st.pad}>
-              {active === 'against' ? (
-                <>
-                  {focus && !focus.general ? (
-                    <>
-                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What focus priority means">
-                        Focus priority
-                      </SectionHead>
-                      <View style={st.focus}>
-                        <FocusTag level={focus.level} />
-                        <Text style={st.focusWhy}>{focus.why}</Text>
-                      </View>
-                    </>
-                  ) : null}
-
-                  <SectionHead onInfo={() => setInfo('counters')} infoLabel="What the counter tags mean">
-                    Best counter overall
-                  </SectionHead>
-                  <CounterCard
-                    pick={hero.counters.overall}
-                    idx={idx}
-                    onPress={() => setPeek({ kind: 'counter', heroId: hero.counters.overall.hero, pick: hero.counters.overall })}
-                  />
-
-                  <SectionHead>Best counter in each role</SectionHead>
-                  <View style={st.cards}>
-                    {roleOrder.map((r) => (
-                      <CounterCard
-                        key={r}
-                        role={r}
-                        mine={r === myRole}
-                        pick={hero.counters[r]}
-                        idx={idx}
-                        onPress={() => setPeek({ kind: 'counter', heroId: hero.counters[r].hero, pick: hero.counters[r] })}
-                      />
-                    ))}
-                  </View>
-
-                  {tips && tips.against.length ? (
-                    <>
-                      <SectionHead>How to play against {hero.name}</SectionHead>
-                      <TipList items={tips.against} />
-                    </>
-                  ) : null}
-                </>
-              ) : null}
-
-              {active === 'as' ? (
-                <>
-                  {hero.styles && hero.styles.length ? (
-                    <>
-                      <SectionHead onInfo={() => setInfo('styles')} infoLabel="What play styles mean">
-                        Play style
-                      </SectionHead>
-                      <View style={st.styles}>
-                        {hero.styles.map((s) =>
-                          HERO_STYLE_LABEL[s] ? (
-                            <Text key={s} style={st.styleText}>
-                              <Text style={st.styleName}>{HERO_STYLE_LABEL[s]}. </Text>
-                              {HERO_STYLE_INFO[s]}
-                            </Text>
-                          ) : null,
-                        )}
-                      </View>
-                    </>
-                  ) : null}
-
-                  {tips && tips.as.length ? (
-                    <>
-                      <SectionHead>How to play {hero.name}</SectionHead>
-                      <TipList items={tips.as} />
-                    </>
-                  ) : null}
-
-                  {teamUps.own.length || teamUps.boosts.length ? (
-                    <>
-                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What team-ups are">
-                        Team-up partners
-                      </SectionHead>
-                      <View style={st.list}>
-                        {teamUps.own.map((u) => (
-                          <TeamUpRow
-                            key={`own-${u.name}-${u.partner.id}`}
-                            other={u.partner}
-                            title={u.partner.name}
-                            detail={`Makes your ${u.name} stronger`}
-                            onPress={() => peekTeamUp(u, u.partner)}
-                          />
-                        ))}
-                        {teamUps.boosts.map((u) => (
-                          <TeamUpRow
-                            key={`boost-${u.name}-${u.user.id}`}
-                            other={u.user}
-                            title={u.user.name}
-                            detail={`You make their ${u.name} stronger`}
-                            onPress={() => peekTeamUp(u, u.user)}
-                          />
-                        ))}
-                      </View>
-                    </>
-                  ) : null}
-
-                  {strongAgainst.length > 0 ? (
-                    <>
-                      <SectionHead>Strong against</SectionHead>
-                      <View style={st.wrap}>
-                        {strongAgainst.map((h) => (
-                          <HeroChip key={h.id} hero={h} onPress={() => setPeek({ kind: 'strong', heroId: h.id })} />
-                        ))}
-                      </View>
-                    </>
-                  ) : null}
-
-                  {!hero.styles?.length && !tips?.as.length && !teamUps.own.length && !teamUps.boosts.length && !strongAgainst.length ? (
-                    <Text style={st.empty}>No play notes for {hero.name} yet.</Text>
-                  ) : null}
-                </>
-              ) : null}
-
-              {active === 'abilities' ? (
-                <>
-                  {kit
-                    ? kit.groups.map((g, i) => (
-                        <View key={g.kind}>
-                          <SectionHead
-                            onInfo={i === 0 ? () => setInfo('abilities') : undefined}
-                            infoLabel={i === 0 ? 'What the ability terms mean' : undefined}
-                          >
-                            {g.label}
-                          </SectionHead>
-                          <View style={st.abilities}>
-                            {g.abilities.map((a) => (
-                              <View key={a.name} style={st.ability}>
-                                <Text style={st.abilityName}>{a.name}</Text>
-                                <Text style={st.abilityText}>{a.text}</Text>
-                              </View>
-                            ))}
-                          </View>
+              <View style={st.pad}>
+                {active === 'against' ? (
+                  <>
+                    {focus && !focus.general ? (
+                      <>
+                        <SectionHead onInfo={() => setInfo('match')} infoLabel="What focus priority means">
+                          Focus priority
+                        </SectionHead>
+                        <View style={st.focus}>
+                          <FocusTag level={focus.level} />
+                          <Text style={st.focusWhy}>{focus.why}</Text>
                         </View>
-                      ))
-                    : null}
+                      </>
+                    ) : null}
 
-                  {teamUps.own.length ? (
-                    <>
-                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What team-ups are">
-                        Team-up abilities
-                      </SectionHead>
-                      <Text style={st.lead}>Pick one before the match. Each works alone and gets stronger with its partner on your team.</Text>
-                      <View style={st.abilities}>
-                        {teamUps.own.map((u) => (
-                          <View key={`${u.name}-${u.partner.id}`} style={st.ability}>
-                            <Text style={st.abilityName}>
-                              {u.name} <Text style={st.abilityWith}>· with {u.partner.name}</Text>
-                            </Text>
-                            {u.effect ? <Text style={st.abilityText}>{u.effect}</Text> : null}
-                            {u.bonus ? (
-                              <Text style={st.abilityText}>
-                                <Text style={st.abilityBonus}>With {u.partner.name}: </Text>
-                                {u.bonus}
+                    <SectionHead onInfo={() => setInfo('counters')} infoLabel="What the counter tags mean">
+                      Best counter overall
+                    </SectionHead>
+                    <CounterCard
+                      pick={hero.counters.overall}
+                      idx={idx}
+                      onPress={() => setPeek({ kind: 'counter', heroId: hero.counters.overall.hero, pick: hero.counters.overall })}
+                    />
+
+                    <SectionHead>Best counter in each role</SectionHead>
+                    <View style={st.cards}>
+                      {roleOrder.map((r) => (
+                        <CounterCard
+                          key={r}
+                          role={r}
+                          mine={r === myRole}
+                          pick={hero.counters[r]}
+                          idx={idx}
+                          onPress={() => setPeek({ kind: 'counter', heroId: hero.counters[r].hero, pick: hero.counters[r] })}
+                        />
+                      ))}
+                    </View>
+
+                    {tips && tips.against.length ? (
+                      <>
+                        <SectionHead>How to play against {hero.name}</SectionHead>
+                        <TipList items={tips.against} />
+                      </>
+                    ) : null}
+                  </>
+                ) : null}
+
+                {active === 'as' ? (
+                  <>
+                    {hero.styles && hero.styles.length ? (
+                      <>
+                        <SectionHead onInfo={() => setInfo('styles')} infoLabel="What play styles mean">
+                          Play style
+                        </SectionHead>
+                        <View style={st.styles}>
+                          {hero.styles.map((s) =>
+                            HERO_STYLE_LABEL[s] ? (
+                              <Text key={s} style={st.styleText}>
+                                <Text style={st.styleName}>{HERO_STYLE_LABEL[s]}. </Text>
+                                {HERO_STYLE_INFO[s]}
                               </Text>
-                            ) : null}
-                          </View>
-                        ))}
-                      </View>
-                    </>
-                  ) : null}
+                            ) : null,
+                          )}
+                        </View>
+                      </>
+                    ) : null}
 
-                  {tips && tips.quirks.length ? (
-                    <>
-                      <SectionHead onInfo={() => setInfo('match')} infoLabel="What quirks are">
-                        Quirks
-                      </SectionHead>
-                      <View style={st.quirks}>
-                        {tips.quirks.map((q) => (
-                          <View key={q.text} style={st.quirk}>
-                            <Text style={st.quirkText}>{q.text}</Text>
-                            <Text style={st.quirkDate}>Checked {formatDate(q.asOf)}</Text>
-                          </View>
-                        ))}
-                      </View>
-                    </>
-                  ) : null}
+                    {tips && tips.as.length ? (
+                      <>
+                        <SectionHead>How to play {hero.name}</SectionHead>
+                        <TipList items={tips.as} />
+                      </>
+                    ) : null}
 
-                  {kit?.checked ? (
-                    <Text style={st.checked}>
-                      Checked against every patch since launch, last on {formatDate(kit.checked)}. Written in our own words, so in-game
-                      names and numbers may differ slightly.
-                    </Text>
-                  ) : null}
-                </>
-              ) : null}
-            </View>
-          </ScrollView>
+                    {teamUps.own.length || teamUps.boosts.length ? (
+                      <>
+                        <SectionHead onInfo={() => setInfo('match')} infoLabel="What team-ups are">
+                          Team-up partners
+                        </SectionHead>
+                        <View style={st.list}>
+                          {teamUps.own.map((u) => (
+                            <TeamUpRow
+                              key={`own-${u.name}-${u.partner.id}`}
+                              other={u.partner}
+                              title={u.partner.name}
+                              detail={`Makes your ${u.name} stronger`}
+                              onPress={() => peekTeamUp(u, u.partner)}
+                            />
+                          ))}
+                          {teamUps.boosts.map((u) => (
+                            <TeamUpRow
+                              key={`boost-${u.name}-${u.user.id}`}
+                              other={u.user}
+                              title={u.user.name}
+                              detail={`You make their ${u.name} stronger`}
+                              onPress={() => peekTeamUp(u, u.user)}
+                            />
+                          ))}
+                        </View>
+                      </>
+                    ) : null}
+
+                    {strongAgainst.length > 0 ? (
+                      <>
+                        <SectionHead>Strong against</SectionHead>
+                        <View style={st.wrap}>
+                          {strongAgainst.map((h) => (
+                            <HeroChip key={h.id} hero={h} onPress={() => setPeek({ kind: 'strong', heroId: h.id })} />
+                          ))}
+                        </View>
+                      </>
+                    ) : null}
+
+                    {!hero.styles?.length && !tips?.as.length && !teamUps.own.length && !teamUps.boosts.length && !strongAgainst.length ? (
+                      <Text style={st.empty}>No play notes for {hero.name} yet.</Text>
+                    ) : null}
+                  </>
+                ) : null}
+
+                {active === 'abilities' ? (
+                  <>
+                    {kit
+                      ? kit.groups.map((g, i) => (
+                          <View key={g.kind}>
+                            <SectionHead
+                              onInfo={i === 0 ? () => setInfo('abilities') : undefined}
+                              infoLabel={i === 0 ? 'What the ability terms mean' : undefined}
+                            >
+                              {g.label}
+                            </SectionHead>
+                            <View style={st.abilities}>
+                              {g.abilities.map((a) => (
+                                <View key={a.name} style={st.ability}>
+                                  <Text style={st.abilityName}>{a.name}</Text>
+                                  <Text style={st.abilityText}>{a.text}</Text>
+                                </View>
+                              ))}
+                            </View>
+                          </View>
+                        ))
+                      : null}
+
+                    {teamUps.own.length ? (
+                      <>
+                        <SectionHead onInfo={() => setInfo('match')} infoLabel="What team-ups are">
+                          Team-up abilities
+                        </SectionHead>
+                        <Text style={st.lead}>Pick one before the match. Each works alone and gets stronger with its partner on your team.</Text>
+                        <View style={st.abilities}>
+                          {teamUps.own.map((u) => (
+                            <View key={`${u.name}-${u.partner.id}`} style={st.ability}>
+                              <Text style={st.abilityName}>
+                                {u.name} <Text style={st.abilityWith}>· with {u.partner.name}</Text>
+                              </Text>
+                              {u.effect ? <Text style={st.abilityText}>{u.effect}</Text> : null}
+                              {u.bonus ? (
+                                <Text style={st.abilityText}>
+                                  <Text style={st.abilityBonus}>With {u.partner.name}: </Text>
+                                  {u.bonus}
+                                </Text>
+                              ) : null}
+                            </View>
+                          ))}
+                        </View>
+                      </>
+                    ) : null}
+
+                    {tips && tips.quirks.length ? (
+                      <>
+                        <SectionHead onInfo={() => setInfo('match')} infoLabel="What quirks are">
+                          Quirks
+                        </SectionHead>
+                        <View style={st.quirks}>
+                          {tips.quirks.map((q) => (
+                            <View key={q.text} style={st.quirk}>
+                              <Text style={st.quirkText}>{q.text}</Text>
+                              <Text style={st.quirkDate}>Checked {formatDate(q.asOf)}</Text>
+                            </View>
+                          ))}
+                        </View>
+                      </>
+                    ) : null}
+
+                    {kit?.checked ? (
+                      <Text style={st.checked}>
+                        Checked against every patch since launch, last on {formatDate(kit.checked)}. Written in our own words, so in-game
+                        names and numbers may differ slightly.
+                      </Text>
+                    ) : null}
+                  </>
+                ) : null}
+              </View>
+            </ScrollView>
+            {pinned ? <TabBar tabs={tabs} active={active} onSelect={selectTab} pinned /> : null}
+          </View>
 
           <Overlay visible={!!peek} onClose={() => setPeek(null)}>
             {peek && idx[peek.heroId] ? (
@@ -430,6 +445,50 @@ export default function HeroDetail({
         </View>
       ) : null}
     </Sheet>
+  );
+}
+
+function TabBar({
+  tabs,
+  active,
+  onSelect,
+  pinned,
+  hidden,
+  onLayout,
+}: {
+  tabs: HeroTab[];
+  active: HeroTab;
+  onSelect: (tab: HeroTab) => void;
+  /** The copy drawn over the top of the list once the real bar scrolls up to it. */
+  pinned?: boolean;
+  /** Hides the real bar from screen readers while the pinned copy shows. */
+  hidden?: boolean;
+  onLayout?: (e: LayoutChangeEvent) => void;
+}) {
+  const st = useStyles(makeStyles);
+  return (
+    <View
+      style={[st.tabBar, pinned && st.tabBarPinned]}
+      accessibilityRole="tablist"
+      aria-hidden={hidden}
+      onLayout={onLayout}
+    >
+      {tabs.map((k) => {
+        const on = k === active;
+        return (
+          <Pressable
+            key={k}
+            onPress={() => onSelect(k)}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: on }}
+            style={({ pressed }) => [st.tabItem, pressed && { opacity: 0.7 }]}
+          >
+            <Text style={[st.tabText, on && st.tabTextOn]}>{HERO_TAB_LABEL[k].toUpperCase()}</Text>
+            <View style={[st.tabLine, on && st.tabLineOn]} />
+          </Pressable>
+        );
+      })}
+    </View>
   );
 }
 
@@ -657,6 +716,7 @@ const makeStyles = (t: Theme) =>
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: t.line,
     },
+    tabBarPinned: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 2 },
     tabItem: { flex: 1, alignItems: 'center', paddingTop: 12 },
     tabText: { color: t.ink3, fontFamily: FONT.displayBold, fontSize: 13.5, letterSpacing: 1.1 },
     tabTextOn: { color: t.ink },

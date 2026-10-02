@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 7,
+  "revision": 8,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
@@ -333,6 +333,7 @@
       "tips": {
         "against": [
           "Bait out Mantle of Oblivion, his short parry, before you commit burst or an ultimate. Season 10 gave it a longer cooldown.",
+          "He can’t parry in Half-Demon form. That form hits hardest, but it’s also your window to burst him.",
           "His veil only weakens projectiles that pass through it, and less so since Season 10. Walk around it or use damage that isn’t a projectile.",
           "His ultimate fires piercing shots and turns damage into bonus health. Don’t line up, and break line of sight so he can’t farm health.",
           "He plays more like a Duelist than a tank, so focusing him pays off more than focusing most Vanguards."
@@ -380,7 +381,7 @@
           {
             "name": "Leaded Transformation",
             "kind": "ability",
-            "text": "In Half-Demon State his arms become rifles that fire very fast without reloading, and hits heal him."
+            "text": "In Half-Demon State both arms become rifles that fire very fast without reloading, and hits heal him. His right hand becomes a second gun, so Mantle of Oblivion is unavailable."
           },
           {
             "name": "Demon of the End",
