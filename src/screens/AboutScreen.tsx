@@ -81,7 +81,7 @@ export default function AboutScreen({ data, source }: { data: Dataset; source: D
 
       <View style={st.disclaimer}>
         <Text style={st.small}>
-          Hero Counters is an unofficial fan-made tool. It is not affiliated with or endorsed by NetEase Games or Marvel. Hero
+          Hard Counter is an unofficial fan-made tool. It is not affiliated with or endorsed by NetEase Games or Marvel. Hero
           names belong to their owners.
         </Text>
         <Text style={[st.small, { marginTop: 8 }]}>Version {Constants.expoConfig?.version ?? '—'}</Text>

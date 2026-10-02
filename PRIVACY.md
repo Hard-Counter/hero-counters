@@ -1,4 +1,4 @@
-# Privacy Policy — Hero Counters
+# Privacy Policy — Hard Counter
 
 > Draft. Fill in the bracketed parts, make sure it matches how you actually run the app, and host it at a public URL before release. This is a starting point, not legal advice.
 
@@ -6,7 +6,7 @@
 **Developer:** [your name or company]
 **Contact:** [email address]
 
-Hero Counters ("the app") is an unofficial companion tool for players of Marvel Rivals. It is not affiliated with or endorsed by NetEase Games or Marvel.
+Hard Counter ("the app") is an unofficial companion tool for players of Marvel Rivals. It is not affiliated with or endorsed by NetEase Games or Marvel.
 
 ## Information the app collects
 

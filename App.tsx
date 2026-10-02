@@ -103,7 +103,7 @@ function Root() {
           </View>
           <View style={st.brand}>
             <Text style={st.title} numberOfLines={1}>
-              HERO COUNTERS
+              HARD COUNTER
             </Text>
             <Text style={st.meta}>
               {data.seasonShort} · updated {formatDate(data.updated)}

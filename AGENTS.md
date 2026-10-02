@@ -1,4 +1,4 @@
-This is Hero Counters, an Expo/React Native app: an unofficial Marvel Rivals ranked companion with tier lists, per-role counters, a draft helper and team comps. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
+This is Hard Counter (formerly Hero Counters; the repo and `DATA_URL` keep the old name), an Expo/React Native app: an unofficial Marvel Rivals ranked companion with tier lists, per-role counters, a draft helper and team comps. Prioritize mobile-first patterns, performance, and cross-platform compatibility.
 
 ## Expo has changed — do not trust your training data
 

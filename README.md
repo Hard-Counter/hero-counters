@@ -1,4 +1,6 @@
-# Hero Counters
+# Hard Counter
+
+Formerly Hero Counters. The repository keeps its old name because the data URL built into the app points at it.
 
 An unofficial ranked companion for Marvel Rivals players: tier lists by rank and platform, the best counter to every hero overall and in each role, a draft helper, and the top team comps. Built with Expo (SDK 57), so one codebase covers iPhone and Android.
 
@@ -49,8 +51,8 @@ Install the build it gives you, then run `npx expo start --dev-client`. Developm
 
 ## 3. Before you publish
 
-- [ ] **Name it.** Set `APP.name` in `app.config.ts`. Keep "Marvel" and "Marvel Rivals" out of the app name, icon and keywords (Apple guidelines 4.1(c) and 2.3.7, Google Play's impersonation policy). Mention the game only factually in the description.
-- [ ] **Bundle IDs.** Replace `com.example.herocounters` with your own, such as `com.yourname.herocounters`.
+- [x] **Name it.** The app is *Hard Counter* (`APP.name` in `app.config.ts`). Keep "Marvel" and "Marvel Rivals" out of the app name, icon and keywords (Apple guidelines 4.1(c) and 2.3.7, Google Play's impersonation policy). Mention the game only factually in the description.
+- [x] **Bundle IDs.** `com.hardcounter.app` on both stores. It can't change once the app is in a store, and it has no personal name in it, so the app can move to a company account later.
 - [ ] **Accounts.** Apple Developer Program (annual fee), Google Play Console (one-time fee), AdMob (free), Expo (free tier is enough).
 - [ ] **AdMob.** Add an iOS app and an Android app in AdMob, create a banner ad unit for each, and put all four IDs in `ADMOB` in `app.config.ts`. Under *Privacy & messaging*, publish a GDPR consent message and an IDFA explainer; the app shows them automatically. AdMob also asks you to publish an `app-ads.txt` file on the website listed in your store listings.
 - [ ] **Privacy policy.** Fill in `PRIVACY.md`, host it anywhere public, and set `PRIVACY_URL`. Both stores require the link.

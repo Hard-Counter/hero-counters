@@ -4,11 +4,13 @@ import type { ConfigContext, ExpoConfig } from 'expo/config';
 // Edit these before your first store build.
 // ---------------------------------------------------------------------------
 const APP = {
-  name: 'Hero Counters', // Working title. Keep "Marvel" and "Marvel Rivals" out of the name.
-  slug: 'hero-counters',
+  name: 'Hard Counter', // Keep "Marvel" and "Marvel Rivals" out of the name.
+  slug: 'hard-counter',
   version: '0.1.0',
-  iosBundleId: 'com.example.herocounters', // Replace "example" with your own reverse-domain name.
-  androidPackage: 'com.example.herocounters',
+  // Permanent once the app is in a store, and kept free of anyone's personal name so the
+  // app can move to a company account later.
+  iosBundleId: 'com.hardcounter.app',
+  androidPackage: 'com.hardcounter.app',
 };
 
 // AdMob. The app IDs below are Google's public test IDs; replace them with your own
