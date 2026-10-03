@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 9;
+const REVISION = 10;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -57,6 +57,7 @@ const METHODOLOGY = [
   'Data-backed counters are supported by public matchup data. Kit-based counters come from how the heroes’ abilities interact. Consensus picks come from community play.',
   'Bans happen at Gold III and above: each team bans three heroes, and a banned hero can’t be picked by either team. Heroes marked as often banned may not be available.',
   'The draft helper leaves out banned heroes and heroes your teammates already picked. Since Season 9 each hero picks one of two team-up abilities that works alone and gets stronger with a named partner, so the helper only gives a small nudge to picks that power up a team-up with your team.',
+  'Heroes you star as yours rank about a tier and a half higher in the draft helper, because a hero you play well often beats a slightly stronger one you don’t. Flex looks at every role and favors one your team is missing. A duo swap is only suggested when the new pair counters the enemy team clearly better than your best pick next to your duo’s current hero.',
   'Picking a map in the draft helper nudges close calls toward heroes whose play style suits its layout, mode and side. A real counter always outweighs the map.',
   'Hero tips are our own advice, written from official patch notes and current guides. Each quirk shows the date it was last checked.',
   'Ability breakdowns are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows when their kit was last checked.',
@@ -73,7 +74,8 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
-  'Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be damaged during his ultimate. The app is now called Hard Counter.',
+  'Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.',
+  'Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.',
   'Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.',
   'Tips for 12 heroes: how to play against them, how to play them, and quirks the game doesn’t explain. Plus a glossary, and a draft helper that tracks bans and both teams.',
   'Weekly review, Sep 26: no tier or counter changes. The Sept 24 update was cosmetic only (new God Quarry map in Quick Match, a Devil Dinosaur KO-feed fix); no ranked map pool change yet.',
@@ -902,14 +904,14 @@ const TIPS = {
       'Firewall is how he survives burst. Since Season 10 it gives less bonus health but also heals him for a few seconds, so burst him before he casts it.',
       'Punish him while his dash, Dynamic Flight, is on cooldown.',
       'His drone heals everyone around its target, so focus enemies away from it.',
-      'He can’t be damaged during his ultimate. Spread out of the drones’ area and save your burst for when it ends.',
+      'Roots and stuns don’t work on him during his ultimate, but he still takes damage. Save your crowd control for when it ends.',
     ],
     as: [
       'Keep your Patch drone on the ally under the most pressure, or on one standing in a group.',
       'Use Firewall against enemy burst and ultimates. Since Season 10 it also heals you.',
       'Use height and cover, and don’t hover in open sightlines. Save your dash for escaping divers.',
       'Add beam damage when nobody needs healing.',
-      'Use your ultimate to answer an enemy engage. You can’t be damaged while it lasts.',
+      'Use your ultimate to answer an enemy engage. Roots and stuns can’t stop you during it, but you still take damage.',
     ],
     quirks: [['Older guides say he can’t heal himself. Since Season 10, Firewall also heals him for a few seconds.', '2026-10-01']],
   },
@@ -1490,7 +1492,7 @@ const ABILITIES = {
     ['Imperative: Patch', 'ability', 'Sends up to two healing drones to follow allies, healing everyone around them and the chosen ally most.'],
     ['Imperative: Firewall', 'ability', 'Cast on his Patch target: he, the target and allies near them get bonus health, and the target gets a speed and damage boost. He then heals for a few seconds.'],
     ['Dynamic Flight', 'ability', 'Flies quickly in the direction he is moving, then keeps a speed boost.'],
-    ['Rage of Ultron', 'ultimate', 'Summons drones that rain Encephalo-Rays around his target, damaging enemies or healing allies. Extra damage against bonus health. He can’t be damaged while it lasts.'],
+    ['Rage of Ultron', 'ultimate', 'Summons drones that rain Encephalo-Rays around his target, damaging enemies or healing allies. Extra damage against bonus health. Roots and stuns don’t work on him while it lasts.'],
   ]],
   'rocket-raccoon': ['2026-10-01', [
     ['Bombard Mode', 'attack', 'Fires energy projectiles at enemies.'],

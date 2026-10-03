@@ -3,6 +3,7 @@ import { LayoutChangeEvent, Platform as RNPlatform, Pressable, ScrollView, Style
 import type { BracketId, CounterPick, Dataset, Hero, Platform, RoleId } from '../data/types';
 import {
   BAN_LABEL,
+  DraftRole,
   GlossaryGroupId,
   HERO_STYLE_INFO,
   HERO_STYLE_LABEL,
@@ -11,6 +12,7 @@ import {
   HeroIndex,
   HeroTab,
   HeroTeamUp,
+  MAX_MY_HEROES,
   ROLES,
   focusFor,
   formatDate,
@@ -46,6 +48,9 @@ export default function HeroDetail({
   platform,
   bracket,
   myRole,
+  starred,
+  starFull,
+  onStar,
   onTab,
   onOpen,
   onBack,
@@ -60,7 +65,12 @@ export default function HeroDetail({
   idx: HeroIndex;
   platform: Platform;
   bracket: BracketId;
-  myRole: RoleId;
+  myRole: DraftRole;
+  /** The hero is one of yours (starred). */
+  starred: boolean;
+  /** You've starred as many heroes as you can. */
+  starFull: boolean;
+  onStar: (heroId: string) => void;
   onTab: (tab: HeroTab) => void;
   onOpen: (heroId: string, tab: HeroTab) => void;
   onBack: () => void;
@@ -78,6 +88,8 @@ export default function HeroDetail({
   const [pinned, setPinned] = useState(false);
   const [peek, setPeek] = useState<Peek | null>(null);
   const [info, setInfo] = useState<GlossaryGroupId | null>(null);
+  // Shown when you try to star a hero with every slot taken.
+  const [starNote, setStarNote] = useState(false);
 
   // A new hero starts with nothing open on top. Done while rendering so the old card never flashes.
   const [shownFor, setShownFor] = useState(heroId);
@@ -86,6 +98,7 @@ export default function HeroDetail({
     setPeek(null);
     setInfo(null);
     setPinned(false);
+    setStarNote(false);
   }
 
   useEffect(() => {
@@ -105,7 +118,18 @@ export default function HeroDetail({
   const tips = hero ? tipsFor(hero) : null;
   const kit = hero ? kitFor(hero) : null;
   const focus = hero ? focusFor(hero) : null;
-  const roleOrder: RoleId[] = [myRole, ...ROLES.filter((r) => r !== myRole)];
+  // Flex has no role of its own, so the roles keep their usual order.
+  const roleOrder: RoleId[] = myRole === 'flex' ? ROLES : [myRole, ...ROLES.filter((r) => r !== myRole)];
+
+  const toggleStar = () => {
+    if (!hero) return;
+    if (!starred && starFull) {
+      setStarNote(true);
+      return;
+    }
+    setStarNote(false);
+    onStar(hero.id);
+  };
 
   const hasAbilities = !!kit || !!tips?.quirks.length || teamUps.own.length > 0;
   const tabs = HERO_TABS.filter((k) => (k !== 'abilities' || hasAbilities) && (k !== 'history' || !!history));
@@ -168,11 +192,29 @@ export default function HeroDetail({
               <View style={st.roleRow}>
                 <RoleTag role={hero.role} />
                 {hero.isNew ? <Text style={st.newText}>NEW THIS SEASON</Text> : null}
+                {starred ? <Text style={st.newText}>MY HERO</Text> : null}
               </View>
+              {starNote ? (
+                <Text style={st.starNote}>
+                  You’ve starred {MAX_MY_HEROES} heroes. Unstar one to add another.
+                </Text>
+              ) : null}
             </View>
-            <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close" hitSlop={10} style={st.round}>
-              <Icon name="close" size={18} color={t.ink} />
-            </Pressable>
+            <View style={st.headBtns}>
+              <Pressable
+                onPress={toggleStar}
+                accessibilityRole="button"
+                accessibilityLabel={starred ? `Remove ${hero.name} from My heroes` : `Add ${hero.name} to My heroes`}
+                accessibilityState={{ selected: starred }}
+                hitSlop={6}
+                style={st.round}
+              >
+                <Icon name={starred ? 'starred' : 'star'} size={19} color={starred ? t.accent : t.ink} />
+              </Pressable>
+              <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close" hitSlop={10} style={st.round}>
+                <Icon name="close" size={18} color={t.ink} />
+              </Pressable>
+            </View>
           </View>
 
           <View style={st.fill}>
@@ -683,6 +725,7 @@ const makeStyles = (t: Theme) =>
       borderBottomColor: t.line,
     },
     headText: { flex: 1, minWidth: 0 },
+    headBtns: { flexDirection: 'row', gap: 8 },
     name: {
       marginBottom: 5,
       color: t.ink,
@@ -694,6 +737,7 @@ const makeStyles = (t: Theme) =>
     },
     roleRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
     newText: { color: t.accent, fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 1 },
+    starNote: { marginTop: 6, color: t.ink2, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
     round: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: t.surface2 },
     body: { paddingTop: 4, paddingBottom: 28 },
     pad: { paddingHorizontal: 16 },

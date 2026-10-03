@@ -300,6 +300,20 @@ export function teamUpLabel(m: TeamUpMatch): string {
 // so completing one is a small tie-breaker.
 const TEAMUP_BONUS = 0.15;
 const TEAMUP_MAX = 0.3;
+// A hero you're comfortable on is worth about a tier and a half.
+const COMFORT_BONUS = 0.75;
+// Flex: filling a role nobody on your team plays yet, or stacking a fourth of one role.
+const ROLE_GAP_BONUS = 0.75;
+const ROLE_STACK_PENALTY = 0.5;
+// A duo swap has to beat your best solo pick by a clear margin (three tier steps, or half a listed counter).
+const DUO_MIN_GAIN = 1.5;
+
+/** Your role in the draft helper. Flex looks at every role and lets the team go off 2-2-2. */
+export type DraftRole = RoleId | 'flex';
+export const DRAFT_ROLES: DraftRole[] = ['vanguard', 'duelist', 'strategist', 'flex'];
+export const DRAFT_ROLE_LABEL: Record<DraftRole, string> = { ...ROLE_LABEL, flex: 'Flex' };
+/** How many heroes you can star as yours. */
+export const MAX_MY_HEROES = 12;
 
 export interface Suggestion {
   hero: Hero;
@@ -313,6 +327,10 @@ export interface Suggestion {
   map: MapFit;
   /** Team-ups this pick would form with your teammates. */
   teamUps: TeamUpMatch[];
+  /** One of the heroes you starred as yours. */
+  comfort: boolean;
+  /** Flex: the pick fills a role your team doesn't have yet. */
+  fillsRole?: RoleId;
 }
 
 /**
@@ -337,58 +355,139 @@ export interface DraftOptions {
   /** Heroes your teammates picked. You can't pick them too, and they unlock team-ups. */
   allies?: readonly string[];
   teamUps?: readonly TeamUp[];
+  /** Heroes you starred as yours. They get a boost. */
+  mine?: readonly string[];
 }
 
+interface Scored {
+  rows: Map<string, Suggestion>;
+  /** Counter points each hero earns against each enemy, for judging pairs. */
+  credits: Map<string, Map<string, number>>;
+}
+
+const pickWeight = (p: CounterPick) => CONFIDENCE_WEIGHT[p.confidence] * (p.weak ? 0.4 : 1);
+
 /**
- * Best picks in your role, plus the in-role counter for each enemy. Banned heroes and heroes your
- * teammates took are left out. The map and team-ups nudge close calls; counters count most.
+ * Scores every available hero in every role: tier, map, team-ups and comfort, plus points for each
+ * enemy it's listed against (in its own role, and as the best counter overall).
  */
-export function draft(
+function scoreHeroes(
   data: Dataset,
   idx: HeroIndex,
-  role: RoleId,
   enemyIds: readonly string[],
   bracket: BracketId,
   platform: Platform,
-  opts: DraftOptions = {},
-): { picks: Suggestion[]; matchups: Matchup[] } {
+  opts: DraftOptions,
+  flex: boolean,
+): Scored {
   const banned = new Set(opts.banned ?? []);
   const allyList = (opts.allies ?? []).filter((id) => !!idx[id]);
   const allies = new Set(allyList);
+  const mine = new Set(opts.mine ?? []);
   const teamUps = opts.teamUps ?? [];
 
   const rows = new Map<string, Suggestion>();
+  const credits = new Map<string, Map<string, number>>();
   for (const h of data.heroes) {
-    if (h.role !== role || banned.has(h.id) || allies.has(h.id)) continue;
+    if (banned.has(h.id) || allies.has(h.id)) continue;
     const tier = tierFor(h, bracket, platform);
     const fit = mapFit(h, opts.map);
     const ups = teamUpsWith(h.id, allyList, teamUps, idx);
     const bonus = Math.min(TEAMUP_MAX, ups.length * TEAMUP_BONUS);
-    rows.set(h.id, { hero: h, score: TIER_SCORE[tier] + fit.score + bonus, tier, beats: [], edges: [], map: fit, teamUps: ups });
+    const comfort = mine.has(h.id);
+    rows.set(h.id, {
+      hero: h,
+      score: TIER_SCORE[tier] + fit.score + bonus + (comfort ? COMFORT_BONUS : 0),
+      tier,
+      beats: [],
+      edges: [],
+      map: fit,
+      teamUps: ups,
+      comfort,
+    });
+    credits.set(h.id, new Map());
   }
 
   const credit = (heroId: string, enemy: Hero, points: number, weak: boolean) => {
     const row = rows.get(heroId);
     if (!row) return;
     row.score += points;
+    const per = credits.get(heroId)!;
+    per.set(enemy.id, (per.get(enemy.id) ?? 0) + points);
     const list = weak ? row.edges : row.beats;
     if (!list.includes(enemy)) list.push(enemy);
   };
+
+  for (const id of enemyIds) {
+    const enemy = idx[id];
+    if (!enemy) continue;
+    for (const r of ROLES) {
+      const rp = enemy.counters[r];
+      if (!rp) continue;
+      const w = pickWeight(rp);
+      credit(rp.hero, enemy, 3 * w, !!rp.weak);
+      for (const a of rp.alt ?? []) credit(a, enemy, 2 * w, !!rp.weak);
+    }
+    const op = enemy.counters.overall;
+    const opRole = idx[op.hero]?.role;
+    if (opRole && op.hero !== enemy.counters[opRole]?.hero) credit(op.hero, enemy, 2 * pickWeight(op), !!op.weak);
+    // With every role open, the best counter overall should stand out from the best in each role.
+    if (flex) credit(op.hero, enemy, pickWeight(op), !!op.weak);
+  }
+  return { rows, credits };
+}
+
+/** Flex nudges: a role nobody on your team plays yet, or a fourth hero in one role. */
+function roleNudges(allies: readonly Hero[]): { bonus: Record<RoleId, number>; gaps: RoleId[] } {
+  const bonus: Record<RoleId, number> = { vanguard: 0, duelist: 0, strategist: 0 };
+  const gaps: RoleId[] = [];
+  for (const r of ROLES) {
+    const n = allies.filter((h) => h.role === r).length;
+    if (allies.length >= 3 && n === 0) {
+      bonus[r] += ROLE_GAP_BONUS;
+      gaps.push(r);
+    }
+    if (n >= 3) bonus[r] -= ROLE_STACK_PENALTY;
+  }
+  return { bonus, gaps };
+}
+
+const byScore = (a: Suggestion, b: Suggestion) =>
+  b.score - a.score || tierRank(a.tier) - tierRank(b.tier) || a.hero.name.localeCompare(b.hero.name);
+
+/**
+ * Best picks in your role, or in any role for Flex, plus the counter for each enemy. Banned heroes
+ * and heroes your teammates took are left out. The map, team-ups and your own heroes nudge close
+ * calls; counters count most.
+ */
+export function draft(
+  data: Dataset,
+  idx: HeroIndex,
+  role: DraftRole,
+  enemyIds: readonly string[],
+  bracket: BracketId,
+  platform: Platform,
+  opts: DraftOptions = {},
+): { picks: Suggestion[]; matchups: Matchup[] } {
+  const flex = role === 'flex';
+  const banned = new Set(opts.banned ?? []);
+  const allies = new Set((opts.allies ?? []).filter((id) => !!idx[id]));
+  const { rows } = scoreHeroes(data, idx, enemyIds, bracket, platform, opts, flex);
+
+  if (flex) {
+    const { bonus, gaps } = roleNudges([...allies].map((id) => idx[id]));
+    for (const row of rows.values()) {
+      row.score += bonus[row.hero.role];
+      if (gaps.includes(row.hero.role)) row.fillsRole = row.hero.role;
+    }
+  }
 
   const matchups: Matchup[] = [];
   for (const id of enemyIds) {
     const enemy = idx[id];
     if (!enemy) continue;
-    const rp = enemy.counters[role];
-    const w = CONFIDENCE_WEIGHT[rp.confidence] * (rp.weak ? 0.4 : 1);
-    credit(rp.hero, enemy, 3 * w, !!rp.weak);
-    for (const a of rp.alt ?? []) credit(a, enemy, 2 * w, !!rp.weak);
-
-    const op = enemy.counters.overall;
-    if (op.hero !== rp.hero && idx[op.hero]?.role === role) {
-      credit(op.hero, enemy, 2 * CONFIDENCE_WEIGHT[op.confidence] * (op.weak ? 0.4 : 1), !!op.weak);
-    }
-
+    const rp = flex ? enemy.counters.overall : enemy.counters[role];
+    if (!rp) continue;
     const alts = (rp.alt ?? []).filter((a) => !!idx[a]);
     let counterId = rp.hero;
     let status: MatchupStatus = 'ok';
@@ -412,11 +511,107 @@ export function draft(
     if (counter) matchups.push({ enemy, pick: rp, counter, status, instead });
   }
 
-  const picks = [...rows.values()]
-    .sort((a, b) => b.score - a.score || tierRank(a.tier) - tierRank(b.tier) || a.hero.name.localeCompare(b.hero.name))
-    .slice(0, 3);
-
+  const picks = [...rows.values()].filter((r) => flex || r.hero.role === role).sort(byScore).slice(0, 3);
   return { picks, matchups };
+}
+
+export interface DuoSwap {
+  /** Your duo's hero now. */
+  from: Hero;
+  /** What your duo switches to. */
+  duo: Suggestion;
+  /** What you pick. */
+  you: Suggestion;
+  /** Enemies the two of you would counter between you. */
+  covers: Hero[];
+}
+
+/**
+ * When a teammate you trust will switch too, the best pair of picks for the two of you, if it beats
+ * your best solo pick next to their current hero by a clear margin. Outside Flex, the two of you keep
+ * the team's roles: either both stay in role, or you trade roles.
+ */
+export function duoSwap(
+  data: Dataset,
+  idx: HeroIndex,
+  role: DraftRole,
+  duoId: string | null | undefined,
+  enemyIds: readonly string[],
+  bracket: BracketId,
+  platform: Platform,
+  opts: DraftOptions = {},
+): DuoSwap | null {
+  const allyIds = (opts.allies ?? []).filter((id) => !!idx[id]);
+  const from = duoId ? idx[duoId] : undefined;
+  if (!from || !allyIds.includes(from.id) || !enemyIds.some((id) => !!idx[id])) return null;
+  const flex = role === 'flex';
+  const others = allyIds.filter((id) => id !== from.id);
+  const { rows, credits } = scoreHeroes(data, idx, enemyIds, bracket, platform, { ...opts, allies: others }, flex);
+  const nudges = flex ? roleNudges(others.map((id) => idx[id])) : null;
+
+  // A pair's value: each hero's own worth, plus the better of the two against each enemy,
+  // so two heroes countering the same enemy don't count twice.
+  const own = (row: Suggestion, forDuo: boolean) => {
+    let v = row.score;
+    for (const pts of credits.get(row.hero.id)?.values() ?? []) v -= pts;
+    if (forDuo && row.comfort) v -= COMFORT_BONUS; // your starred heroes are yours, not your duo's
+    return v;
+  };
+  const pairValue = (a: Suggestion, b: Suggestion) => {
+    let v = own(a, false) + own(b, true);
+    const ca = credits.get(a.hero.id) ?? new Map<string, number>();
+    const cb = credits.get(b.hero.id) ?? new Map<string, number>();
+    for (const id of new Set([...ca.keys(), ...cb.keys()])) v += Math.max(ca.get(id) ?? 0, cb.get(id) ?? 0);
+    if (teamUpsWith(a.hero.id, [b.hero.id], opts.teamUps ?? [], idx).length) v += TEAMUP_BONUS;
+    if (nudges) {
+      // Flex: judge the two picks' roles together against the rest of the team.
+      const roles = [a.hero.role, b.hero.role];
+      for (const r of ROLES) {
+        const n = others.filter((id) => idx[id]?.role === r).length + roles.filter((x) => x === r).length;
+        if (others.length + 2 >= 5 && n === 0) v -= ROLE_GAP_BONUS;
+        if (n >= 4) v -= ROLE_STACK_PENALTY;
+      }
+    }
+    return v;
+  };
+
+  const all = [...rows.values()];
+  const top = (pred: (r: Suggestion) => boolean, n = 8) => all.filter(pred).sort(byScore).slice(0, n);
+  const current = rows.get(from.id);
+  if (!current) return null;
+
+  // Staying put: your best pick in your role next to your duo's current hero.
+  const mineNow = top((r) => r.hero.id !== from.id && (flex || r.hero.role === role));
+  let base = -Infinity;
+  for (const a of mineNow) base = Math.max(base, pairValue(a, current));
+
+  // Pairs that keep the team's roles (or any roles, for Flex).
+  const roleSets: [((r: Suggestion) => boolean), ((r: Suggestion) => boolean)][] = flex
+    ? [[() => true, () => true]]
+    : [
+        [(r) => r.hero.role === role, (r) => r.hero.role === from.role],
+        [(r) => r.hero.role === from.role, (r) => r.hero.role === role],
+      ];
+  let best: { you: Suggestion; duo: Suggestion; value: number } | null = null;
+  for (const [youOk, duoOk] of roleSets) {
+    const youList = top(youOk, flex ? 12 : 8);
+    const duoList = top(duoOk, flex ? 12 : 8);
+    for (const a of youList) {
+      for (const b of duoList) {
+        if (a.hero.id === b.hero.id || b.hero.id === from.id) continue;
+        const value = pairValue(a, b);
+        if (!best || value > best.value) best = { you: a, duo: b, value };
+      }
+    }
+  }
+  if (!best || best.value - base < DUO_MIN_GAIN) return null;
+
+  const covers: Hero[] = [];
+  for (const id of enemyIds) {
+    const e = idx[id];
+    if (e && (best.you.beats.includes(e) || best.duo.beats.includes(e))) covers.push(e);
+  }
+  return { from, duo: best.duo, you: best.you, covers };
 }
 
 export interface BanSuggestion {
@@ -516,7 +711,7 @@ export function tipsFor(hero: Hero): TipsView | null {
 }
 
 /** "2 Vanguards and 1 Strategist so far. No Duelist yet." for your teammates' picks. */
-export function teamNote(allies: readonly Hero[], myRole: RoleId): string | null {
+export function teamNote(allies: readonly Hero[], myRole: RoleId | null): string | null {
   if (!allies.length) return null;
   const count = (r: RoleId) => allies.filter((h) => h.role === r).length;
   const parts = ROLES.filter((r) => count(r) > 0).map((r) => `${count(r)} ${ROLE_LABEL[r]}${count(r) > 1 ? 's' : ''}`);
@@ -807,6 +1002,18 @@ export const GLOSSARY: GlossaryGroup[] = [
         text: 'Each hero picks one of two team-up abilities. It works on its own and gets stronger when its partner hero is on your team.',
       },
       { term: 'Focus priority', text: 'Who to take out first when a hero is on the enemy team: high, medium or low.' },
+      {
+        term: 'Flex',
+        text: 'Shows the best picks from every role, for when you’ll play anything or your team isn’t going two of each. Picks that fill a role your team is missing get a nudge.',
+      },
+      {
+        term: 'My heroes',
+        text: `Up to ${MAX_MY_HEROES} heroes you star as ones you play well. The draft helper ranks them about a tier and a half higher. Counters still count more.`,
+      },
+      {
+        term: 'Duo swap',
+        text: 'Mark a teammate who’ll switch heroes with you. If a new pair of picks would counter the enemy team clearly better, the draft helper suggests it. Outside Flex, you both keep your roles or trade them.',
+      },
       {
         term: 'Quirk',
         text: 'Something the in-game ability text gets wrong or doesn’t explain, a known bug, or advice that went out of date. Each shows when it was last checked.',

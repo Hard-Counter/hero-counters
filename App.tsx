@@ -10,11 +10,11 @@ import { Barlow_700Bold } from '@expo-google-fonts/barlow/700Bold';
 import { BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed/700Bold';
 import { BarlowCondensed_800ExtraBold } from '@expo-google-fonts/barlow-condensed/800ExtraBold';
 
-import type { BracketId, Platform, RoleId } from './src/data/types';
+import type { BracketId, Platform } from './src/data/types';
 import { useDataset } from './src/data/useDataset';
-import { HeroTab, ROLES, formatDate, indexHeroes } from './src/logic';
+import { DRAFT_ROLES, DraftRole, HeroTab, MAX_MY_HEROES, formatDate, indexHeroes } from './src/logic';
 import { FONT, Theme, useStyles, useTheme } from './src/theme';
-import { usePersisted } from './src/usePersisted';
+import { usePersisted, usePersistedList } from './src/usePersisted';
 import { Segmented, SlantChip } from './src/components/ui';
 import { Icon } from './src/components/icons';
 import AdBanner from './src/components/AdBanner';
@@ -65,7 +65,17 @@ function Root() {
   const [tab, setTab] = usePersisted<Tab>('tab', 'tiers', TAB_IDS);
   const [platform, setPlatform] = usePersisted<Platform>('platform', 'pc', PLATFORMS);
   const [bracket, setBracket] = usePersisted<BracketId>('bracket', 'plat_diamond', BRACKETS);
-  const [myRole, setMyRole] = usePersisted<RoleId>('role', 'duelist', ROLES);
+  const [myRole, setMyRole] = usePersisted<DraftRole>('role', 'duelist', DRAFT_ROLES);
+  // Heroes you starred as ones you're good at. The draft helper ranks them higher.
+  const [starred, setStarred] = usePersistedList('myHeroes');
+  const mine = useMemo(() => starred.filter((id) => !!idx[id]), [starred, idx]);
+  const toggleMine = useCallback(
+    (id: string) => {
+      if (starred.includes(id)) setStarred(starred.filter((x) => x !== id));
+      else if (mine.length < MAX_MY_HEROES) setStarred([...mine, id]);
+    },
+    [starred, mine, setStarred],
+  );
   // Bans, teams and the map change every match, so they aren't remembered between launches.
   const [match, setMatch] = useState<MatchState>(EMPTY_MATCH);
   // Hero pages opened from a hero page stack up, so Back returns to the one before, on the tab it showed.
@@ -141,6 +151,8 @@ function Root() {
             setMyRole={setMyRole}
             match={match}
             setMatch={setMatch}
+            mine={mine}
+            setMine={setStarred}
             onOpen={openDetail}
           />
         ) : null}
@@ -181,6 +193,9 @@ function Root() {
         platform={platform}
         bracket={bracket}
         myRole={myRole}
+        starred={!!detail && mine.includes(detail.id)}
+        starFull={mine.length >= MAX_MY_HEROES}
+        onStar={toggleMine}
         onOpen={pushDetail}
         onBack={popDetail}
         onClose={closeDetail}

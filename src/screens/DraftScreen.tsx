@@ -1,7 +1,11 @@
 import React, { useMemo, useState } from 'react';
-import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import type { BracketId, Dataset, Hero, MapSide, Platform, RoleId } from '../data/types';
+import { Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
+import type { BracketId, Dataset, Hero, MapSide, Platform } from '../data/types';
 import {
+  DRAFT_ROLES,
+  DRAFT_ROLE_LABEL,
+  DraftRole,
+  DuoSwap,
   GlossaryGroupId,
   HeroIndex,
   HeroTab,
@@ -9,12 +13,14 @@ import {
   MAP_SIDES,
   MAP_SIDE_LABEL,
   MAP_TRAIT_LABEL,
+  MAX_MY_HEROES,
   Matchup,
   ROLES,
   ROLE_LABEL,
   Suggestion,
   banSuggestions,
   draft,
+  duoSwap,
   focusOrder,
   hasSides,
   mapNote,
@@ -38,6 +44,8 @@ export interface MatchState {
   bans: { ours: string[]; theirs: string[] };
   /** Your teammates' heroes (not yours). */
   allies: string[];
+  /** A teammate who'll switch heroes with you, like a friend you queue with. */
+  duoId: string | null;
   enemies: string[];
   /** The hero you want to play, for ban suggestions. */
   protectId: string | null;
@@ -50,6 +58,7 @@ export const EMPTY_MATCH: MatchState = {
   side: 'either',
   bans: { ours: [], theirs: [] },
   allies: [],
+  duoId: null,
   enemies: [],
   protectId: null,
   example: false,
@@ -59,15 +68,20 @@ const MAX_BANS = 3;
 const MAX_ALLIES = 5;
 const MAX_ENEMIES = 6;
 
-const EXAMPLE: Pick<MatchState, 'bans' | 'allies' | 'enemies'> = {
+const EXAMPLE: Pick<MatchState, 'bans' | 'allies' | 'duoId' | 'enemies'> = {
   bans: { ours: ['elsa-bloodstone', 'gambit', 'magik'], theirs: ['black-panther', 'wolverine', 'hela'] },
   allies: ['magneto', 'the-hood', 'rocket-raccoon', 'jubilee'],
+  duoId: 'magneto',
   enemies: ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'],
 };
 
-type PickerTarget = 'ours' | 'theirs' | 'allies' | 'enemies' | 'protect';
+type PickerTarget = 'ours' | 'theirs' | 'allies' | 'enemies' | 'protect' | 'mine';
 
 const names = (list: { name: string }[]) => list.map((h) => h.name).join(', ');
+
+/** "A, B and C" */
+const andList = (list: { name: string }[]) =>
+  list.length > 1 ? `${names(list.slice(0, -1))} and ${list[list.length - 1].name}` : (list[0]?.name ?? '');
 
 function pickReason(p: Suggestion): string {
   if (p.beats.length) return `Counters ${names(p.beats)}`;
@@ -87,21 +101,28 @@ export default function DraftScreen({
   setMyRole,
   match,
   setMatch,
+  mine,
+  setMine,
   onOpen,
 }: {
   data: Dataset;
   idx: HeroIndex;
   platform: Platform;
   bracket: BracketId;
-  myRole: RoleId;
-  setMyRole: (r: RoleId) => void;
+  myRole: DraftRole;
+  setMyRole: (r: DraftRole) => void;
   match: MatchState;
   setMatch: React.Dispatch<React.SetStateAction<MatchState>>;
+  /** Heroes you starred as ones you play well. */
+  mine: string[];
+  setMine: (ids: string[]) => void;
   /** Opens a hero page on the tab that fits: Play as for your picks, Against for enemies. */
   onOpen: (heroId: string, tab?: HeroTab) => void;
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
+  // Four role buttons share the row, so the smallest phones get slightly smaller labels.
+  const narrow = useWindowDimensions().width < 350;
   const [picker, setPicker] = useState<PickerTarget | null>(null);
   const [pickingMap, setPickingMap] = useState(false);
   const [info, setInfo] = useState<GlossaryGroupId | null>(null);
@@ -112,10 +133,29 @@ export default function DraftScreen({
   const map = maps.find((m) => m.id === match.mapId) ?? null;
   const mapCtx = useMemo(() => (map ? { map, side: match.side } : null), [map, match.side]);
   const banned = useMemo(() => [...match.bans.ours, ...match.bans.theirs], [match.bans]);
+  const flex = myRole === 'flex';
+  // The duo only counts while they're still on your team.
+  const duoId = match.duoId && match.allies.includes(match.duoId) ? match.duoId : null;
 
+  const opts = useMemo(
+    () => ({ map: mapCtx, banned, allies: match.allies, teamUps, mine }),
+    [mapCtx, banned, match.allies, teamUps, mine],
+  );
   const result = useMemo(
-    () => draft(data, idx, myRole, match.enemies, bracket, platform, { map: mapCtx, banned, allies: match.allies, teamUps }),
-    [data, idx, myRole, match.enemies, match.allies, bracket, platform, mapCtx, banned, teamUps],
+    () => draft(data, idx, myRole, match.enemies, bracket, platform, opts),
+    [data, idx, myRole, match.enemies, bracket, platform, opts],
+  );
+  const swap = useMemo(
+    () => duoSwap(data, idx, myRole, duoId, match.enemies, bracket, platform, opts),
+    [data, idx, myRole, duoId, match.enemies, bracket, platform, opts],
+  );
+  const mineHeroes = useMemo(
+    () =>
+      mine
+        .map((id) => idx[id])
+        .filter(Boolean)
+        .sort((a, b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role) || a.name.localeCompare(b.name)),
+    [mine, idx],
   );
 
   const protectHero = match.protectId ? idx[match.protectId] : undefined;
@@ -129,6 +169,8 @@ export default function DraftScreen({
 
   const allyHeroes = match.allies.map((id) => idx[id]).filter(Boolean);
   const enemyHeroes = match.enemies.map((id) => idx[id]).filter(Boolean);
+  const duoHero = duoId ? idx[duoId] : undefined;
+  const note = teamNote(allyHeroes, flex ? null : myRole);
   const started = !!(map || banned.length || match.allies.length || match.enemies.length || match.protectId);
   const showPicks = !!(map || banned.length || match.allies.length || match.enemies.length);
   const oursFull = match.bans.ours.length >= MAX_BANS;
@@ -179,6 +221,9 @@ export default function DraftScreen({
         setMatch((m) => ({ ...m, protectId: m.protectId === id ? null : id }));
         setPicker(null);
         break;
+      case 'mine':
+        setMine(toggleIn(mine, id, MAX_MY_HEROES));
+        break;
     }
   };
 
@@ -199,9 +244,11 @@ export default function DraftScreen({
           max: 1,
           single: true,
           unavailable: [...banned, ...match.allies],
-          initialRole: myRole,
+          initialRole: flex ? undefined : myRole,
           tone: 'ally' as const,
         };
+      case 'mine':
+        return { title: 'My heroes', selected: mine, max: MAX_MY_HEROES, tone: 'ally' as const };
       default:
         return { title: '', selected: [], max: 0 };
     }
@@ -275,7 +322,7 @@ export default function DraftScreen({
           Your role
         </SectionHead>
         <View style={st.roleRow} accessibilityRole="radiogroup">
-          {ROLES.map((r) => {
+          {DRAFT_ROLES.map((r) => {
             const on = r === myRole;
             return (
               <Pressable
@@ -285,12 +332,42 @@ export default function DraftScreen({
                 accessibilityState={{ checked: on }}
                 style={[st.roleBtn, on && st.roleBtnOn]}
               >
-                <Icon name={r} size={15} color={t.role[r]} />
-                <Text style={[st.roleText, on && { color: t.ink }]}>{ROLE_LABEL[r]}</Text>
+                <Icon name={r} size={16} color={r === 'flex' ? t.accent : t.role[r]} />
+                <Text style={[st.roleText, narrow && st.roleTextNarrow, on && { color: t.ink }]} numberOfLines={1}>
+                  {DRAFT_ROLE_LABEL[r]}
+                </Text>
               </Pressable>
             );
           })}
         </View>
+        {flex ? <Text style={st.roleNote}>Picks from every role, for when you’ll play anything.</Text> : null}
+
+        <SectionHead onInfo={() => setInfo('match')} infoLabel="What My heroes means">
+          My heroes
+        </SectionHead>
+        <Pressable
+          onPress={() => setPicker('mine')}
+          accessibilityRole="button"
+          accessibilityLabel={
+            mineHeroes.length ? `My heroes: ${names(mineHeroes)}. Edit your heroes` : 'Add the heroes you play well'
+          }
+          style={({ pressed }) => [st.mapBtn, pressed && { opacity: 0.8 }]}
+        >
+          <Icon name={mineHeroes.length ? 'starred' : 'star'} size={18} color={mineHeroes.length ? t.accent : t.ink3} />
+          <View style={st.flex}>
+            {mineHeroes.length ? (
+              <Text style={st.mineNames} numberOfLines={2}>
+                {names(mineHeroes)}
+              </Text>
+            ) : (
+              <>
+                <Text style={st.mapName}>None yet</Text>
+                <Text style={st.mapMeta}>Optional. Star heroes you play well and they rank higher in your picks.</Text>
+              </>
+            )}
+          </View>
+          <Text style={st.link}>{mineHeroes.length ? 'Edit' : 'Add'}</Text>
+        </Pressable>
 
         {maps.length > 0 ? (
           <>
@@ -417,10 +494,38 @@ export default function DraftScreen({
           max={MAX_ALLIES}
           idx={idx}
           tone="ally"
+          duoId={duoId}
           onAdd={() => setPicker('allies')}
           onRemove={(id) => edit((m) => ({ allies: m.allies.filter((x) => x !== id) }))}
         />
-        {teamNote(allyHeroes, myRole) ? <Text style={st.teamNote}>{teamNote(allyHeroes, myRole)}</Text> : null}
+        {note ? <Text style={st.teamNote}>{note}</Text> : null}
+        {allyHeroes.length ? (
+          <View style={st.duoBox}>
+            <Text style={st.duoLabel}>
+              {duoHero ? 'Your duo will swap heroes too' : 'Playing with a friend who’ll swap heroes too? Tap them.'}
+            </Text>
+            <View style={st.duoRow}>
+              {allyHeroes.map((h) => {
+                const on = h.id === duoId;
+                return (
+                  <Pressable
+                    key={h.id}
+                    onPress={() => edit(() => ({ duoId: on ? null : h.id }))}
+                    accessibilityRole="button"
+                    accessibilityLabel={on ? `${h.name} is your duo. Tap to clear` : `Make ${h.name} your duo`}
+                    accessibilityState={{ selected: on }}
+                    style={({ pressed }) => [st.duoChip, on && st.duoChipOn, pressed && { opacity: 0.7 }]}
+                  >
+                    <Avatar hero={h} size={20} />
+                    <Text style={[st.duoName, on && { color: t.ink }]} numberOfLines={1}>
+                      {h.name}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        ) : null}
 
         <SectionHead right={match.enemies.length ? <LinkButton label="Clear" onPress={() => edit(() => ({ enemies: [] }))} /> : null}>
           Enemy team · {match.enemies.length}/{MAX_ENEMIES}
@@ -455,12 +560,15 @@ export default function DraftScreen({
         {showPicks ? (
           <>
             <SectionHead>
-              Best {ROLE_LABEL[myRole]} picks{map && match.enemies.length === 0 ? ` on ${map.name}` : ''}
+              {flex ? 'Best picks in any role' : `Best ${ROLE_LABEL[myRole]} picks`}
+              {map && match.enemies.length === 0 ? ` on ${map.name}` : ''}
             </SectionHead>
-            {result.picks.length === 0 ? <Text style={st.hint}>Every {ROLE_LABEL[myRole]} is banned or taken.</Text> : null}
+            {result.picks.length === 0 ? (
+              <Text style={st.hint}>{flex ? 'Every hero is banned or taken.' : `Every ${ROLE_LABEL[myRole]} is banned or taken.`}</Text>
+            ) : null}
             <View style={st.list}>
               {result.picks.map((p, i) => {
-                const note = mapNote(p.map);
+                const fit = mapNote(p.map);
                 return (
                   <Pressable
                     key={p.hero.id}
@@ -471,20 +579,47 @@ export default function DraftScreen({
                     <Text style={[st.pickN, i === 0 && { color: t.accent }]}>{i + 1}</Text>
                     <Avatar hero={p.hero} size={36} />
                     <View style={st.pickBody}>
-                      <Text style={st.pickName}>{p.hero.name}</Text>
+                      <View style={st.pickHead}>
+                        <Text style={st.pickName}>{p.hero.name}</Text>
+                        {flex ? (
+                          <Text style={[st.pickRole, { color: t.role[p.hero.role] }]}>{ROLE_LABEL[p.hero.role].toUpperCase()}</Text>
+                        ) : null}
+                      </View>
                       <Text style={st.pickWhy}>{pickReason(p)}</Text>
+                      {p.comfort ? (
+                        <View style={st.noteRow}>
+                          <Icon name="starred" size={11} color={t.accent} />
+                          <Text style={[st.pickNote, { color: t.accent }]}>One of your heroes</Text>
+                        </View>
+                      ) : null}
+                      {p.fillsRole ? (
+                        <Text style={[st.pickNote, { color: t.conf.data }]}>Your team has no {ROLE_LABEL[p.fillsRole]} yet</Text>
+                      ) : null}
                       {p.teamUps.map((m) => (
                         <Text key={m.name + m.partners.map((h) => h.id).join()} style={[st.pickNote, { color: t.accent }]}>
                           {teamUpLabel(m)}
                         </Text>
                       ))}
-                      {note ? <Text style={[st.pickNote, { color: p.map.score > 0 ? t.conf.data : t.ban.medium }]}>{note}</Text> : null}
+                      {fit ? <Text style={[st.pickNote, { color: p.map.score > 0 ? t.conf.data : t.ban.medium }]}>{fit}</Text> : null}
                     </View>
                     <TierBadge tier={p.tier} size={30} />
                   </Pressable>
                 );
               })}
             </View>
+          </>
+        ) : null}
+
+        {duoHero && enemyHeroes.length ? (
+          <>
+            <SectionHead onInfo={() => setInfo('match')} infoLabel="How duo swaps work">
+              Swap with your duo
+            </SectionHead>
+            {swap ? (
+              <DuoCard swap={swap} onOpen={onOpen} />
+            ) : (
+              <Text style={st.hint}>No swap with {duoHero.name} beats your best pick right now.</Text>
+            )}
           </>
         ) : null}
 
@@ -600,6 +735,7 @@ function Slots({
   max,
   idx,
   tone,
+  duoId,
   onAdd,
   onRemove,
 }: {
@@ -607,6 +743,8 @@ function Slots({
   max: number;
   idx: HeroIndex;
   tone: 'ally' | 'enemy';
+  /** Your duo partner, marked on their slot. */
+  duoId?: string | null;
   onAdd: () => void;
   onRemove: (id: string) => void;
 }) {
@@ -629,6 +767,7 @@ function Slots({
             <View style={st.slotX}>
               <Icon name="close" size={11} color={t.ink3} />
             </View>
+            {hero.id === duoId ? <Text style={st.slotDuo}>DUO</Text> : null}
             <Avatar hero={hero} size={30} />
             <Text style={st.slotName} numberOfLines={2}>
               {hero.name}
@@ -651,14 +790,55 @@ function Slots({
   );
 }
 
-function MatchupCard({ m, role, onOpen }: { m: Matchup; role: RoleId; onOpen: (heroId: string, tab?: HeroTab) => void }) {
+function DuoCard({ swap, onOpen }: { swap: DuoSwap; onOpen: (heroId: string, tab?: HeroTab) => void }) {
+  const t = useTheme();
+  const st = useStyles(makeStyles);
+  const rows: { key: string; label: string; s: Suggestion }[] = [
+    { key: 'you', label: 'You pick', s: swap.you },
+    { key: 'duo', label: `${swap.from.name} switches to`, s: swap.duo },
+  ];
+  return (
+    <View style={st.duoCard}>
+      {rows.map(({ key, label, s }) => (
+        <Pressable
+          key={key}
+          onPress={() => onOpen(s.hero.id, 'as')}
+          accessibilityRole="button"
+          accessibilityLabel={`${label} ${s.hero.name}, ${ROLE_LABEL[s.hero.role]}`}
+          style={({ pressed }) => [st.duoPick, pressed && { opacity: 0.8 }]}
+        >
+          <Avatar hero={s.hero} size={32} />
+          <View style={st.flex}>
+            <Text style={st.duoPickLabel} numberOfLines={1}>
+              {label.toUpperCase()}
+            </Text>
+            <View style={st.pickHead}>
+              <Text style={st.pickName}>{s.hero.name}</Text>
+              <Text style={[st.pickRole, { color: t.role[s.hero.role] }]}>{ROLE_LABEL[s.hero.role].toUpperCase()}</Text>
+            </View>
+            {key === 'you' && s.comfort ? (
+              <View style={st.noteRow}>
+                <Icon name="starred" size={11} color={t.accent} />
+                <Text style={[st.pickNote, { color: t.accent }]}>One of your heroes</Text>
+              </View>
+            ) : null}
+          </View>
+          <TierBadge tier={s.tier} size={28} />
+        </Pressable>
+      ))}
+      {swap.covers.length ? <Text style={st.duoWhy}>Together you counter {andList(swap.covers)}.</Text> : null}
+    </View>
+  );
+}
+
+function MatchupCard({ m, role, onOpen }: { m: Matchup; role: DraftRole; onOpen: (heroId: string, tab?: HeroTab) => void }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
   const note =
     m.status === 'ally'
       ? `${m.counter.name} is already on your team.`
       : m.status === 'banned'
-        ? `${m.counter.name} is banned, and no other ${ROLE_LABEL[role]} is listed. Lean on your team.`
+        ? `${m.counter.name} is banned, and no ${role === 'flex' ? 'alternative' : `other ${ROLE_LABEL[role]}`} is listed. Lean on your team.`
         : m.instead
           ? `${m.instead.name} is banned, so ${m.counter.name} stands in.`
           : null;
@@ -738,18 +918,23 @@ const makeStyles = (t: Theme) =>
     roleRow: { flexDirection: 'row', gap: 6 },
     roleBtn: {
       flex: 1,
-      flexDirection: 'row',
+      minWidth: 0,
       alignItems: 'center',
       justifyContent: 'center',
-      gap: 6,
-      paddingVertical: 10,
+      gap: 4,
+      paddingTop: 9,
+      paddingBottom: 8,
+      paddingHorizontal: 2,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: t.line,
       backgroundColor: t.surface,
     },
-    roleBtnOn: { borderColor: t.accent, backgroundColor: t.surface2, borderBottomWidth: 3 },
-    roleText: { color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 14 },
+    roleBtnOn: { borderColor: t.accent, backgroundColor: t.surface2, borderBottomWidth: 3, paddingBottom: 6 },
+    roleText: { color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 13 },
+    roleTextNarrow: { fontSize: 12, letterSpacing: -0.1 },
+    roleNote: { marginTop: 8, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
+    mineNames: { color: t.ink, fontFamily: FONT.bodySemi, fontSize: 14, lineHeight: 19 },
     link: { color: t.accent, fontFamily: FONT.bodySemi, fontSize: 14 },
     mapBtn: {
       flexDirection: 'row',
@@ -823,6 +1008,29 @@ const makeStyles = (t: Theme) =>
     slotName: { color: t.ink, fontFamily: FONT.bodySemi, fontSize: 12.5, lineHeight: 15, textAlign: 'center' },
     slotAdd: { color: t.ink3, fontFamily: FONT.bodySemi, fontSize: 12.5 },
     teamNote: { marginTop: 8, color: t.ink2, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
+    slotDuo: { position: 'absolute', top: 6, left: 8, color: t.accent, fontFamily: FONT.displayBold, fontSize: 10.5, letterSpacing: 0.8 },
+    duoBox: { marginTop: 10, gap: 7 },
+    duoLabel: { color: t.ink2, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
+    duoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6 },
+    duoChip: {
+      maxWidth: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+      paddingVertical: 5,
+      paddingLeft: 5,
+      paddingRight: 11,
+      borderRadius: 999,
+      borderWidth: 1,
+      borderColor: t.line,
+      backgroundColor: t.surface,
+    },
+    duoChipOn: { borderColor: t.accent, backgroundColor: alpha(t.accent, 0.12) },
+    duoName: { flexShrink: 1, color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 13 },
+    duoCard: { gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, borderColor: t.accent, backgroundColor: t.surface },
+    duoPick: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+    duoPickLabel: { marginBottom: 1, color: t.ink3, fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 1 },
+    duoWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
     empty: { marginTop: 18, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: t.line, backgroundColor: t.surface },
     emptyText: { marginBottom: 12, color: t.ink2, fontFamily: FONT.body, fontSize: 15, lineHeight: 21 },
     btn: { alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 9, borderRadius: 9, backgroundColor: t.accent },
@@ -843,7 +1051,10 @@ const makeStyles = (t: Theme) =>
     },
     pickN: { width: 16, color: t.ink3, fontFamily: FONT.display, fontSize: 20, textAlign: 'center' },
     pickBody: { flex: 1, gap: 2 },
+    pickHead: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', columnGap: 8 },
     pickName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15.5 },
+    pickRole: { fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 0.9 },
+    noteRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
     pickWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13 },
     pickNote: { fontFamily: FONT.bodySemi, fontSize: 12.5 },
     focusRow: {

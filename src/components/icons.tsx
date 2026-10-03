@@ -16,7 +16,10 @@ export type IconName =
   | 'chevron'
   | 'buffed'
   | 'nerfed'
-  | 'mixed';
+  | 'mixed'
+  | 'flex'
+  | 'star'
+  | 'starred';
 
 /** Original role and interface icons (no game artwork). */
 export function Icon({ name, size = 16, color }: { name: IconName; size?: number; color: string }) {
@@ -129,6 +132,25 @@ export function Icon({ name, size = 16, color }: { name: IconName; size?: number
       return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
           <Path fill={color} d="M12 1.5l7 9.5H5zM12 22.5L5 13h14z" />
+        </Svg>
+      );
+    case 'flex':
+      // Two arrows trading places: any role, or swapping with a teammate.
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4" {...stroke} strokeLinejoin="round" />
+        </Svg>
+      );
+    case 'star':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d="M12 2.6l2.47 6.6 7.04.31-5.52 4.39 1.89 6.79L12 16.8l-5.88 3.89 1.89-6.79-5.52-4.39 7.04-.31z" {...stroke} strokeWidth={1.8} strokeLinejoin="round" />
+        </Svg>
+      );
+    case 'starred':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} stroke={color} strokeWidth={1.8} strokeLinejoin="round" d="M12 2.6l2.47 6.6 7.04.31-5.52 4.39 1.89 6.79L12 16.8l-5.88 3.89 1.89-6.79-5.52-4.39 7.04-.31z" />
         </Svg>
       );
   }
