@@ -4,12 +4,15 @@ import type {
   AbilityKind,
   BanRisk,
   BracketId,
+  ChangeKind,
   CounterPick,
   Dataset,
   FocusLevel,
   GameMap,
   Hero,
   HeroStyle,
+  HistoryChange,
+  HistoryData,
   MapMode,
   MapSide,
   MapTrait,
@@ -556,13 +559,163 @@ export function kitFor(hero: Hero): KitView | null {
 }
 
 /** The tabs on a hero page. */
-export type HeroTab = 'against' | 'as' | 'abilities';
-export const HERO_TABS: HeroTab[] = ['against', 'as', 'abilities'];
-export const HERO_TAB_LABEL: Record<HeroTab, string> = { against: 'Against', as: 'Play as', abilities: 'Abilities' };
+export type HeroTab = 'against' | 'as' | 'abilities' | 'history';
+export const HERO_TABS: HeroTab[] = ['against', 'as', 'abilities', 'history'];
+export const HERO_TAB_LABEL: Record<HeroTab, string> = { against: 'Against', as: 'Play as', abilities: 'Abilities', history: 'History' };
+
+// ---- Patch history ----
+
+export const CHANGE_KINDS: ChangeKind[] = ['b', 'n', 'm', 'c', 'f'];
+export const CHANGE_LABEL: Record<ChangeKind, string> = { b: 'Buff', n: 'Nerf', m: 'Mixed', c: 'Change', f: 'Fix' };
+
+/** How a hero's strength moved this season, for the tier list markers. */
+export type SeasonShift = 'buffed' | 'nerfed' | 'mixed';
+export const SEASON_SHIFT_LABEL: Record<SeasonShift, string> = {
+  buffed: 'Buffed this season',
+  nerfed: 'Nerfed this season',
+  mixed: 'Buffed and nerfed this season',
+};
+
+export interface HistoryEntry {
+  date: string;
+  season: string;
+  kind: ChangeKind;
+  ability: string;
+  text: string;
+}
+
+export interface SeasonTally {
+  season: string;
+  start: string;
+  counts: Record<ChangeKind, number>;
+}
+
+export interface HistoryView {
+  /** When the hero joined, if they weren't in the launch roster. */
+  added?: string;
+  /** Newest first. */
+  entries: HistoryEntry[];
+  /** Oldest first, from launch or the hero's arrival to the current season. */
+  seasons: SeasonTally[];
+  totals: Record<ChangeKind, number>;
+  current: string;
+}
+
+// Balance posts come out a few days before a season starts, so a change dated up to six days
+// early counts toward the new season.
+const EARLY_DAYS = 6;
+
+function daysBefore(iso: string, days: number): string {
+  const d = new Date(`${iso}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() - days);
+  return d.toISOString().slice(0, 10);
+}
+
+function historyOf(data: Dataset): HistoryData | null {
+  const h = data.history;
+  if (!h || typeof h !== 'object' || !Array.isArray(h.changes) || !Array.isArray(h.seasons)) return null;
+  const seasons = h.seasons.filter((s) => Array.isArray(s) && typeof s[0] === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s[1]));
+  if (!seasons.length) return null;
+  return { seasons, added: h.added && typeof h.added === 'object' ? h.added : {}, changes: h.changes };
+}
+
+/** The season a change dated `date` belongs to. */
+export function seasonOf(date: string, seasons: readonly [string, string][]): string {
+  let id = seasons[0]?.[0] ?? '0';
+  for (const [s, start] of seasons) {
+    if (date >= daysBefore(start, EARLY_DAYS)) id = s;
+    else break;
+  }
+  return id;
+}
+
+/** The season running on `date`, by its actual start. */
+export function seasonOn(date: string, seasons: readonly [string, string][]): string {
+  let id = seasons[0]?.[0] ?? '0';
+  for (const [s, start] of seasons) {
+    if (date >= start) id = s;
+    else break;
+  }
+  return id;
+}
+
+export function seasonLabel(id: string): string {
+  return `Season ${id}`;
+}
+
+const zeroCounts = (): Record<ChangeKind, number> => ({ b: 0, n: 0, m: 0, c: 0, f: 0 });
+
+function validChange(c: unknown): c is HistoryChange {
+  if (!Array.isArray(c) || c.length < 5) return false;
+  const [date, ids, kind, ability, text] = c;
+  return (
+    typeof date === 'string' &&
+    Array.isArray(ids) &&
+    CHANGE_KINDS.includes(kind) &&
+    typeof ability === 'string' &&
+    typeof text === 'string'
+  );
+}
+
+/** Ids a change can name this hero by: its own, and 'deadpool' for any Deadpool version. */
+function historyKeys(heroId: string): string[] {
+  return heroId.startsWith('deadpool-') ? [heroId, 'deadpool'] : [heroId];
+}
+
+/** Every change to a hero since launch, with per-season counts. Null when the data has no history. */
+export function historyFor(data: Dataset, heroId: string): HistoryView | null {
+  const h = historyOf(data);
+  if (!h) return null;
+  const keys = historyKeys(heroId);
+  const current = seasonOn(data.updated, h.seasons);
+  const entries: HistoryEntry[] = [];
+  for (const c of h.changes) {
+    if (!validChange(c) || !c[1].some((id) => keys.includes(id))) continue;
+    entries.push({ date: c[0], season: seasonOf(c[0], h.seasons), kind: c[2], ability: c[3], text: c[4] });
+  }
+  entries.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+
+  const added = typeof h.added[heroId] === 'string' ? h.added[heroId] : undefined;
+  const first = added ? seasonOn(added, h.seasons) : h.seasons[0][0];
+  const from = h.seasons.findIndex(([id]) => id === first);
+  const to = h.seasons.findIndex(([id]) => id === current);
+  const totals = zeroCounts();
+  const seasons: SeasonTally[] = h.seasons.slice(Math.max(0, from), to + 1).map(([season, start]) => ({ season, start, counts: zeroCounts() }));
+  for (const e of entries) {
+    totals[e.kind] += 1;
+    const tally = seasons.find((s) => s.season === e.season);
+    if (tally) tally.counts[e.kind] += 1;
+  }
+  return { added, entries, seasons, totals, current };
+}
+
+/** Heroes whose strength changed in the current season, for the tier list. */
+export function seasonShifts(data: Dataset): Map<string, SeasonShift> {
+  const out = new Map<string, SeasonShift>();
+  const h = historyOf(data);
+  if (!h) return out;
+  const current = seasonOn(data.updated, h.seasons);
+  const seen = new Map<string, Set<ChangeKind>>();
+  for (const c of h.changes) {
+    // Team-up changes name every hero in the team-up, so they'd mark partners the change didn't touch.
+    if (!validChange(c) || c[1].length !== 1 || !['b', 'n', 'm'].includes(c[2]) || seasonOf(c[0], h.seasons) !== current) continue;
+    for (const id of c[1]) {
+      const targets = id === 'deadpool' ? data.heroes.filter((x) => x.id.startsWith('deadpool-')).map((x) => x.id) : [id];
+      for (const t of targets) {
+        if (!seen.has(t)) seen.set(t, new Set());
+        seen.get(t)!.add(c[2]);
+      }
+    }
+  }
+  for (const [id, kinds] of seen) {
+    out.set(id, kinds.has('m') || (kinds.has('b') && kinds.has('n')) ? 'mixed' : kinds.has('b') ? 'buffed' : 'nerfed');
+  }
+  return out;
+}
 
 // ---- Glossary ----
 
-export type GlossaryGroupId = 'roles' | 'tiers' | 'counters' | 'bans' | 'styles' | 'maps' | 'match' | 'abilities';
+export type GlossaryGroupId = 'roles' | 'tiers' | 'counters' | 'bans' | 'styles' | 'maps' | 'match' | 'abilities' | 'history';
 
 export interface GlossaryTerm {
   term: string;
@@ -599,6 +752,10 @@ export const GLOSSARY: GlossaryGroup[] = [
       },
       { term: 'PC and console', text: 'Tiers match on both unless official data shows a clear gap. Those heroes move one tier on console.' },
       { term: 'New', text: 'Added this season, so there’s less data on them.' },
+      {
+        term: 'Buffed or nerfed',
+        text: 'An up arrow marks a hero made stronger this season, a down arrow one made weaker, and a double arrow a mix of both. Each hero’s History tab lists every change.',
+      },
     ],
   },
   {
@@ -683,6 +840,22 @@ export const GLOSSARY: GlossaryGroup[] = [
       { term: 'Team-up ability', text: 'Each hero picks one of two before the match. It works alone and gets stronger with its partner on your team.' },
     ],
   },
+  {
+    id: 'history',
+    title: 'Patch history',
+    intro: 'Every change to a hero since launch, from the official balance posts and patch notes, in our own words.',
+    terms: [
+      { term: 'Buff', text: 'Made the hero stronger.' },
+      { term: 'Nerf', text: 'Made the hero weaker.' },
+      { term: 'Mixed', text: 'Stronger in one way and weaker in another.' },
+      { term: 'Change', text: 'Works differently without clearly getting stronger or weaker, or a team-up change.' },
+      { term: 'Fix', text: 'A bug fix. Hidden unless you turn on Show fixes.' },
+      {
+        term: 'Seasons',
+        text: 'Each season and half season usually starts with a balance patch. Balance posts come out a few days early, so their changes count toward the new season.',
+      },
+    ],
+  },
 ];
 
 export function glossaryGroup(id: GlossaryGroupId): GlossaryGroup {
@@ -696,6 +869,20 @@ export function formatDate(iso: string): string {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
   if (!m) return iso;
   return `${MONTHS[Number(m[2]) - 1] ?? m[2]} ${Number(m[3])}`;
+}
+
+/** '2025-09-24' -> 'Sep 24, 2025' */
+export function formatLongDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  return `${MONTHS[Number(m[2]) - 1] ?? m[2]} ${Number(m[3])}, ${m[1]}`;
+}
+
+/** '2025-09-24' -> 'Sep 2025' */
+export function formatMonth(iso: string): string {
+  const m = /^(\d{4})-(\d{2})/.exec(iso);
+  if (!m) return iso;
+  return `${MONTHS[Number(m[2]) - 1] ?? m[2]} ${m[1]}`;
 }
 
 /** Guards against a broken or incompatible remote data file. */

@@ -2,7 +2,21 @@ import React from 'react';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import type { RoleId } from '../data/types';
 
-export type IconName = RoleId | 'tiers' | 'draft' | 'comps' | 'about' | 'close' | 'plus' | 'search' | 'arrow' | 'back' | 'chevron';
+export type IconName =
+  | RoleId
+  | 'tiers'
+  | 'draft'
+  | 'comps'
+  | 'about'
+  | 'close'
+  | 'plus'
+  | 'search'
+  | 'arrow'
+  | 'back'
+  | 'chevron'
+  | 'buffed'
+  | 'nerfed'
+  | 'mixed';
 
 /** Original role and interface icons (no game artwork). */
 export function Icon({ name, size = 16, color }: { name: IconName; size?: number; color: string }) {
@@ -97,6 +111,24 @@ export function Icon({ name, size = 16, color }: { name: IconName; size?: number
       return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
           <Path d="M9 5l7 7-7 7" {...stroke} strokeLinejoin="round" />
+        </Svg>
+      );
+    case 'buffed':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} d="M12 4l9 15H3z" />
+        </Svg>
+      );
+    case 'nerfed':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} d="M12 20L3 5h18z" />
+        </Svg>
+      );
+    case 'mixed':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path fill={color} d="M12 1.5l7 9.5H5zM12 22.5L5 13h14z" />
         </Svg>
       );
   }

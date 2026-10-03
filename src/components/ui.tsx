@@ -1,7 +1,7 @@
 import React from 'react';
 import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 import type { Confidence, FocusLevel, Hero, RoleId, Tier } from '../data/types';
-import { CONFIDENCE_LABEL, FOCUS_LABEL, ROLE_LABEL, ROLES } from '../logic';
+import { CONFIDENCE_LABEL, FOCUS_LABEL, ROLE_LABEL, ROLES, SEASON_SHIFT_LABEL, SeasonShift } from '../logic';
 import { FONT, Theme, alpha, useStyles, useTheme } from '../theme';
 import { Icon } from './icons';
 
@@ -161,6 +161,7 @@ export function HeroChip({
   disabled,
   wide,
   selectedColor,
+  shift,
 }: {
   hero: Hero;
   onPress: () => void;
@@ -169,10 +170,17 @@ export function HeroChip({
   wide?: boolean;
   /** Border and tint when selected. Enemy red by default. */
   selectedColor?: string;
+  /** Marks a hero buffed or nerfed this season. */
+  shift?: SeasonShift;
 }) {
   const t = useTheme();
   const st = useStyles(makeStyles);
-  const label = [hero.name, hero.variant ? ROLE_LABEL[hero.role] : null, hero.banRisk === 'high' ? 'often banned' : null]
+  const label = [
+    hero.name,
+    hero.variant ? ROLE_LABEL[hero.role] : null,
+    shift ? SEASON_SHIFT_LABEL[shift].toLowerCase() : null,
+    hero.banRisk === 'high' ? 'often banned' : null,
+  ]
     .filter(Boolean)
     .join(', ');
   return (
@@ -195,6 +203,7 @@ export function HeroChip({
         {hero.name}
       </Text>
       {hero.variant ? <Icon name={hero.role} size={11} color={t.role[hero.role]} /> : null}
+      {shift ? <Icon name={shift} size={10} color={t.change[shift === 'buffed' ? 'b' : shift === 'nerfed' ? 'n' : 'm']} /> : null}
       {hero.isNew ? (
         <View style={st.newTag}>
           <Text style={st.newText}>NEW</Text>

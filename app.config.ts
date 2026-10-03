@@ -27,7 +27,7 @@ const ADMOB = {
 // to use only the data built into the app. This is the raw file on the repo's main
 // branch, so pushing a new revision there updates installed apps (GitHub caches it
 // for about five minutes).
-const DATA_URL = 'https://raw.githubusercontent.com/Nemesis-Counter/hero-counters/main/src/data/heroes.json';
+const DATA_URL = 'https://raw.githubusercontent.com/Hard-Counter/hero-counters/main/src/data/heroes.json';
 
 // Public URL of your privacy policy (see PRIVACY.md). Both stores require one.
 const PRIVACY_URL = '';

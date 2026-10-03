@@ -28,7 +28,7 @@ Data: curated tiers and counters, reviewed weekly and after major patches. The c
 You need [Node.js](https://nodejs.org) (the LTS version) on your computer and the **Expo Go** app on your phone.
 
 ```bash
-git clone https://github.com/Nemesis-Counter/hero-counters.git
+git clone https://github.com/Hard-Counter/hero-counters.git
 cd hero-counters
 npm install
 npx expo start --go
@@ -70,9 +70,9 @@ eas submit --platform android
 
 ## 4. Update the data
 
-1. Edit `scripts/build-data.mjs` (tiers, counters, comps, notes, the ranked map list in `MAPS`, hero play styles in `STYLES`, hero tips in `TIPS`, every hero's team-up abilities in `TEAMUPS`, ability breakdowns in `ABILITIES`) and bump `REVISION`.
+1. Edit `scripts/build-data.mjs` (tiers, counters, comps, notes, the ranked map list in `MAPS`, hero play styles in `STYLES`, hero tips in `TIPS`, every hero's team-up abilities in `TEAMUPS`, ability breakdowns in `ABILITIES`, season start dates in `SEASONS`, and the patch history in `HISTORY`, one line per hero change in each balance post and patch note) and bump `REVISION`.
 2. Run `npm run data` (or `node scripts/build-data.mjs`). It checks every hero, role and counter and refuses to write a broken file.
-3. Commit and push to `main`. That publishes the data: `DATA_URL` in `app.config.ts` points installed apps at the raw copy of the file on `main`, <https://raw.githubusercontent.com/Nemesis-Counter/hero-counters/main/src/data/heroes.json>. On launch the app downloads it and keeps it only if it passes validation and has a higher revision than the data it already has. GitHub caches the file for about five minutes, so allow that long before checking.
+3. Commit and push to `main`. That publishes the data: `DATA_URL` in `app.config.ts` points installed apps at the raw copy of the file on `main`, <https://raw.githubusercontent.com/Hard-Counter/hero-counters/main/src/data/heroes.json>. On launch the app downloads it and keeps it only if it passes validation and has a higher revision than the data it already has. GitHub caches the file for about five minutes, so allow that long before checking.
 4. Optional: `npm run preview` rebuilds the web preview at `preview/dist/hero-counters.html`.
 
 The scheduled data refreshes don't push to `main` themselves. They push a `claude/data-revision-<N>` branch, and `.github/workflows/publish-data.yml` checks it: only the data files changed, `heroes.json` matches what the script builds, the revision goes up, and the branch builds on the current `main`. If it passes, the workflow moves `main` forward and deletes the branch. A branch that fails a check stays put, and the reason shows under the repo's **Actions** tab.
@@ -98,7 +98,8 @@ npm run data        # after data edits
 - **Draft helper** ranks the heroes in your role: each is scored on its tier at your rank, plus points for every enemy it is the listed counter to (full weight for data-backed picks, less for kit-based ones and for weak edges). Banned heroes and heroes your teammates picked are left out. A pick that powers up a team-up with your teammates gets a small nudge (since Season 9 team-up abilities work alone and a partner only makes them stronger, so the nudge is a tie-breaker). You get the top three, a counter for each enemy (with a stand-in when the listed counter is banned), and the enemies in the order to focus them.
 - **Quick lookup** at the top of the Draft tab opens any hero's counters and tips in two taps, for the hero who's giving you trouble mid-match.
 - **Protect your pick** suggests bans: the strongest available counters to the hero you want to play.
-- **Hero pages** have three tabs. *Against* shows focus priority, the best counters and tips for facing the hero. *Play as* shows play style, tips, team-up partners and who the hero beats. *Abilities* explains what each ability does, the hero's two team-up abilities, and quirks. Picks, counters and comps open on Play as; the tier list and enemies open on Against, and each page in the back stack remembers its tab.
+- **Hero pages** have four tabs. *Against* shows focus priority, the best counters and tips for facing the hero. *Play as* shows play style, tips, team-up partners and who the hero beats. *Abilities* explains what each ability does, the hero's two team-up abilities, and quirks. *History* charts buffs and nerfs by season and lists every change since launch, with bug fixes hidden unless you ask. Picks, counters and comps open on Play as; the tier list and enemies open on Against, and each page in the back stack remembers its tab.
+- **Patch history** comes from every official balance post and patch note since launch, in our own words. The tier list marks heroes buffed or nerfed this season with arrows.
 - **Ability breakdowns** are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows the date their kit was last checked.
 - **Hero tips** are short advice for playing against and as each hero, plus quirks the in-game text doesn't explain. They're our own words, written from official patch notes and current guides, and each quirk shows the date it was last checked.
 - **Maps** are optional. Each ranked map is tagged with its mode and layout (long sightlines, tight spaces, high ground, chokepoints, flank routes), and each hero with a play style (long range, brawler, dive, flyer, area control). Picking a map, and your side on Convoy and Convergence, adds a small nudge of at most one and a half tier steps toward heroes whose style suits it, so a real counter still outweighs the map. Heroes without a style tag are unaffected.

@@ -3,7 +3,7 @@
 > Draft. Fill in the bracketed parts, make sure it matches how you actually run the app, and host it at a public URL before release. This is a starting point, not legal advice.
 
 **Effective date:** [date]
-**Developer:** [your name or company]
+**Developer:** Hard Counter
 **Contact:** [email address]
 
 Hard Counter ("the app") is an unofficial companion tool for players of Marvel Rivals. It is not affiliated with or endorsed by NetEase Games or Marvel.
@@ -31,7 +31,7 @@ Google explains how it uses this information here: https://policies.google.com/t
 
 ## Hero data updates
 
-The app may download updated hero data from [where you host heroes.json]. Like any web server, that host may record your IP address in its normal logs.
+The app may download updated hero data from GitHub (raw.githubusercontent.com). Like any web server, that host may record your IP address in its normal logs.
 
 ## Children
 

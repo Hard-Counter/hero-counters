@@ -156,4 +156,23 @@ export interface Dataset {
   maps?: GameMap[];
   /** Team-ups active this season. Optional so older data files still load. */
   teamUps?: TeamUp[];
+  /** Every hero change since launch. Optional so older data files still load. */
+  history?: HistoryData;
+}
+
+/** b buff, n nerf, m mixed, c other change, f bug fix. */
+export type ChangeKind = 'b' | 'n' | 'm' | 'c' | 'f';
+
+/**
+ * One change from a balance post or patch notes: date, the heroes it touches ('deadpool' means all
+ * three versions, and a team-up change lists every hero in it), kind, ability, and what changed.
+ */
+export type HistoryChange = [date: string, heroes: string[], kind: ChangeKind, ability: string, text: string];
+
+export interface HistoryData {
+  /** Season ids ('10', '10.5') with their start dates, oldest first. */
+  seasons: [id: string, start: string][];
+  /** When heroes who weren't in the launch roster joined. */
+  added: Record<string, string>;
+  changes: HistoryChange[];
 }

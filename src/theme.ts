@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { BanRisk, Confidence, RoleId, Tier } from './data/types';
+import type { BanRisk, ChangeKind, Confidence, RoleId, Tier } from './data/types';
 import { useScheme } from './useScheme';
 
 export interface Theme {
@@ -20,6 +20,8 @@ export interface Theme {
   tierInk: string;
   ban: Record<BanRisk, string>;
   conf: Record<Confidence, string>;
+  /** Patch history: buff, nerf, mixed, other change, bug fix. */
+  change: Record<ChangeKind, string>;
 }
 
 // Classic tier-list bands; the same in both themes, always with dark ink.
@@ -50,6 +52,7 @@ export const darkTheme: Theme = {
   tierInk: '#17120A',
   ban: { high: '#FF5465', medium: '#F2A33D', low: '#6F7B8E' },
   conf: { data: '#3ED39B', kit: '#6AA6FF', consensus: '#C69CFF' },
+  change: { b: '#5BD27A', n: '#FF5F6D', m: '#C69CFF', c: '#A2ADBD', f: '#6F7B8E' },
 };
 
 export const lightTheme: Theme = {
@@ -70,6 +73,7 @@ export const lightTheme: Theme = {
   tierInk: '#17120A',
   ban: { high: '#D63447', medium: '#B36B00', low: '#6E798C' },
   conf: { data: '#0C8A60', kit: '#2E6BD9', consensus: '#7C4DD8' },
+  change: { b: '#1E8C46', n: '#D63447', m: '#7C4DD8', c: '#455064', f: '#6E798C' },
 };
 
 // Loaded in App.tsx with expo-font. If a font fails to load, the system font is used.

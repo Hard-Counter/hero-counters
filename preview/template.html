@@ -32,6 +32,11 @@
     --conf-data: #3ed39b;
     --conf-kit: #6aa6ff;
     --conf-consensus: #c69cff;
+    --chg-b: #5bd27a;
+    --chg-n: #ff5f6d;
+    --chg-m: #c69cff;
+    --chg-c: #a2adbd;
+    --chg-f: #6f7b8e;
     --scrim: rgba(0, 0, 0, .6);
     --font-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
     --font-body: "Barlow", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -58,6 +63,11 @@
       --conf-data: #0c8a60;
       --conf-kit: #2e6bd9;
       --conf-consensus: #7c4dd8;
+      --chg-b: #1e8c46;
+      --chg-n: #d63447;
+      --chg-m: #7c4dd8;
+      --chg-c: #455064;
+      --chg-f: #6e798c;
       --scrim: rgba(14, 19, 26, .45);
     }
   }
@@ -82,6 +92,11 @@
     --conf-data: #0c8a60;
     --conf-kit: #2e6bd9;
     --conf-consensus: #7c4dd8;
+    --chg-b: #1e8c46;
+    --chg-n: #d63447;
+    --chg-m: #7c4dd8;
+    --chg-c: #455064;
+    --chg-f: #6e798c;
     --scrim: rgba(14, 19, 26, .45);
   }
 
@@ -251,6 +266,10 @@
   .hero-chip[disabled] { opacity: .4; cursor: not-allowed; }
   .hc-name { min-width: 0; overflow-wrap: anywhere; }
   .hc-variant { display: inline-flex; margin-left: 4px; font-size: 11px; vertical-align: -1px; }
+  .hc-shift { margin-left: 4px; font-size: 10px; vertical-align: 0; }
+  .hc-shift.buffed { color: var(--chg-b); }
+  .hc-shift.nerfed { color: var(--chg-n); }
+  .hc-shift.mixed { color: var(--chg-m); }
   .new {
     padding: 3px 5px;
     border-radius: 3px;
@@ -666,7 +685,7 @@
 
   /* Hero page tabs */
   .dtabs { position: sticky; top: -4px; z-index: 2; display: flex; margin: 14px -16px 0; padding: 0 8px; background: var(--bg); border-bottom: 1px solid var(--line); }
-  .dtab { flex: 1; display: grid; justify-items: stretch; gap: 10px; padding: 12px 0 0; text-align: center; font: 700 13.5px/1 var(--font-display); letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+  .dtab { flex: 1; min-width: 0; display: grid; justify-items: stretch; gap: 10px; padding: 12px 0 0; text-align: center; font: 700 13.5px/1 var(--font-display); letter-spacing: .07em; white-space: nowrap; text-transform: uppercase; color: var(--ink-3); }
   .dtab::after { content: ""; height: 3px; margin-inline: 10px; border-radius: 2px; background: transparent; }
   .dtab[aria-selected="true"] { color: var(--ink); }
   .dtab[aria-selected="true"]::after { background: var(--accent); }
@@ -684,6 +703,42 @@
   .team-row small { font-size: 12.5px; color: var(--ink-3); }
   .team-row svg { width: 16px; height: 16px; color: var(--ink-3); }
   .empty-note { margin-top: 18px; font-size: 13.5px; color: var(--ink-3); }
+
+  /* Patch history */
+  .hist-summary { margin: 0 0 10px; font-size: 13.5px; color: var(--ink-2); }
+  .hist-chart { padding: 6px 0 4px; }
+  .hist-bars { display: flex; }
+  .hist-col { flex: 1; min-width: 0; display: grid; justify-items: center; }
+  .hist-up, .hist-down { display: flex; justify-content: center; width: 100%; height: 42px; }
+  .hist-up { align-items: flex-end; border-bottom: 1.5px solid var(--line); }
+  .hist-down { align-items: flex-start; }
+  .hist-col.current .hist-up { border-bottom-color: var(--accent); }
+  .hist-up i, .hist-down i { display: block; width: 62%; max-width: 12px; border-radius: 2px; }
+  .hist-up i { background: var(--chg-b); }
+  .hist-down i { background: var(--chg-n); }
+  .hist-col small { margin-top: 4px; font-size: 10.5px; line-height: 12px; color: var(--ink-3); }
+  .hist-col.current small { color: var(--accent); }
+  .hist-legend { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--ink-3); }
+  .hist-legend .key { width: 9px; height: 9px; border-radius: 2px; }
+  .hist-legend .key.b { background: var(--chg-b); }
+  .hist-legend .key.n { background: var(--chg-n); margin-left: 6px; }
+  .hist-legend .right { margin-left: auto; }
+  .hist-toggle { padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); font-size: 12.5px; font-weight: 600; color: var(--ink-2); }
+  .hist-toggle[aria-checked="true"] { border-color: var(--ink-3); background: var(--surface-2); color: var(--ink); }
+  .hist-group { margin-bottom: 14px; }
+  .hist-group h3 { margin: 0 0 8px; font: 700 15px/1.2 var(--font-display); letter-spacing: .04em; }
+  .hist-group h3 small { font: 400 13px/1 var(--font-body); letter-spacing: 0; color: var(--ink-3); }
+  .hist-rows { display: grid; gap: 10px; }
+  .hist-row { padding-left: 10px; border-left: 2px solid var(--line); }
+  .hist-top { display: flex; align-items: center; gap: 8px; }
+  .hist-top b { flex: 1; min-width: 0; font-size: 14px; }
+  .hist-top small { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+  .hist-row p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
+  .chg { --c: var(--chg-c); flex: none; padding: 2px 6px; border-radius: 4px; background: color-mix(in srgb, var(--c) 14%, transparent); color: var(--c); font: 700 11px/1.3 var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+  .chg.b { --c: var(--chg-b); }
+  .chg.n { --c: var(--chg-n); }
+  .chg.m { --c: var(--chg-m); }
+  .chg.f { --c: var(--chg-f); }
 
   /* Overlay cards: glossary groups and hero quick looks */
   .overlay { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; justify-content: flex-end; }
@@ -844,6 +899,9 @@
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"/></svg>',
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
     chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+    buffed: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l9 15H3z"/></svg>',
+    nerfed: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 20L3 5h18z"/></svg>',
+    mixed: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1.5l7 9.5H5zM12 22.5L5 13h14z"/></svg>',
   };
 
   // Tiny element builder. `html` is used only for the trusted icon strings above.
@@ -898,7 +956,13 @@
   }
 
   function heroChip(hero, onClick, opts = {}) {
-    const label = [hero.name, hero.variant ? ROLE_LABEL[hero.role] : null, hero.banRisk === 'high' ? 'often banned' : null]
+    const shift = opts.shift;
+    const label = [
+      hero.name,
+      hero.variant ? ROLE_LABEL[hero.role] : null,
+      shift ? SEASON_SHIFT_LABEL[shift].toLowerCase() : null,
+      hero.banRisk === 'high' ? 'often banned' : null,
+    ]
       .filter(Boolean)
       .join(', ');
     return h(
@@ -912,7 +976,13 @@
         'aria-label': label,
       },
       avatar(hero, 26),
-      h('span', { class: 'hc-name' }, hero.name, hero.variant ? h('span', { class: 'hc-variant' }, icon(hero.role, hero.role)) : null),
+      h(
+        'span',
+        { class: 'hc-name' },
+        hero.name,
+        hero.variant ? h('span', { class: 'hc-variant' }, icon(hero.role, hero.role)) : null,
+        shift ? icon(shift, `hc-shift ${shift}`) : null,
+      ),
       hero.isNew ? h('span', { class: 'new' }, 'New') : null,
       hero.banRisk === 'high' ? h('span', { class: 'ban' }) : null,
     );
@@ -980,6 +1050,8 @@
   }
 
   // ---- Tiers ----
+  const SHIFTS = seasonShifts(DATA);
+
   function tiersView() {
     const list = h('div', { class: 'tier-list' });
     for (const tier of TIERS) {
@@ -990,7 +1062,7 @@
       );
       if (!heroes.length) continue;
       list.append(
-        h('section', { class: 'tier-row', 'aria-label': `${tier} tier` }, tierChip(tier, 44), h('div', { class: 'tier-heroes' }, heroes.map((x) => heroChip(x, () => openDetail(x.id, 'against'))))),
+        h('section', { class: 'tier-row', 'aria-label': `${tier} tier` }, tierChip(tier, 44), h('div', { class: 'tier-heroes' }, heroes.map((x) => heroChip(x, () => openDetail(x.id, 'against'), { shift: SHIFTS.get(x.id) })))),
       );
     }
     return h(
@@ -998,7 +1070,7 @@
       null,
       roleFilters(state.roleFilter, (value) => set({ roleFilter: value })),
       list,
-      h('p', { class: 'foot' }, `${bracketById(state.bracket).label} on ${platformName()}. `, h('span', { class: 'ban inline' }), 'Often banned at Gold III and above. Tap any hero for counters.'),
+      h('p', { class: 'foot' }, `${bracketById(state.bracket).label} on ${platformName()}. `, h('span', { class: 'ban inline' }), 'Often banned at Gold III and above.', SHIFTS.size ? ' Arrows mark heroes buffed or nerfed this season.' : '', ' Tap any hero for counters.'),
       h('p', { class: 'foot', style: 'margin-top:10px' }, linkBtn('What tiers and tags mean', () => openInfo('tiers'))),
     );
   }
@@ -1658,6 +1730,93 @@
     );
   }
 
+  // Patch history on the hero page. Bug fixes stay hidden until asked for.
+  let showFixes = false;
+  function historyView(view) {
+    const { b, n, m, f } = view.totals;
+    const since = view.added ? `since joining in ${formatMonth(view.added)}` : 'since launch';
+    const summary = [`${b} ${b === 1 ? 'buff' : 'buffs'}`, `${n} ${n === 1 ? 'nerf' : 'nerfs'}`, m ? `${m} mixed` : null, `${f} bug ${f === 1 ? 'fix' : 'fixes'}`]
+      .filter(Boolean)
+      .join(' · ');
+    const max = Math.max(1, ...view.seasons.map((s) => Math.max(s.counts.b, s.counts.n)));
+    const pct = (v) => (v ? Math.max(7, Math.round((v / max) * 100)) : 0);
+    const chartLabel =
+      'Buffs and nerfs by season: ' +
+      view.seasons
+        .filter((s) => s.counts.b || s.counts.n)
+        .map((s) => `${seasonLabel(s.season)}, ${s.counts.b} buffs and ${s.counts.n} nerfs`)
+        .join('; ');
+    const chart = h(
+      'div',
+      { class: 'hist-chart', role: 'img', 'aria-label': chartLabel },
+      h(
+        'div',
+        { class: 'hist-bars' },
+        view.seasons.map((s) =>
+          h(
+            'div',
+            { class: 'hist-col' + (s.season === view.current ? ' current' : '') },
+            h('span', { class: 'hist-up' }, h('i', { style: `height:${pct(s.counts.b)}%` })),
+            h('span', { class: 'hist-down' }, h('i', { style: `height:${pct(s.counts.n)}%` })),
+            h('small', null, s.season.endsWith('.5') ? '·' : s.season),
+          ),
+        ),
+      ),
+      h('div', { class: 'hist-legend' }, h('span', { class: 'key b' }), 'Buffs', h('span', { class: 'key n' }), 'Nerfs', h('span', { class: 'right' }, 'Seasons, half seasons as dots')),
+    );
+    const starts = new Map(view.seasons.map((s) => [s.season, s.start]));
+    const groups = [];
+    for (const e of showFixes ? view.entries : view.entries.filter((x) => x.kind !== 'f')) {
+      const last = groups[groups.length - 1];
+      if (last && last.season === e.season) last.entries.push(e);
+      else groups.push({ season: e.season, entries: [e] });
+    }
+    const toggle = f
+      ? h(
+          'button',
+          {
+            type: 'button',
+            class: 'hist-toggle',
+            role: 'switch',
+            'aria-checked': String(showFixes),
+            'aria-label': 'Show bug fixes',
+            onClick: () => {
+              showFixes = !showFixes;
+              renderDetail(true);
+            },
+          },
+          showFixes ? 'Hide fixes' : `Show fixes (${f})`,
+        )
+      : null;
+    return [
+      sectionHead('Changes by season', { info: 'history', infoLabel: 'What the history shows' }),
+      h('p', { class: 'hist-summary' }, `${summary} ${since}.`),
+      chart,
+      sectionHead('Every change', { right: toggle }),
+      ...groups.map((g) =>
+        h(
+          'section',
+          { class: 'hist-group' },
+          h('h3', null, seasonLabel(g.season), starts.get(g.season) ? h('small', null, ` · ${formatMonth(starts.get(g.season))}`) : null),
+          h(
+            'div',
+            { class: 'hist-rows' },
+            g.entries.map((e) =>
+              h(
+                'div',
+                { class: 'hist-row' },
+                h('div', { class: 'hist-top' }, h('span', { class: `chg ${e.kind}` }, CHANGE_LABEL[e.kind]), h('b', null, e.ability), h('small', null, formatLongDate(e.date))),
+                h('p', null, e.text),
+              ),
+            ),
+          ),
+        ),
+      ),
+      groups.length ? null : h('p', { class: 'empty-note' }, 'No balance changes yet.'),
+      h('p', { class: 'kit-checked' }, 'From the official balance posts and patch notes, in our own words.'),
+    ];
+  }
+
   // Each hero page in the stack remembers its tab. Tier list and enemies open on Against,
   // picks, counters and comps on Play as.
   function openDetail(id, tab = 'against') {
@@ -1715,10 +1874,11 @@
     const tips = tipsFor(hero);
     const focus = focusFor(hero);
     const kit = kitFor(hero);
+    const history = historyFor(DATA, hero.id);
     const ups = heroTeamUps(hero.id, usableTeamUps(DATA, IDX), IDX);
     const strong = sortHeroes(goodAgainst(DATA, hero.id), state.bracket, state.platform);
     const hasAbilities = !!kit || !!(tips && tips.quirks.length) || ups.own.length > 0;
-    const tabs = HERO_TABS.filter((k) => k !== 'abilities' || hasAbilities);
+    const tabs = HERO_TABS.filter((k) => (k !== 'abilities' || hasAbilities) && (k !== 'history' || !!history));
     const active = tabs.includes(top.tab) ? top.tab : 'against';
     const body = h('div', { class: 'sheet-body' });
 
@@ -1798,6 +1958,8 @@
       if (!(hero.styles && hero.styles.length) && !(tips && tips.as.length) && !ups.own.length && !ups.boosts.length && !strong.length) {
         body.append(h('p', { class: 'empty-note' }, `No play notes for ${hero.name} yet.`));
       }
+    } else if (active === 'history' && history) {
+      body.append(...historyView(history));
     } else {
       if (kit) {
         kit.groups.forEach((g, i) => {

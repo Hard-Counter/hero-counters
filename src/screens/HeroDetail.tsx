@@ -16,6 +16,7 @@ import {
   formatDate,
   goodAgainst,
   heroTeamUps,
+  historyFor,
   kitFor,
   sortHeroes,
   tierFor,
@@ -28,6 +29,7 @@ import { Icon } from '../components/icons';
 import { Sheet } from '../components/Sheet';
 import { Overlay } from '../components/Overlay';
 import { InfoCard } from '../components/Glossary';
+import { HeroHistory } from '../components/HeroHistory';
 
 /** Why a hero shown in the peek card is on this page. */
 type Peek =
@@ -99,13 +101,14 @@ export default function HeroDetail({
     () => (hero ? heroTeamUps(hero.id, usableTeamUps(data, idx), idx) : { own: [], boosts: [] }),
     [data, idx, hero],
   );
+  const history = useMemo(() => (hero ? historyFor(data, hero.id) : null), [data, hero]);
   const tips = hero ? tipsFor(hero) : null;
   const kit = hero ? kitFor(hero) : null;
   const focus = hero ? focusFor(hero) : null;
   const roleOrder: RoleId[] = [myRole, ...ROLES.filter((r) => r !== myRole)];
 
   const hasAbilities = !!kit || !!tips?.quirks.length || teamUps.own.length > 0;
-  const tabs = HERO_TABS.filter((k) => k !== 'abilities' || hasAbilities);
+  const tabs = HERO_TABS.filter((k) => (k !== 'abilities' || hasAbilities) && (k !== 'history' || !!history));
   const active: HeroTab = tabs.includes(tab) ? tab : 'against';
 
   // The tab bar pins by drawing a copy over the top of the list rather than as a sticky header,
@@ -343,6 +346,8 @@ export default function HeroDetail({
                   </>
                 ) : null}
 
+                {active === 'history' && history ? <HeroHistory view={history} onInfo={() => setInfo('history')} /> : null}
+
                 {active === 'abilities' ? (
                   <>
                     {kit
@@ -483,7 +488,9 @@ function TabBar({
             accessibilityState={{ selected: on }}
             style={({ pressed }) => [st.tabItem, pressed && { opacity: 0.7 }]}
           >
-            <Text style={[st.tabText, on && st.tabTextOn]}>{HERO_TAB_LABEL[k].toUpperCase()}</Text>
+            <Text style={[st.tabText, on && st.tabTextOn]} numberOfLines={1}>
+              {HERO_TAB_LABEL[k].toUpperCase()}
+            </Text>
             <View style={[st.tabLine, on && st.tabLineOn]} />
           </Pressable>
         );
@@ -718,7 +725,7 @@ const makeStyles = (t: Theme) =>
     },
     tabBarPinned: { position: 'absolute', top: 0, left: 0, right: 0, zIndex: 2 },
     tabItem: { flex: 1, alignItems: 'center', paddingTop: 12 },
-    tabText: { color: t.ink3, fontFamily: FONT.displayBold, fontSize: 13.5, letterSpacing: 1.1 },
+    tabText: { color: t.ink3, fontFamily: FONT.displayBold, fontSize: 13.5, letterSpacing: 0.9 },
     tabTextOn: { color: t.ink },
     tabLine: { alignSelf: 'stretch', height: 3, marginTop: 10, marginHorizontal: 10, borderRadius: 2, backgroundColor: 'transparent' },
     tabLineOn: { backgroundColor: t.accent },

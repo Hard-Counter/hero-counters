@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import type { BracketId, Dataset, Platform } from '../data/types';
-import { TIERS, sortHeroes, tierFor } from '../logic';
+import { TIERS, seasonShifts, sortHeroes, tierFor } from '../logic';
 import { FONT, Theme, useStyles } from '../theme';
 import { HeroChip, LinkButton, RoleFilter, RoleFilterValue, TierBadge } from '../components/ui';
 import { Overlay } from '../components/Overlay';
@@ -35,6 +35,7 @@ export default function TierListScreen({
     [data, role, bracket, platform],
   );
   const bracketLabel = data.brackets.find((b) => b.id === bracket)?.label ?? '';
+  const shifts = useMemo(() => seasonShifts(data), [data]);
 
   return (
     <View style={st.fill}>
@@ -45,14 +46,14 @@ export default function TierListScreen({
             <TierBadge tier={g.tier} size={44} />
             <View style={st.heroes}>
               {g.heroes.map((h) => (
-                <HeroChip key={h.id} hero={h} onPress={() => onOpen(h.id)} />
+                <HeroChip key={h.id} hero={h} shift={shifts.get(h.id)} onPress={() => onOpen(h.id)} />
               ))}
             </View>
           </View>
         ))}
         <Text style={st.foot}>
-          {bracketLabel} on {platform === 'pc' ? 'PC' : 'console'}. A red dot means often banned at Gold III and above. Tap any
-          hero for counters.
+          {bracketLabel} on {platform === 'pc' ? 'PC' : 'console'}. A red dot means often banned at Gold III and above.
+          {shifts.size ? ' Arrows mark heroes buffed or nerfed this season.' : ''} Tap any hero for counters.
         </Text>
         <View style={st.more}>
           <LinkButton label="What tiers and tags mean" onPress={() => setInfo(true)} />
