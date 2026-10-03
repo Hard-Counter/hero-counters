@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "revision": 10,
+  "revision": 11,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
-  "updated": "2026-10-02",
-  "nextReview": "2026-10-03",
+  "updated": "2026-10-03",
+  "nextReview": "2026-10-09",
   "brackets": [
     {
       "id": "bronze_gold",
@@ -50,13 +50,12 @@
     "Season 10.5 arrives October 9."
   ],
   "changelog": [
+    "Weekly review, Oct 3: no tier or counter changes.",
     "Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.",
     "Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.",
     "Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.",
     "Tips for 12 heroes: how to play against them, how to play them, and quirks the game doesn’t explain. Plus a glossary, and a draft helper that tracks bans and both teams.",
-    "Weekly review, Sep 26: no tier or counter changes. The Sept 24 update was cosmetic only (new God Quarry map in Quick Match, a Devil Dinosaur KO-feed fix); no ranked map pool change yet.",
-    "Draft helper: pick a map (and your side) to nudge suggestions by layout. Covers the 17 ranked maps.",
-    "Season 10 launch data: Gorr added, Sept 11 balance patch and Sept 17 Scarlet Witch fix reflected."
+    "Weekly review, Sep 26: no tier or counter changes. The Sept 24 update was cosmetic only (new God Quarry map in Quick Match, a Devil Dinosaur KO-feed fix); no ranked map pool change yet."
   ],
   "heroes": [
     {
