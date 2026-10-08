@@ -349,7 +349,10 @@ export default function HeroDetail({
                           When to pick
                         </SectionHead>
                         <View style={st.focus}>
-                          {pickNotes.difficulty ? <DifficultyTag stars={pickNotes.difficulty} /> : null}
+                          {pickNotes.difficulty ? (
+                            <DifficultyTag stars={pickNotes.difficulty} estimate={!!pickNotes.difficultyNote} />
+                          ) : null}
+                          {pickNotes.difficultyNote ? <Text style={st.small}>{pickNotes.difficultyNote}</Text> : null}
                           {pickNotes.shines ? <Text style={st.focusWhy}>{pickNotes.shines}</Text> : null}
                         </View>
                       </>

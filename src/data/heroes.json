@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 12,
+  "revision": 13,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
@@ -40,7 +40,7 @@
     "Hero tips are our own advice, written from official patch notes and current guides. Each quirk shows the date it was last checked.",
     "Ability breakdowns are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows when their kit was last checked.",
     "Patch history lists every buff, nerf and fix to each hero since launch, in our own words from the official balance posts and patch notes. Arrows on the tier list mark heroes buffed or nerfed this season.",
-    "Each hero page shows the game’s own difficulty rating and says when the hero shines: the maps, teams and enemy picks that suit them. The Shines when lines are our own read of the kit and the counters, because a low tier doesn’t mean a hero is never a good pick.",
+    "Each hero page shows the game’s own difficulty rating (Deadpool’s is our estimate, because the game gives him zero stars) and says when the hero shines: the maps, teams and enemy picks that suit them. The Shines when lines are our own read of the kit and the counters, because a low tier doesn’t mean a hero is never a good pick.",
     "Ability keys and controller buttons are the game’s defaults, checked against the official hero pages, the wiki and in-game screenshots.",
     "The meta shifts with every patch. The data is reviewed weekly and after each balance update."
   ],
@@ -52,12 +52,12 @@
     "Season 10.5 arrives October 9."
   ],
   "changelog": [
+    "Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.",
     "Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).",
     "Weekly review, Oct 3: no tier or counter changes.",
     "Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.",
     "Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.",
-    "Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.",
-    "Tips for 12 heroes: how to play against them, how to play them, and quirks the game doesn’t explain. Plus a glossary, and a draft helper that tracks bans and both teams."
+    "Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips."
   ],
   "heroes": [
     {
@@ -1760,6 +1760,8 @@
       "banRisk": "low",
       "patchNote": "Buffed in all three roles this season.",
       "variant": true,
+      "difficulty": 5,
+      "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
       "shines": "Shines in close fights where his taunt drags enemy focus onto him and away from your backline.",
       "counters": {
         "overall": {
@@ -2355,7 +2357,8 @@
             "kind": "attack",
             "text": "Chaos magic that damages every Chaos-Marked enemy in a wide cone in front of her at once, and restores her Chaos Energy. She needs to mark enemies first.",
             "keys": {
-              "pc": "lmb"
+              "pc": "lmb",
+              "console": "rt"
             }
           },
           {
@@ -2363,7 +2366,8 @@
             "kind": "attack",
             "text": "Spends Chaos Energy to fire explosive magic missiles.",
             "keys": {
-              "pc": "rmb"
+              "pc": "rmb",
+              "console": "lt"
             }
           },
           {
@@ -2371,7 +2375,8 @@
             "kind": "ability",
             "text": "A shockwave in a long strip in front of her that damages and Chaos-Marks every enemy it hits.",
             "keys": {
-              "pc": "f"
+              "pc": "f",
+              "console": "x"
             }
           },
           {
@@ -2379,7 +2384,8 @@
             "kind": "ability",
             "text": "Throws a seal that stuns enemies briefly when it lands, then leaves a field that damages, slows and keeps marking enemies inside. Can be cast during Mystic Projection.",
             "keys": {
-              "pc": "e"
+              "pc": "e",
+              "console": "lb"
             }
           },
           {
@@ -2387,7 +2393,8 @@
             "kind": "ability",
             "text": "Becomes a phased projection that flies freely with a speed boost. She can end it early.",
             "keys": {
-              "pc": "shift"
+              "pc": "shift",
+              "console": "rb"
             }
           },
           {
@@ -2395,7 +2402,8 @@
             "kind": "passive",
             "text": "Can fall slowly.",
             "keys": {
-              "pc": "space"
+              "pc": "space",
+              "console": "a"
             }
           },
           {
@@ -2408,7 +2416,8 @@
             "kind": "ultimate",
             "text": "Rises with bonus health and channels chaos energy that pulls in and damages enemies near her, then releases a huge blast.",
             "keys": {
-              "pc": "q"
+              "pc": "q",
+              "console": "ls+rs"
             }
           }
         ]
@@ -4667,6 +4676,8 @@
       "banRisk": "low",
       "patchNote": "Buffed in all three roles this season.",
       "variant": true,
+      "difficulty": 5,
+      "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
       "shines": "Shines in close fights where his taunt and Healing Factor let him outlast enemies who can’t burst him down.",
       "counters": {
         "overall": {
@@ -6314,6 +6325,8 @@
       "banRisk": "low",
       "patchNote": "Buffed in all three roles this season.",
       "variant": true,
+      "difficulty": 5,
+      "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
       "shines": "Shines up close with a brawl team, healing as he fights and taunting enemies off his allies.",
       "counters": {
         "overall": {

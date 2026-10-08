@@ -735,6 +735,7 @@
   }
   .difficulty-stars { display: inline-flex; align-items: center; gap: 1.5px; font-size: 11px; color: var(--ink-3); }
   .difficulty-stars .on { color: var(--accent); }
+  .focus-box p.difficulty-note { font-size: 12.5px; color: var(--ink-3); }
   .focus-box p { font-size: 13.5px; color: var(--ink-2); }
   .quirks { display: grid; gap: 10px; }
   .quirk { padding-left: 10px; border-left: 2px solid var(--line); font-size: 14px; }
@@ -1058,10 +1059,10 @@
       },
       PAD_LABEL[state.pad][k],
     );
-  const difficultyTag = (stars) =>
+  const difficultyTag = (stars, estimate = false) =>
     h(
       'span',
-      { class: 'difficulty', role: 'img', 'aria-label': `Difficulty ${stars} of ${MAX_DIFFICULTY} stars, the game’s own rating` },
+      { class: 'difficulty', role: 'img', 'aria-label': `Difficulty ${stars} of ${MAX_DIFFICULTY} stars, ${estimate ? 'our estimate' : 'the game’s own rating'}` },
       h('span', { 'aria-hidden': 'true' }, 'Difficulty'),
       h('span', { class: 'difficulty-stars', 'aria-hidden': 'true' }, Array.from({ length: MAX_DIFFICULTY }, (_, i) => icon(i < stars ? 'starred' : 'star', i < stars ? 'on' : ''))),
     );
@@ -2176,7 +2177,15 @@
     } else if (active === 'as') {
       if (pick) {
         body.append(sectionHead('When to pick', { info: 'tiers', infoLabel: 'What difficulty and Shines when mean' }));
-        body.append(h('div', { class: 'focus-box' }, pick.difficulty ? difficultyTag(pick.difficulty) : null, pick.shines ? h('p', null, pick.shines) : null));
+        body.append(
+          h(
+            'div',
+            { class: 'focus-box' },
+            pick.difficulty ? difficultyTag(pick.difficulty, !!pick.difficultyNote) : null,
+            pick.difficultyNote ? h('p', { class: 'difficulty-note' }, pick.difficultyNote) : null,
+            pick.shines ? h('p', null, pick.shines) : null,
+          ),
+        );
       }
       if (hero.styles && hero.styles.length) {
         body.append(sectionHead('Play style', { info: 'styles', infoLabel: 'What play styles mean' }));

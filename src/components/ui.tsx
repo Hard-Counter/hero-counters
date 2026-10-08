@@ -151,14 +151,17 @@ export function FocusTag({ level }: { level: FocusLevel }) {
   );
 }
 
-/** The game's own difficulty rating: a label and five stars, filled up to the rating. */
-export function DifficultyTag({ stars }: { stars: Difficulty }) {
+/**
+ * A difficulty rating: a label and five stars, filled up to the rating. The game's own rating
+ * unless `estimate` is set, in which case the screen shows a note saying it's ours.
+ */
+export function DifficultyTag({ stars, estimate = false }: { stars: Difficulty; estimate?: boolean }) {
   const t = useTheme();
   return (
     <View
       style={[s.pill, { borderColor: t.line }]}
       accessible
-      accessibilityLabel={`Difficulty ${stars} of ${MAX_DIFFICULTY} stars, the game’s own rating`}
+      accessibilityLabel={`Difficulty ${stars} of ${MAX_DIFFICULTY} stars, ${estimate ? 'our estimate' : 'the game’s own rating'}`}
     >
       <Text style={[s.pillText, { color: t.ink2 }]}>DIFFICULTY</Text>
       <View style={s.stars}>

@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 12;
+const REVISION = 13;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -62,7 +62,7 @@ const METHODOLOGY = [
   'Hero tips are our own advice, written from official patch notes and current guides. Each quirk shows the date it was last checked.',
   'Ability breakdowns are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows when their kit was last checked.',
   'Patch history lists every buff, nerf and fix to each hero since launch, in our own words from the official balance posts and patch notes. Arrows on the tier list mark heroes buffed or nerfed this season.',
-  'Each hero page shows the game’s own difficulty rating and says when the hero shines: the maps, teams and enemy picks that suit them. The Shines when lines are our own read of the kit and the counters, because a low tier doesn’t mean a hero is never a good pick.',
+  'Each hero page shows the game’s own difficulty rating (Deadpool’s is our estimate, because the game gives him zero stars) and says when the hero shines: the maps, teams and enemy picks that suit them. The Shines when lines are our own read of the kit and the counters, because a low tier doesn’t mean a hero is never a good pick.',
   'Ability keys and controller buttons are the game’s defaults, checked against the official hero pages, the wiki and in-game screenshots.',
   'The meta shifts with every patch. The data is reviewed weekly and after each balance update.',
 ];
@@ -76,12 +76,12 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
+  'Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.',
   'Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).',
   'Weekly review, Oct 3: no tier or counter changes.',
   'Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.',
   'Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.',
   'Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.',
-  'Tips for 12 heroes: how to play against them, how to play them, and quirks the game doesn’t explain. Plus a glossary, and a draft helper that tracks bans and both teams.',
 ];
 
 // ---------------------------------------------------------------------------
@@ -675,8 +675,9 @@ const STYLES = {
 // Difficulty and "Shines when", shown under "When to pick" on the Play as tab.
 // DIFFICULTY is the game's own rating, 1 to 5 stars, as the game shows it (the wiki's hero pages
 // copy it in their "Difficulty" field). Never adjust it to our own taste: change it only when the
-// game does, and add it for every new hero. Deadpool is left out until his rating is confirmed in
-// game (the wiki leaves it blank); a hero without one simply shows no stars.
+// game does, and add it for every new hero. Where the game's rating isn't usable, our estimate goes
+// in DIFFICULTY_ESTIMATE instead, with a note the app shows under the stars; a hero with neither
+// simply shows no stars.
 // SHINES is our own read: one sentence starting "Shines" (under 150 characters) on the maps,
 // team-ups and enemy picks where the hero beats their tier, from the kit in ABILITIES and the
 // counters, so a low tier doesn't read as "never pick". Re-check it when a patch changes the
@@ -739,6 +740,14 @@ const DIFFICULTY = {
   'white-fox': 3,
   'luna-snow': 2,
   'jeff-the-land-shark': 1,
+};
+
+// Our own estimate where the game's rating isn't usable: [stars, note shown under them].
+// 'deadpool' covers all three versions. The game gives Deadpool zero stars; his kit is among the
+// most complex in the game (three role kits, upgrades earned mid-match, and a Style meter in
+// place of normal ultimate charge), so we rate him five.
+const DIFFICULTY_ESTIMATE = {
+  deadpool: [5, 'Our estimate. The game gives Deadpool zero stars.'],
 };
 
 const SHINES = {
@@ -1869,6 +1878,16 @@ const CONSOLE_KEYS = {
     'Weather Control': 'y',
     'Goddess Boost': 'b',
     'Omega Hurricane': 'ls+rs',
+  },
+  // From an in-game screenshot: the wiki has no button for Scarlet Hex, which is on X.
+  'scarlet-witch': {
+    'Chaos Control': 'rt',
+    'Chthonian Burst': 'lt',
+    'Scarlet Hex': 'x',
+    'Dark Seal': 'lb',
+    'Mystic Projection': 'rb',
+    'Telekinesis': 'a',
+    'Reality Erasure': 'ls+rs',
   },
   hela: {
     'Nightsword Thorn': 'rt',
@@ -4009,6 +4028,8 @@ const heroes = HEROES.map(([id, name, r, tiers, ban, extra = {}]) => {
   }
   if (STYLES[id]) hero.styles = STYLES[id];
   if (DIFFICULTY[id]) hero.difficulty = DIFFICULTY[id];
+  const estimate = DIFFICULTY_ESTIMATE[id.startsWith('deadpool-') ? 'deadpool' : id];
+  if (estimate) [hero.difficulty, hero.difficultyNote] = estimate;
   if (SHINES[id]) hero.shines = SHINES[id];
   return hero;
 });
@@ -4020,6 +4041,14 @@ const MAX_SHINES = 150;
 for (const [id, stars] of Object.entries(DIFFICULTY)) {
   if (!byId.has(id)) fail(`difficulty for unknown hero ${id}`);
   if (!Number.isInteger(stars) || stars < 1 || stars > 5) fail(`${id}: difficulty must be 1 to 5 stars, got ${stars}`);
+}
+const MAX_DIFFICULTY_NOTE = 100;
+for (const [id, [stars, note]] of Object.entries(DIFFICULTY_ESTIMATE)) {
+  if (id !== 'deadpool' && !byId.has(id)) fail(`difficulty estimate for unknown hero ${id}`);
+  if (DIFFICULTY[id]) fail(`${id}: has both the game's difficulty and our estimate`);
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) fail(`${id}: estimated difficulty must be 1 to 5 stars, got ${stars}`);
+  if (typeof note !== 'string' || !/^Our estimate/.test(note)) fail(`${id}: an estimate's note must start "Our estimate"`);
+  else if (note.length > MAX_DIFFICULTY_NOTE) fail(`${id}: difficulty note is ${note.length} characters (max ${MAX_DIFFICULTY_NOTE})`);
 }
 for (const [id, text] of Object.entries(SHINES)) {
   if (!byId.has(id)) fail(`shines for unknown hero ${id}`);
@@ -4348,6 +4377,7 @@ writeFileSync(out, json + '\n');
 const perRole = ROLE_KEYS.map((r) => `${heroes.filter((h) => h.role === r).length} ${r}s`).join(', ');
 const withTips = heroes.filter((h) => h.tips).length;
 const withStars = heroes.filter((h) => h.difficulty).length;
+const estimated = heroes.filter((h) => h.difficultyNote).length;
 const withShines = heroes.filter((h) => h.shines).length;
 const withKeys = heroes.reduce((n, h) => n + (h.kit?.abilities.filter((a) => a.keys?.pc).length ?? 0), 0);
 const withPads = heroes.filter((h) => h.kit?.abilities.some((a) => a.keys?.console)).length;
@@ -4355,6 +4385,6 @@ const abilityCount = heroes.reduce((n, h) => n + (h.kit?.abilities.length ?? 0),
 console.log(
   `Wrote ${out}\nrevision ${REVISION}: ${heroes.length} hero entries (${perRole}), ${comps.length} comps, ` +
     `${maps.length} maps, ${teamUps.length} team-ups, ${abilityCount} abilities, tips for ${withTips} heroes, ` +
-    `${historyChanges.length} patch history entries, difficulty for ${withStars} heroes, Shines when for ${withShines}, ` +
+    `${historyChanges.length} patch history entries, difficulty for ${withStars} heroes (${estimated} our estimate), Shines when for ${withShines}, ` +
     `PC keys for ${withKeys} abilities, controller layouts for ${withPads} heroes`,
 );

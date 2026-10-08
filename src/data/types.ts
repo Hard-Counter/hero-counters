@@ -97,6 +97,8 @@ export interface Hero {
   styles?: HeroStyle[];
   /** The game's own difficulty rating, 1 to 5 stars. */
   difficulty?: Difficulty;
+  /** Set when `difficulty` is our estimate rather than the game's. Shown under the stars. */
+  difficultyNote?: string;
   /** One sentence on the matches where the hero beats their tier. Starts with "Shines". */
   shines?: string;
   /** Optional tips. Heroes without them simply show none. */

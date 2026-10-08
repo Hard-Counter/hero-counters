@@ -663,18 +663,22 @@ export function banSuggestions(
 export const MAX_DIFFICULTY = 5;
 
 export interface WhenToPick {
-  /** The game's own difficulty rating in stars. */
+  /** The game's own difficulty rating in stars, or our estimate when `difficultyNote` is set. */
   difficulty: Difficulty | null;
+  /** Says the rating is our estimate, and why. Null for the game's own rating. */
+  difficultyNote: string | null;
   /** One sentence starting "Shines". */
   shines: string | null;
 }
 
-/** The game's difficulty rating and when the hero shines. Null when the data has neither. */
+/** The difficulty rating and when the hero shines. Null when the data has neither. */
 export function whenToPick(hero: Hero): WhenToPick | null {
   const d = hero.difficulty;
   const difficulty = Number.isInteger(d) && (d as number) >= 1 && (d as number) <= MAX_DIFFICULTY ? (d as Difficulty) : null;
+  const note = typeof hero.difficultyNote === 'string' ? hero.difficultyNote.trim() : '';
+  const difficultyNote = difficulty && note ? note : null;
   const shines = typeof hero.shines === 'string' && hero.shines.trim() ? hero.shines.trim() : null;
-  return difficulty || shines ? { difficulty, shines } : null;
+  return difficulty || shines ? { difficulty, difficultyNote, shines } : null;
 }
 
 // ---- Focus, tips and team makeup ----
@@ -1056,7 +1060,7 @@ export const GLOSSARY: GlossaryGroup[] = [
       },
       {
         term: 'Difficulty',
-        text: 'The game’s own rating, from one star to five. More stars means a hero takes more practice to play well.',
+        text: 'The game’s own rating, from one star to five. More stars means a hero takes more practice to play well. Where the game’s rating doesn’t help, the hero page shows our estimate and says so.',
       },
       {
         term: 'Shines when',
