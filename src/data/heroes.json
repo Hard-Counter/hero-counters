@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 13,
+  "revision": 14,
   "season": "Season 10: Butcher's Blasphemy",
   "seasonShort": "Season 10",
   "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
@@ -2376,7 +2376,7 @@
             "text": "A shockwave in a long strip in front of her that damages and Chaos-Marks every enemy it hits.",
             "keys": {
               "pc": "f",
-              "console": "x"
+              "console": "b"
             }
           },
           {

@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 13;
+const REVISION = 14;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -1879,11 +1879,12 @@ const CONSOLE_KEYS = {
     'Goddess Boost': 'b',
     'Omega Hurricane': 'ls+rs',
   },
-  // From an in-game screenshot: the wiki has no button for Scarlet Hex, which is on X.
+  // From the in-game controller settings: the wiki has no button for Scarlet Hex, which shares B
+  // with her second team-up slot. X stays free (it's Reload for heroes with ammo).
   'scarlet-witch': {
     'Chaos Control': 'rt',
     'Chthonian Burst': 'lt',
-    'Scarlet Hex': 'x',
+    'Scarlet Hex': 'b',
     'Dark Seal': 'lb',
     'Mystic Projection': 'rb',
     'Telekinesis': 'a',
