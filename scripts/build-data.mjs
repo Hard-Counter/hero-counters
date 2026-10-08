@@ -13,13 +13,13 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 11;
+const REVISION = 12;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
   seasonShort: 'Season 10',
   patch: 'Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1',
-  updated: '2026-10-03',
+  updated: '2026-10-08',
   nextReview: '2026-10-09',
 };
 
@@ -62,6 +62,8 @@ const METHODOLOGY = [
   'Hero tips are our own advice, written from official patch notes and current guides. Each quirk shows the date it was last checked.',
   'Ability breakdowns are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows when their kit was last checked.',
   'Patch history lists every buff, nerf and fix to each hero since launch, in our own words from the official balance posts and patch notes. Arrows on the tier list mark heroes buffed or nerfed this season.',
+  'Each hero page shows the game’s own difficulty rating and says when the hero shines: the maps, teams and enemy picks that suit them. The Shines when lines are our own read of the kit and the counters, because a low tier doesn’t mean a hero is never a good pick.',
+  'Ability keys and controller buttons are the game’s defaults, checked against the official hero pages, the wiki and in-game screenshots.',
   'The meta shifts with every patch. The data is reviewed weekly and after each balance update.',
 ];
 
@@ -74,12 +76,12 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
+  'Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).',
   'Weekly review, Oct 3: no tier or counter changes.',
   'Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.',
   'Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.',
   'Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.',
   'Tips for 12 heroes: how to play against them, how to play them, and quirks the game doesn’t explain. Plus a glossary, and a draft helper that tracks bans and both teams.',
-  'Weekly review, Sep 26: no tier or counter changes. The Sept 24 update was cosmetic only (new God Quarry map in Quick Match, a Devil Dinosaur KO-feed fix); no ranked map pool change yet.',
 ];
 
 // ---------------------------------------------------------------------------
@@ -670,6 +672,138 @@ const STYLES = {
 };
 
 // ---------------------------------------------------------------------------
+// Difficulty and "Shines when", shown under "When to pick" on the Play as tab.
+// DIFFICULTY is the game's own rating, 1 to 5 stars, as the game shows it (the wiki's hero pages
+// copy it in their "Difficulty" field). Never adjust it to our own taste: change it only when the
+// game does, and add it for every new hero. Deadpool is left out until his rating is confirmed in
+// game (the wiki leaves it blank); a hero without one simply shows no stars.
+// SHINES is our own read: one sentence starting "Shines" (under 150 characters) on the maps,
+// team-ups and enemy picks where the hero beats their tier, from the kit in ABILITIES and the
+// counters, so a low tier doesn't read as "never pick". Re-check it when a patch changes the
+// hero, and add one for every new hero. The user reviews new or changed lines before they go out.
+// ---------------------------------------------------------------------------
+const DIFFICULTY = {
+  // Vanguards
+  'peni-parker': 4,
+  'devil-dinosaur': 3,
+  'the-hood': 2,
+  hulk: 4,
+  thor: 3,
+  'captain-america': 3,
+  rogue: 5,
+  'doctor-strange': 2,
+  magneto: 2,
+  venom: 1,
+  angela: 4,
+  'the-thing': 1,
+  'emma-frost': 3,
+  groot: 2,
+  // Duelists
+  magik: 3,
+  gorr: 4,
+  storm: 3,
+  'scarlet-witch': 1,
+  hela: 3,
+  daredevil: 3,
+  'iron-fist': 4,
+  'mister-fantastic': 3,
+  psylocke: 5,
+  'spider-man': 5,
+  'black-panther': 4,
+  blade: 3,
+  'iron-man': 2,
+  'human-torch': 3,
+  wolverine: 3,
+  'elsa-bloodstone': 3,
+  'winter-soldier': 3,
+  'black-cat': 4,
+  'star-lord': 2,
+  'black-widow': 4,
+  hawkeye: 4,
+  namor: 2,
+  'moon-knight': 3,
+  'the-punisher': 1,
+  cyclops: 2,
+  'squirrel-girl': 1,
+  phoenix: 3,
+  // Strategists
+  mantis: 1,
+  ultron: 2,
+  'rocket-raccoon': 1,
+  jubilee: 4,
+  gambit: 4,
+  loki: 4,
+  'cloak-and-dagger': 3,
+  'adam-warlock': 3,
+  'invisible-woman': 4,
+  'white-fox': 3,
+  'luna-snow': 2,
+  'jeff-the-land-shark': 1,
+};
+
+const SHINES = {
+  // Vanguards
+  'peni-parker': 'Shines holding one area, like a point or a choke, against melee heroes who have to walk through her webs, mines and drones.',
+  'devil-dinosaur': 'Shines in close brawls against tanks and melee heroes: he can’t be knocked around, and his bleeds hit harder on big health pools.',
+  'the-hood': 'Shines in steady mid-range fights, where constant hits and blocked damage keep him in Half-Demon form.',
+  hulk: 'Shines diving with his team: shields on nearby allies charge his ultimate, and his leap knocks flying enemies down.',
+  thor: 'Shines against flying heroes: enemies who leave his Lightning Realm are grounded, and his dash and hammer throw reach them.',
+  'captain-america': 'Shines leading a coordinated dive, more so at higher ranks: his ultimate gives allies along its path bonus health and speed.',
+  rogue: 'Shines up close against projectile-heavy teams: she soaks shots in Defensive Stance and can steal an enemy’s ability with a dash.',
+  'doctor-strange': 'Shines on maps with long sightlines and chokepoints: his big barrier covers the push, and his portals open a way around.',
+  magneto: 'Shines against poke and projectile damage: his shields and curtain absorb it, and blocked damage powers his Mag-Cannon.',
+  venom: 'Shines diving squishy backlines from high ground: the lower his health, the more bonus health he gets to escape.',
+  angela: 'Shines on open maps with room to fly, where she can catch an isolated target and carry them back to her team.',
+  'the-thing': 'Shines against dive and mobility heroes: his charge leaves a zone where they can’t use movement abilities, and nothing knocks him around.',
+  'emma-frost': 'Shines in close brawls next to a second tank: her barrier goes wherever it’s needed, and her ultimate stops enemies from using theirs.',
+  groot: 'Shines on maps with narrow lanes and chokepoints, where well-placed walls split the enemy team and block their sightlines.',
+  'deadpool-vanguard': 'Shines in close fights where his taunt drags enemy focus onto him and away from your backline.',
+  // Duelists
+  magik: 'Shines diving slow backlines: she can’t be hurt mid-teleport, and the damage she deals becomes bonus health.',
+  gorr: 'Shines in long brawls with lots of knockouts: every enemy he kills leaves a Berserker behind, so he snowballs as the fight goes on.',
+  storm: 'Shines on open maps with room to fly, speeding up or powering up the allies near her, best alongside a dive or flyer team.',
+  'scarlet-witch': 'Shines against teams that bunch up in front of her: one Scarlet Hex marks them all for her Chaos Control.',
+  hela: 'Shines from high ground on maps with long sightlines, landing critical hits on targets who can’t reach her.',
+  daredevil: 'Shines against stealth heroes like Psylocke and Invisible Woman, since he senses enemy movement, and in tight spaces with walls to run.',
+  'iron-fist': 'Shines picking off isolated targets: his block and self-heal let him win drawn-out one-on-one fights.',
+  'mister-fantastic': 'Shines against dive heroes: he grabs them, soaks their damage with his rubber body and fires it back.',
+  psylocke: 'Shines against teams light on shields and crowd control, where stealth gets her close enough for a full ultimate.',
+  'spider-man': 'Shines at higher ranks against flyers and backline heroes, when a practiced player chains tracers and pulls.',
+  'black-panther': 'Shines against healers without a quick escape: lunges on marked targets refresh, so he can dive in and back out.',
+  blade: 'Shines against heavy healing: his sword dash and ultimate cut the healing enemies receive.',
+  'iron-man': 'Shines in lower ranks and against teams without hitscan or other ways to reach a flyer.',
+  'human-torch': 'Shines on maps with tight spaces and chokepoints, where his fire fields and walls of flame trap enemies.',
+  wolverine: 'Shines against tanks: his grab and Rage-fueled claws shred big health pools, alongside a dive or brawl team.',
+  'elsa-bloodstone': 'Shines against tanks and anyone leaning on shields or bonus health, which her seeking and elephant-gun rounds tear through.',
+  'winter-soldier': 'Shines against grouped enemies and flyers: his hook reels in several at once, and his electric punch knocks flyers down.',
+  'black-cat': 'Shines harassing a backline that can’t lock her down: she takes little damage and can’t be crowd-controlled mid-Phantom Pursuit.',
+  'star-lord': 'Shines flanking squishy targets up close, and his auto-aim ultimate is strongest on open maps with enemies in sight.',
+  'black-widow': 'Shines against flyers like Storm and Iron Man on maps with long sightlines, especially on PC.',
+  hawkeye: 'Shines on long-sightline maps when a practiced aim lands charged shots, and his slowing arrow knocks flyers down.',
+  namor: 'Shines defending a point or choke, where his turrets hold space, and against divers like Black Panther.',
+  'moon-knight': 'Shines against teams that group up: his darts bounce between enemies and Ankhs, so tight spaces multiply his damage.',
+  'the-punisher': 'Shines holding a long angle from a safe spot, and against big, slow targets like Peni Parker and The Thing.',
+  'deadpool-duelist': 'Shines in close fights where his taunt and Healing Factor let him outlast enemies who can’t burst him down.',
+  cyclops: 'Shines on maps with walls and corridors, where his beams bounce to enemies behind cover, and his ultimate breaks barriers.',
+  'squirrel-girl': 'Shines in tight spaces and chokepoints where bouncing acorns can’t miss, and against Scarlet Witch and White Fox.',
+  phoenix: 'Shines against teams leaning on summons and shields, which her ultimate destroys, and against Devil Dinosaur.',
+  // Strategists
+  mantis: 'Shines with a dive or brawl team she can boost, and against divers she can put to sleep.',
+  ultron: 'Shines against teams that struggle to hit flyers, healing from the air and beaming down enemy supports.',
+  'rocket-raccoon': 'Shines with a team that stays grouped, where bouncing heals reach everyone, and his revive beacon swings long fights.',
+  jubilee: 'Shines when her team fights close together: her fireworks blind enemies, and her marks boost the team’s healing.',
+  gambit: 'Shines with a team that pushes together: his ultimate heals, speeds up and powers up every ally in sight, and his decks swap healing and damage.',
+  loki: 'Shines with a practiced player at higher ranks: illusions double up his healing, and his ultimate turns him into any hero in the match.',
+  'cloak-and-dagger': 'Shines when the team holds one spot: Dagger’s fields heal everyone inside, and Cloak can hide allies to escape a bad fight.',
+  'adam-warlock': 'Shines in a team that fights together: Soul Bond spreads damage across allies, and his ultimate revives several at once.',
+  'invisible-woman': 'Shines against long-range and burst damage: her shields block it, and her ultimate hides the whole team.',
+  'white-fox': 'Shines against dive heroes like Spider-Man: her fox charms them and makes allies briefly invulnerable.',
+  'luna-snow': 'Shines in long fights that need steady healing, and her ultimate can flip to a damage boost to win a push.',
+  'deadpool-strategist': 'Shines up close with a brawl team, healing as he fights and taunting enemies off his allies.',
+  'jeff-the-land-shark': 'Shines on maps with ledges, where his ultimate can swallow grouped enemies and spit them out over the edge.',
+};
+
+// ---------------------------------------------------------------------------
 // Hero tips: our own short advice, written from official patch notes and current guides.
 // Never paste guide text; keep each tip to a sentence or two, and only include what the
 // sources support. A hero without an entry simply shows no tips.
@@ -1065,8 +1199,1000 @@ const TEAMUPS = [
 ];
 
 // ---------------------------------------------------------------------------
-// Ability breakdowns: what each hero's moves do, in our own words. No inputs and only
-// the numbers that matter. kind: attack, ability, ultimate or passive.
+// Default PC keys for each ability, shown as key caps on the Abilities tab when PC is picked.
+// lmb, rmb: mouse buttons · shift, e, f: abilities · q: ultimate · v: melee · space: jump, double
+// jump, wall crawl, hover or glide (held in the air) · c: team-up. Leave out abilities with no key
+// of their own. Abilities that share a key in different forms (weapon sets, transformations)
+// each list that key. Checked against the official hero pages and at least one guide; re-check
+// when a patch reworks a hero. Console buttons come later.
+// ---------------------------------------------------------------------------
+const PC_KEYS = {
+  // Vanguards
+  'peni-parker': {
+    'Cyber-Web Cluster': 'lmb',
+    'Cyber-Web Snare': 'rmb',
+    'Bionic Spider-Nest': 'shift',
+    'Arachno-Mine': 'e',
+    'Cyber-Bond': 'f',
+    'Wall Crawl': 'space',
+    'Spider-Sweeper': 'q',
+  },
+  'devil-dinosaur': {
+    'Primal Bite': 'lmb',
+    'Impact Beam': 'rmb',
+    'Buddy Barrier': 'e',
+    'Savage Predation': 'shift',
+    'Frenzied Feast': 'f',
+    'Devil-Beast Rampage': 'q',
+  },
+  'the-hood': {
+    'Accursed Pistols': 'lmb',
+    'Mantle of Oblivion': 'rmb',
+    'Abyssal Veil': 'e',
+    'Void Walk': 'shift',
+    'Leaded Transformation': 'lmb',
+    'Demon of the End': 'q',
+  },
+  hulk: {
+    'Gamma Ray Gun': 'lmb',
+    'Gamma Grenade': 'shift',
+    'Puny Banner': 'q',
+    'Heavy Blow': 'lmb',
+    'Gamma Burst': 'rmb',
+    'Incredible Leap': 'space',
+    'Indestructible Guard': 'shift',
+    'Radioactive Lockdown': 'e',
+    'Hulk Smash!': 'q',
+    'World Breaker': 'q',
+  },
+  thor: {
+    'Mjölnir Bash': 'lmb',
+    'Hammer Throw': 'rmb',
+    'Storm Surge': 'shift',
+    'Lightning Realm': 'e',
+    'Awakening Rune': 'f',
+    'God of Thunder': 'q',
+  },
+  'captain-america': {
+    'Sentinel Strike': 'lmb',
+    'Living Legend': 'rmb',
+    'Leading Dash': 'shift',
+    'Super-Soldier Slam': 'lmb',
+    'Vibranium Energy Saw': 'e',
+    'Liberty Rush': 'f',
+    'Freedom Charge': 'q',
+  },
+  rogue: {
+    'Power Surge Punch': 'lmb',
+    'Defensive Stance': 'rmb',
+    'Southern Brawl': 'lmb',
+    'Ability Absorption': 'f',
+    'Chrono Kick Combo': 'e',
+    'Fatal Attraction': 'shift',
+    'Heartbreaker': 'q',
+  },
+  'doctor-strange': {
+    'Daggers of Denak': 'lmb',
+    'Shield of the Seraphim': 'rmb',
+    'Maelstrom of Madness': 'e',
+    'Pentagram of Farallah': 'f',
+    'Cloak of Levitation': 'shift',
+    'Eye of Agamotto': 'q',
+  },
+  magneto: {
+    'Iron Volley': 'lmb',
+    'Mag-Cannon': 'rmb',
+    'Metallic Curtain': 'shift',
+    'Iron Bulwark': 'f',
+    'Metal Bulwark': 'e',
+    'Magnetic Descent': 'space',
+    'Meteor M': 'q',
+  },
+  venom: {
+    'Dark Predation': 'lmb',
+    'Cellular Corrosion': 'rmb',
+    'Venom Swing': 'shift',
+    'Symbiotic Resilience': 'e',
+    'Frenzied Arrival': 'f',
+    'Alien Biology': 'space',
+    'Feast of the Abyss': 'q',
+  },
+  angela: {
+    'Spear of Ichors': 'lmb',
+    'Axes of Ichors': 'lmb',
+    'Shielded Stance': 'rmb',
+    'Assassin’s Charge': 'shift',
+    'Divine Judgement': 'e',
+    'Wingblade Ascent': 'e',
+    'Heven’s Retribution': 'q',
+  },
+  'the-thing': {
+    'Rocky Jab': 'lmb',
+    'Stone Haymaker': 'rmb',
+    'Yancy Street Charge': 'shift',
+    'Embattled Leap': 'e',
+    'Battle Blitz': 'f',
+    'Clobberin’ Time': 'q',
+  },
+  'emma-frost': {
+    'Telepathic Pulse': 'lmb',
+    'Mind’s Aegis': 'rmb',
+    'Psychic Spear': 'e',
+    'Diamond Form': 'shift',
+    'Faceted Fury': 'lmb',
+    'Crystal Kick': 'rmb',
+    'Carbon Crush': 'e',
+    'Psionic Seduction': 'q',
+  },
+  groot: {
+    'Vine Strike': 'lmb',
+    'Spore Bomb': 'rmb',
+    'Furious Flora': 'v',
+    'Thornlash Wall': 'shift',
+    'Ironwood Wall': 'e',
+    'Strangling Prison': 'q',
+  },
+  'deadpool-vanguard': {
+    'Dual Desert Eagles': 'lmb',
+    'Kick@$$ Katana': 'lmb',
+    'Slice and Dice! / Lock and Load!': 'shift',
+    'Magical Unicorn Shield!': 'rmb',
+    'Hazardous Hijinks': 'rmb',
+    'Deadpool In Your Area': 'e',
+    'Bunny Bounce': 'space',
+    'Upgrade!': 'f',
+    'The Ban Hammer': 'q',
+    'The Big Test': 'q',
+  },
+  // Duelists
+  magik: {
+    'Soulsword': 'lmb',
+    'Magik Slash': 'rmb',
+    'Stepping Discs': 'shift',
+    'Eldritch Whirl': 'lmb',
+    'Demon’s Rage': 'rmb',
+    'Umbral Incursion': 'e',
+    'Darkchild': 'q',
+  },
+  gorr: {
+    'All-Black': 'lmb',
+    'Necro-Power': 'rmb',
+    'Black Berserker': 'e',
+    'Shadow Harvest': 'f',
+    'Living Abyss': 'shift',
+    'Twilight of the Gods': 'q',
+  },
+  storm: {
+    'Wind Blade': 'lmb',
+    'Bolt Rush': 'rmb',
+    'Weather Control': 'shift',
+    'Goddess Boost': 'e',
+    'Omega Hurricane': 'q',
+  },
+  'scarlet-witch': {
+    'Chaos Control': 'lmb',
+    'Chthonian Burst': 'rmb',
+    'Dark Seal': 'e',
+    'Mystic Projection': 'shift',
+    'Telekinesis': 'space',
+    'Reality Erasure': 'q',
+    'Scarlet Hex': 'f',
+  },
+  hela: {
+    'Nightsword Thorn': 'lmb',
+    'Piercing Night': 'rmb',
+    'Soul Drainer': 'e',
+    'Astral Flock': 'shift',
+    'Hel’s Descent': 'space',
+    'Goddess of Death': 'q',
+  },
+  daredevil: {
+    'Justice Jab': 'lmb',
+    'Righteous Cross': 'lmb',
+    'Objection!': 'rmb',
+    'Devil’s Latch': 'shift',
+    'Infernal Fury': 'e',
+    'Sonic Pursuit': 'f',
+    'Blind Ascent': 'space',
+    'Let the Devil Out': 'q',
+  },
+  'iron-fist': {
+    'Jeet Kune Do': 'lmb',
+    'Yat Jee Chung Kuen': 'lmb',
+    'Dragon’s Defense': 'rmb',
+    'K’un-Lun Kick': 'shift',
+    'Harmony Recovery': 'e',
+    'Crane Leap': 'space',
+    'Wall Runner': 'space',
+    'Living Chi': 'q',
+  },
+  'mister-fantastic': {
+    'Stretch Punch': 'lmb',
+    'Distended Grip': 'rmb',
+    'Reflexive Rubber': 'shift',
+    'Flexible Elongation': 'e',
+    'Brainiac Bounce': 'q',
+  },
+  psylocke: {
+    'Psionic Crossbow': 'lmb',
+    'Wing Shurikens': 'rmb',
+    'Psi-Blade Dash': 'shift',
+    'Psychic Stealth': 'e',
+    'Dance of the Butterfly': 'q',
+  },
+  'spider-man': {
+    'Spider-Power': 'lmb',
+    'Web-Cluster': 'rmb',
+    'Web-Swing': 'shift',
+    'Get Over Here!': 'e',
+    'Amazing Combo': 'f',
+    'Wall Crawl': 'space',
+    'Thwip and Flip': 'space',
+    'Spectacular Spin': 'q',
+  },
+  'black-panther': {
+    'Vibranium Claws': 'lmb',
+    'Spinning Kick': 'e',
+    'Spirit Rend': 'shift',
+    'Spear Toss': 'rmb',
+    'Subtle Step': 'space',
+    'Bast’s Descent': 'q',
+  },
+  blade: {
+    'Ancestral Sword': 'lmb',
+    'Hunter’s Shotgun': 'lmb',
+    'Scarlet Shroud': 'rmb',
+    'Daywalker Dash': 'shift',
+    'Bloodline Awakening': 'e',
+    'Thousand-Fold Slash': 'q',
+  },
+  'iron-man': {
+    'Repulsor Blast': 'lmb',
+    'Unibeam': 'rmb',
+    'Hyper-Velocity': 'shift',
+    'Armor Overdrive': 'e',
+    'Micro-Missile Barrage': 'f',
+    'Invincible Pulse Cannon': 'q',
+  },
+  'human-torch': {
+    'Fire Cluster': 'lmb',
+    'Blazing Blast': 'rmb',
+    'Pyro-Prison': 'e',
+    'Plasma Body': 'shift',
+    'Flaming Meteor': 'f',
+    'Supernova': 'q',
+  },
+  wolverine: {
+    'Savage Claw': 'lmb',
+    'Vicious Rampage': 'rmb',
+    'Feral Leap': 'shift',
+    'Undying Animal': 'e',
+    'Last Stand': 'q',
+  },
+  'elsa-bloodstone': {
+    'Double-Barrel Blaster': 'lmb',
+    'Monster-Piercer': 'lmb',
+    'Living Bullet': 'rmb',
+    'Ruthless Pursuit': 'e',
+    'Helix Advance': 'shift',
+    'Smoky Snare': 'f',
+    'Apex Predator': 'q',
+  },
+  'winter-soldier': {
+    'Roterstern': 'lmb',
+    'Bionic Hook': 'rmb',
+    'Trooper’s Fist': 'shift',
+    'Tainted Voltage': 'e',
+    'Kraken Impact': 'q',
+  },
+  'black-cat': {
+    'Feline Fury': 'lmb',
+    'Claw Whip': 'lmb',
+    'Fortune’s Favor': 'rmb',
+    'Turn of Fortune': 'e',
+    'Phantom Pursuit': 'e',
+    'Cat’s Cradle': 'shift',
+    'Gilded Deal': 'f',
+    'Thieving Grace': 'space',
+    'Calling Card': 'q',
+  },
+  'star-lord': {
+    'Element Guns': 'lmb',
+    'Stellar Shift': 'rmb',
+    'Rocket Propulsion': 'shift',
+    'Blaster Barrage': 'e',
+    'Galactic Legend': 'q',
+  },
+  'black-widow': {
+    'Red Room Rifle': 'lmb',
+    'Electric Batons': 'lmb',
+    'Electro-Plasma Blast': 'rmb',
+    'Fleet Foot': 'shift',
+    'Widow’s Bite Slam': 'f',
+    'Edge Dancer': 'e',
+    'Assassin’s Focus': 'q',
+  },
+  hawkeye: {
+    'Piercing Arrow': 'lmb',
+    'Blast Arrow': 'lmb',
+    'Hypersonic Arrow': 'e',
+    'Crescent Slash': 'shift',
+    'Ronin Slash': 'v',
+    'Skyward Leap': 'space',
+    'Hunter’s Sight': 'q',
+  },
+  namor: {
+    'Trident of Neptune': 'lmb',
+    'Wrath of the Seven Seas': 'rmb',
+    'Aquatic Dominion': 'e',
+    'Blessing of the Deep': 'shift',
+    'Tide Fall': 'space',
+    'Horn of Proteus': 'q',
+  },
+  'moon-knight': {
+    'Crescent Dart': 'lmb',
+    'Moon Blade': 'rmb',
+    'Ancient Ankh': 'e',
+    'Moonlight Hook': 'f',
+    'Triple Eclipse': 'v',
+    'Night Glider': 'shift',
+    'Rising Leap': 'space',
+    'Hand of Khonshu': 'q',
+  },
+  'the-punisher': {
+    'Adjudication': 'lmb',
+    'Deliverance': 'lmb',
+    'Scourge Grenade': 'rmb',
+    'Vantage Connection': 'shift',
+    'Culling Turret': 'e',
+    'Final Judgement': 'q',
+  },
+  'deadpool-duelist': {
+    'Dual Desert Eagles': 'lmb',
+    'Kick@$$ Katana': 'lmb',
+    'Slice and Dice! / Lock and Load!': 'shift',
+    'Headshot!': 'rmb',
+    'Hazardous Hijinks': 'rmb',
+    'Deadpool In Your Area': 'e',
+    'Bunny Hop': 'space',
+    'Upgrade!': 'f',
+    'Skill Issue': 'q',
+    'Pop Quiz!': 'q',
+  },
+  cyclops: {
+    'Optic Blast': 'lmb',
+    'Concussive Beam': 'rmb',
+    'Ricochet Force': 'e',
+    'Propulsion Burst': 'shift',
+    'Optic Ascent': 'f',
+    'Ruby Rage': 'q',
+  },
+  'squirrel-girl': {
+    'Burst Acorn': 'lmb',
+    'Squirrel Blockade': 'rmb',
+    'Tail Bounce': 'shift',
+    'Mammal Bond': 'e',
+    'Unbeatable Squirrel Tsunami': 'q',
+  },
+  phoenix: {
+    'Cosmic Flames': 'lmb',
+    'Psionic Detonation': 'rmb',
+    'Telepathic Illusion': 'shift',
+    'Dark Ascent': 'e',
+    'Endsong Inferno': 'q',
+  },
+  // Strategists
+  mantis: {
+    'Life Energy Blast': 'lmb',
+    'Healing Flower': 'rmb',
+    'Allied Inspiration': 'e',
+    'Natural Anger': 'f',
+    'Spore Slumber': 'shift',
+    'Soul Resurgence': 'q',
+  },
+  ultron: {
+    'Encephalo-Ray': 'lmb',
+    'Imperative: Patch': 'e',
+    'Imperative: Firewall': 'rmb',
+    'Dynamic Flight': 'shift',
+    'Rage of Ultron': 'q',
+  },
+  'rocket-raccoon': {
+    'Bombard Mode': 'lmb',
+    'Repair Mode': 'rmb',
+    'Jetpack Dash': 'shift',
+    'B.R.B.': 'e',
+    'Wild Crawl': 'space',
+    'Flying Ace': 'space',
+    'C.Y.A.': 'q',
+  },
+  jubilee: {
+    'Energy Plasmoids': 'lmb',
+    'Blooming Ball': 'rmb',
+    'Dazzling Detonation': 'e',
+    'Sparking Sprint': 'shift',
+    'Firework Finale': 'q',
+  },
+  gambit: {
+    'Kinetic Cards': 'lmb',
+    'Bayou Bash': 'rmb',
+    'Cajun Charge': 'shift',
+    'Healing Hearts': 'e',
+    'Breaking Spades': 'f',
+    'Ragin’ Royal Flush': 'q',
+  },
+  loki: {
+    'Mystical Missile': 'lmb',
+    'Regeneration Domain': 'shift',
+    'Doppelganger': 'e',
+    'Devious Exchange': 'f',
+    'Deception': 'rmb',
+    'Backstab': 'v',
+    'God of Mischief': 'q',
+  },
+  'cloak-and-dagger': {
+    'Lightforce Dagger': 'lmb',
+    'Dagger Storm': 'rmb',
+    'Light Explosion': 'e',
+    'Darkforce Cloak': 'lmb',
+    'Terror Cape': 'e',
+    'Dark Teleportation': 'rmb',
+    'Shadow’s Embrace / Light’s Embrace': 'shift',
+    'Eternal Bond': 'q',
+  },
+  'adam-warlock': {
+    'Quantum Magic': 'lmb',
+    'Cosmic Cluster': 'rmb',
+    'Soul Bond': 'shift',
+    'Avatar Life Stream': 'e',
+    'Soaring Surge': 'f',
+    'Karmic Revival': 'q',
+  },
+  'invisible-woman': {
+    'Orb Projection': 'lmb',
+    'Guardian Shield': 'rmb',
+    'Force Physics': 'e',
+    'Psionic Vortex': 'shift',
+    'Agile Strike': 'v',
+    'Veiled Step': 'space',
+    'Invisible Boundary': 'q',
+  },
+  'white-fox': {
+    'Yeowoo Guseul': 'lmb',
+    'Spectral Surge': 'rmb',
+    'Spirit Sanctuary': 'shift',
+    'Fox Form Awakening': 'e',
+    'Claw Strike': 'lmb',
+    'Tail Sweep': 'rmb',
+    'Predatory Pounce': 'shift',
+    'Kumiho Unleashed': 'q',
+    'Ninefold Slam': 'lmb',
+    'Blessed by the Nine': 'rmb',
+  },
+  'luna-snow': {
+    'Light & Dark Ice': 'lmb',
+    'Absolute Zero': 'rmb',
+    'Ice Arts': 'shift',
+    'Share the Stage': 'e',
+    'Number One Idol': 'f',
+    'Fate of Both Worlds': 'q',
+  },
+  'deadpool-strategist': {
+    'Dual Desert Eagles': 'lmb',
+    'Kick@$$ Katana': 'lmb',
+    'Slice and Dice! / Lock and Load!': 'shift',
+    'Bouncing Bobblehead': 'rmb',
+    'Healing Hijinks': 'rmb',
+    'Deadpool In Your Area': 'e',
+    'Healing Hop': 'space',
+    'Upgrade!': 'f',
+    'Pwnage Pound': 'q',
+    'Final Exam': 'q',
+  },
+  'jeff-the-land-shark': {
+    'Joyful Splash': 'lmb',
+    'Aqua Burst': 'rmb',
+    'Healing Bubble': 'e',
+    'Hide and Seek': 'shift',
+    'It’s Jeff!': 'q',
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Default controller buttons for each ability, from the Marvel Rivals wiki's per-platform ability
+// tables (checked against in-game controller screenshots). Xbox names; PlayStation buttons sit in
+// the same spots.
+// rt, lt: triggers · rb, lb: bumpers · a, b, x, y: face buttons · ls, rs: stick clicks ·
+// ls+rs: both sticks (ultimates). Layouts differ per hero, so never derive them from PC_KEYS.
+// List a hero only once every ability with a PC key has its button, so the app never shows
+// half a layout.
+// ---------------------------------------------------------------------------
+const CONSOLE_KEYS = {
+  // Vanguards
+  'peni-parker': {
+    'Cyber-Web Cluster': 'rt',
+    'Cyber-Web Snare': 'lt',
+    'Bionic Spider-Nest': 'lb',
+    'Arachno-Mine': 'rb',
+    'Cyber-Bond': 'b',
+    'Wall Crawl': 'a',
+    'Spider-Sweeper': 'ls+rs',
+  },
+  'devil-dinosaur': {
+    'Primal Bite': 'rt',
+    'Impact Beam': 'lt',
+    'Buddy Barrier': 'x',
+    'Savage Predation': 'lb',
+    'Frenzied Feast': 'rb',
+    'Devil-Beast Rampage': 'ls+rs',
+  },
+  'the-hood': {
+    'Accursed Pistols': 'rt',
+    'Mantle of Oblivion': 'lt',
+    'Abyssal Veil': 'lb',
+    'Void Walk': 'rb',
+    'Leaded Transformation': 'rt',
+    'Demon of the End': 'ls+rs',
+  },
+  hulk: {
+    'Gamma Ray Gun': 'rt',
+    'Gamma Grenade': 'lt',
+    'Puny Banner': 'ls+rs',
+    'Heavy Blow': 'rt',
+    'Gamma Burst': 'rb',
+    'Incredible Leap': 'lt',
+    'Indestructible Guard': 'x',
+    'Radioactive Lockdown': 'lb',
+    'Hulk Smash!': 'ls+rs',
+    'World Breaker': 'ls+rs',
+  },
+  thor: {
+    'Mjölnir Bash': 'rt',
+    'Hammer Throw': 'rb',
+    'Storm Surge': 'lt',
+    'Lightning Realm': 'lb',
+    'Awakening Rune': 'x',
+    'God of Thunder': 'ls+rs',
+  },
+  'captain-america': {
+    'Sentinel Strike': 'rt',
+    'Living Legend': 'lt',
+    'Leading Dash': 'rb',
+    'Super-Soldier Slam': 'rt',
+    'Vibranium Energy Saw': 'lb',
+    'Liberty Rush': 'x',
+    'Freedom Charge': 'ls+rs',
+  },
+  rogue: {
+    'Power Surge Punch': 'rt',
+    'Defensive Stance': 'lt',
+    'Southern Brawl': 'rt',
+    'Ability Absorption': 'b',
+    'Chrono Kick Combo': 'rb',
+    'Fatal Attraction': 'lb',
+    'Heartbreaker': 'ls+rs',
+  },
+  'doctor-strange': {
+    'Daggers of Denak': 'rt',
+    'Shield of the Seraphim': 'lt',
+    'Maelstrom of Madness': 'rb',
+    'Pentagram of Farallah': 'y',
+    'Cloak of Levitation': 'lb',
+    'Eye of Agamotto': 'ls+rs',
+  },
+  magneto: {
+    'Iron Volley': 'rt',
+    'Mag-Cannon': 'lb',
+    'Metallic Curtain': 'lt',
+    'Iron Bulwark': 'b',
+    'Metal Bulwark': 'rb',
+    'Magnetic Descent': 'a',
+    'Meteor M': 'ls+rs',
+  },
+  venom: {
+    'Dark Predation': 'rt',
+    'Cellular Corrosion': 'lt',
+    'Venom Swing': 'lb',
+    'Symbiotic Resilience': 'rb',
+    'Frenzied Arrival': 'x',
+    'Alien Biology': 'a',
+    'Feast of the Abyss': 'ls+rs',
+  },
+  angela: {
+    'Spear of Ichors': 'rt',
+    'Axes of Ichors': 'rt',
+    'Shielded Stance': 'lt',
+    'Assassin’s Charge': 'rb',
+    'Divine Judgement': 'lb',
+    'Wingblade Ascent': 'lb',
+    'Heven’s Retribution': 'ls+rs',
+  },
+  'the-thing': {
+    'Rocky Jab': 'rt',
+    'Stone Haymaker': 'lt',
+    'Yancy Street Charge': 'rb',
+    'Embattled Leap': 'lb',
+    'Battle Blitz': 'x',
+    'Clobberin’ Time': 'ls+rs',
+  },
+  'emma-frost': {
+    'Telepathic Pulse': 'rt',
+    'Mind’s Aegis': 'lt',
+    'Psychic Spear': 'lb',
+    'Diamond Form': 'rb',
+    'Faceted Fury': 'rt',
+    'Crystal Kick': 'lt',
+    'Carbon Crush': 'lb',
+    'Psionic Seduction': 'ls+rs',
+  },
+  groot: {
+    'Vine Strike': 'rt',
+    'Spore Bomb': 'lt',
+    'Furious Flora': 'rs',
+    'Thornlash Wall': 'lb',
+    'Ironwood Wall': 'rb',
+    'Strangling Prison': 'ls+rs',
+  },
+  'deadpool-vanguard': {
+    'Dual Desert Eagles': 'rt',
+    'Kick@$$ Katana': 'rt',
+    'Slice and Dice! / Lock and Load!': 'y',
+    'Magical Unicorn Shield!': 'lt',
+    'Hazardous Hijinks': 'lt',
+    'Deadpool In Your Area': 'rb',
+    'Bunny Bounce': 'a',
+    'Upgrade!': 'lb',
+    'The Ban Hammer': 'ls+rs',
+    'The Big Test': 'ls+rs',
+  },
+  // Duelists
+  magik: {
+    'Soulsword': 'rt',
+    'Magik Slash': 'lt',
+    'Stepping Discs': 'lb',
+    'Eldritch Whirl': 'rt',
+    'Demon’s Rage': 'lt',
+    'Umbral Incursion': 'rb',
+    'Darkchild': 'ls+rs',
+  },
+  gorr: {
+    'All-Black': 'rt',
+    'Necro-Power': 'rb',
+    'Black Berserker': 'lb',
+    'Shadow Harvest': 'x',
+    'Living Abyss': 'lt',
+    'Twilight of the Gods': 'ls+rs',
+  },
+  storm: {
+    'Wind Blade': 'rt',
+    'Bolt Rush': 'rb',
+    'Weather Control': 'y',
+    'Goddess Boost': 'b',
+    'Omega Hurricane': 'ls+rs',
+  },
+  hela: {
+    'Nightsword Thorn': 'rt',
+    'Piercing Night': 'lt',
+    'Soul Drainer': 'rb',
+    'Astral Flock': 'lb',
+    'Hel’s Descent': 'a',
+    'Goddess of Death': 'ls+rs',
+  },
+  daredevil: {
+    'Justice Jab': 'rt',
+    'Righteous Cross': 'rt',
+    'Objection!': 'lt',
+    'Devil’s Latch': 'b',
+    'Infernal Fury': 'rb',
+    'Sonic Pursuit': 'lb',
+    'Blind Ascent': 'a',
+    'Let the Devil Out': 'ls+rs',
+  },
+  'iron-fist': {
+    'Jeet Kune Do': 'rt',
+    'Yat Jee Chung Kuen': 'rt',
+    'Dragon’s Defense': 'lt',
+    'K’un-Lun Kick': 'lb',
+    'Harmony Recovery': 'rb',
+    'Crane Leap': 'a',
+    'Wall Runner': 'a',
+    'Living Chi': 'ls+rs',
+  },
+  'mister-fantastic': {
+    'Stretch Punch': 'rt',
+    'Distended Grip': 'lt',
+    'Reflexive Rubber': 'rb',
+    'Flexible Elongation': 'lb',
+    'Brainiac Bounce': 'ls+rs',
+  },
+  psylocke: {
+    'Psionic Crossbow': 'rt',
+    'Wing Shurikens': 'lt',
+    'Psi-Blade Dash': 'lb',
+    'Psychic Stealth': 'rb',
+    'Dance of the Butterfly': 'ls+rs',
+  },
+  'spider-man': {
+    'Spider-Power': 'rt',
+    'Web-Cluster': 'lt',
+    'Web-Swing': 'lb',
+    'Get Over Here!': 'rb',
+    'Amazing Combo': 'x',
+    'Wall Crawl': 'a',
+    'Thwip and Flip': 'a',
+    'Spectacular Spin': 'ls+rs',
+  },
+  'black-panther': {
+    'Vibranium Claws': 'rt',
+    'Spinning Kick': 'lb',
+    'Spirit Rend': 'rb',
+    'Spear Toss': 'lt',
+    'Subtle Step': 'a',
+    'Bast’s Descent': 'ls+rs',
+  },
+  blade: {
+    'Ancestral Sword': 'rt',
+    'Hunter’s Shotgun': 'rt',
+    'Scarlet Shroud': 'lt',
+    'Daywalker Dash': 'lb',
+    'Bloodline Awakening': 'rb',
+    'Thousand-Fold Slash': 'ls+rs',
+  },
+  'iron-man': {
+    'Repulsor Blast': 'rt',
+    'Unibeam': 'lt',
+    'Hyper-Velocity': 'b',
+    'Armor Overdrive': 'y',
+    'Micro-Missile Barrage': 'a',
+    'Invincible Pulse Cannon': 'ls+rs',
+  },
+  'human-torch': {
+    'Fire Cluster': 'rt',
+    'Blazing Blast': 'rb',
+    'Pyro-Prison': 'y',
+    'Plasma Body': 'b',
+    'Flaming Meteor': 'x',
+    'Supernova': 'ls+rs',
+  },
+  wolverine: {
+    'Savage Claw': 'rt',
+    'Vicious Rampage': 'lt',
+    'Feral Leap': 'lb',
+    'Undying Animal': 'rb',
+    'Last Stand': 'ls+rs',
+  },
+  'elsa-bloodstone': {
+    'Double-Barrel Blaster': 'rt',
+    'Monster-Piercer': 'rt',
+    'Living Bullet': 'lt',
+    'Ruthless Pursuit': 'rb',
+    'Helix Advance': 'lb',
+    'Smoky Snare': 'b',
+    'Apex Predator': 'ls+rs',
+  },
+  'winter-soldier': {
+    'Roterstern': 'rt',
+    'Bionic Hook': 'lt',
+    'Trooper’s Fist': 'lb',
+    'Tainted Voltage': 'rb',
+    'Kraken Impact': 'ls+rs',
+  },
+  'black-cat': {
+    'Feline Fury': 'rt',
+    'Claw Whip': 'rt',
+    'Fortune’s Favor': 'b',
+    'Turn of Fortune': 'lt',
+    'Phantom Pursuit': 'rb',
+    'Cat’s Cradle': 'lb',
+    'Gilded Deal': 'rb',
+    'Thieving Grace': 'a',
+    'Calling Card': 'ls+rs',
+  },
+  'star-lord': {
+    'Element Guns': 'rt',
+    'Stellar Shift': 'lt',
+    'Rocket Propulsion': 'rb',
+    'Blaster Barrage': 'lb',
+    'Galactic Legend': 'ls+rs',
+  },
+  'black-widow': {
+    'Red Room Rifle': 'rt',
+    'Electric Batons': 'rt',
+    'Electro-Plasma Blast': 'lt',
+    'Fleet Foot': 'rb',
+    'Widow’s Bite Slam': 'b',
+    'Edge Dancer': 'lb',
+    'Assassin’s Focus': 'ls+rs',
+  },
+  hawkeye: {
+    'Piercing Arrow': 'rt',
+    'Blast Arrow': 'rt',
+    'Hypersonic Arrow': 'lb',
+    'Crescent Slash': 'rb',
+    'Ronin Slash': 'rs',
+    'Skyward Leap': 'a',
+    'Hunter’s Sight': 'ls+rs',
+  },
+  namor: {
+    'Trident of Neptune': 'rt',
+    'Wrath of the Seven Seas': 'lt',
+    'Aquatic Dominion': 'lb',
+    'Blessing of the Deep': 'rb',
+    'Tide Fall': 'a',
+    'Horn of Proteus': 'ls+rs',
+  },
+  'moon-knight': {
+    'Crescent Dart': 'rt',
+    'Moon Blade': 'lt',
+    'Ancient Ankh': 'rb',
+    'Moonlight Hook': 'b',
+    'Triple Eclipse': 'rs',
+    'Night Glider': 'lb',
+    'Rising Leap': 'a',
+    'Hand of Khonshu': 'ls+rs',
+  },
+  'the-punisher': {
+    'Adjudication': 'rt',
+    'Deliverance': 'rt',
+    'Scourge Grenade': 'lt',
+    'Vantage Connection': 'lb',
+    'Culling Turret': 'rb',
+    'Final Judgement': 'ls+rs',
+  },
+  'deadpool-duelist': {
+    'Dual Desert Eagles': 'rt',
+    'Kick@$$ Katana': 'rt',
+    'Slice and Dice! / Lock and Load!': 'y',
+    'Headshot!': 'lt',
+    'Hazardous Hijinks': 'lt',
+    'Deadpool In Your Area': 'rb',
+    'Bunny Hop': 'a',
+    'Upgrade!': 'lb',
+    'Skill Issue': 'ls+rs',
+    'Pop Quiz!': 'ls+rs',
+  },
+  cyclops: {
+    'Optic Blast': 'rt',
+    'Concussive Beam': 'lt',
+    'Ricochet Force': 'rb',
+    'Propulsion Burst': 'lb',
+    'Optic Ascent': 'b',
+    'Ruby Rage': 'ls+rs',
+  },
+  'squirrel-girl': {
+    'Burst Acorn': 'rt',
+    'Squirrel Blockade': 'lt',
+    'Tail Bounce': 'lb',
+    'Mammal Bond': 'rb',
+    'Unbeatable Squirrel Tsunami': 'ls+rs',
+  },
+  phoenix: {
+    'Cosmic Flames': 'rt',
+    'Psionic Detonation': 'lt',
+    'Telepathic Illusion': 'lb',
+    'Dark Ascent': 'rb',
+    'Endsong Inferno': 'ls+rs',
+  },
+  // Strategists
+  mantis: {
+    'Life Energy Blast': 'rt',
+    'Healing Flower': 'lt',
+    'Allied Inspiration': 'lb',
+    'Natural Anger': 'b',
+    'Spore Slumber': 'rb',
+    'Soul Resurgence': 'ls+rs',
+  },
+  ultron: {
+    'Encephalo-Ray': 'rt',
+    'Imperative: Patch': 'rb',
+    'Imperative: Firewall': 'y',
+    'Dynamic Flight': 'b',
+    'Rage of Ultron': 'ls+rs',
+  },
+  'rocket-raccoon': {
+    'Bombard Mode': 'rt',
+    'Repair Mode': 'lt',
+    'Jetpack Dash': 'lb',
+    'B.R.B.': 'rb',
+    'Wild Crawl': 'a',
+    'Flying Ace': 'a',
+    'C.Y.A.': 'ls+rs',
+  },
+  jubilee: {
+    'Energy Plasmoids': 'rt',
+    'Blooming Ball': 'lt',
+    'Dazzling Detonation': 'rb',
+    'Sparking Sprint': 'lb',
+    'Firework Finale': 'ls+rs',
+  },
+  gambit: {
+    'Kinetic Cards': 'rt',
+    'Bayou Bash': 'lt',
+    'Cajun Charge': 'b',
+    'Healing Hearts': 'lb',
+    'Breaking Spades': 'rb',
+    'Ragin’ Royal Flush': 'ls+rs',
+  },
+  loki: {
+    'Mystical Missile': 'rt',
+    'Regeneration Domain': 'lb',
+    'Doppelganger': 'rb',
+    'Devious Exchange': 'b',
+    'Deception': 'lt',
+    'Backstab': 'rs',
+    'God of Mischief': 'ls+rs',
+  },
+  'cloak-and-dagger': {
+    'Lightforce Dagger': 'rt',
+    'Dagger Storm': 'lt',
+    'Light Explosion': 'lb',
+    'Darkforce Cloak': 'rt',
+    'Terror Cape': 'lb',
+    'Dark Teleportation': 'lt',
+    'Shadow’s Embrace / Light’s Embrace': 'rb',
+    'Eternal Bond': 'ls+rs',
+  },
+  'adam-warlock': {
+    'Quantum Magic': 'rt',
+    'Cosmic Cluster': 'lt',
+    'Soul Bond': 'lb',
+    'Avatar Life Stream': 'rb',
+    'Soaring Surge': 'b',
+    'Karmic Revival': 'ls+rs',
+  },
+  'invisible-woman': {
+    'Orb Projection': 'rt',
+    'Guardian Shield': 'lt',
+    'Force Physics': 'rb',
+    'Psionic Vortex': 'lb',
+    'Agile Strike': 'rs',
+    'Veiled Step': 'a',
+    'Invisible Boundary': 'ls+rs',
+  },
+  'white-fox': {
+    'Yeowoo Guseul': 'rt',
+    'Spectral Surge': 'lt',
+    'Spirit Sanctuary': 'lb',
+    'Fox Form Awakening': 'rb',
+    'Claw Strike': 'rt',
+    'Tail Sweep': 'lt',
+    'Predatory Pounce': 'lb',
+    'Kumiho Unleashed': 'ls+rs',
+    'Ninefold Slam': 'rt',
+    'Blessed by the Nine': 'lt',
+  },
+  'luna-snow': {
+    'Light & Dark Ice': 'rt',
+    'Absolute Zero': 'lt',
+    'Ice Arts': 'rb',
+    'Share the Stage': 'lb',
+    'Number One Idol': 'b',
+    'Fate of Both Worlds': 'ls+rs',
+  },
+  'deadpool-strategist': {
+    'Dual Desert Eagles': 'rt',
+    'Kick@$$ Katana': 'rt',
+    'Slice and Dice! / Lock and Load!': 'y',
+    'Bouncing Bobblehead': 'lt',
+    'Healing Hijinks': 'lt',
+    'Deadpool In Your Area': 'rb',
+    'Healing Hop': 'a',
+    'Upgrade!': 'lb',
+    'Pwnage Pound': 'ls+rs',
+    'Final Exam': 'ls+rs',
+  },
+  'jeff-the-land-shark': {
+    'Joyful Splash': 'rt',
+    'Aqua Burst': 'lt',
+    'Healing Bubble': 'rb',
+    'Hide and Seek': 'lb',
+    'It’s Jeff!': 'ls+rs',
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Ability breakdowns: what each hero's moves do, in our own words. No inputs (keys live in
+// PC_KEYS) and only the numbers that matter. kind: attack, ability, ultimate or passive.
 //   hero id: [date the kit was last checked against the patch notes, [[name, kind, text]]]
 // When a patch changes a hero's kit, fix the text and bump the date. Explain mechanics
 // here; keep TIPS for advice.
@@ -1205,9 +2331,10 @@ const ABILITIES = {
     ['Flora Colossus', 'passive', 'His walls awaken with extra effects when he is near them, and he can add extra segments while building one.'],
     ['Strangling Prison', 'ultimate', 'Fires a giant vine cluster that pulls nearby enemies to its center and traps them.'],
   ]],
-  'deadpool-vanguard': ['2026-10-01', [
+  'deadpool-vanguard': ['2026-10-03', [
     ['Dual Desert Eagles', 'attack', 'Rapid pistol fire that loses damage at range.'],
-    ['Kick@$$ Katana', 'attack', 'A three-hit sword combo at close range. He swaps between guns and katanas, and each set changes his other moves.'],
+    ['Kick@$$ Katana', 'attack', 'A three-hit sword combo at close range.'],
+    ['Slice and Dice! / Lock and Load!', 'ability', 'Swaps between his guns and katanas. Each set changes his attacks, abilities and ultimate.'],
     ['Magical Unicorn Shield!', 'ability', 'With guns: summons a plush unicorn barrier that blocks attacks for a few seconds.'],
     ['Hazardous Hijinks', 'ability', 'With katanas: a dashing slash that knocks enemies down. Hitting someone refreshes it, up to three dashes in a row.'],
     ['Deadpool In Your Area', 'ability', 'Taunts nearby enemies so they have to attack him, blurs their vision and burns them, while he attacks faster.'],
@@ -1218,9 +2345,10 @@ const ABILITIES = {
     ['The Ban Hammer', 'ultimate', 'With guns: taunts one chosen enemy. He gains bonus health and healing, and every ability that enemy misses hurts them and gives him more bonus health.'],
     ['The Big Test', 'ultimate', 'With katanas: starts a timed challenge that gives him speed, healing, extra dashes and extra health for nearby allies. Completing it strengthens the buffs.'],
   ]],
-  'deadpool-duelist': ['2026-10-01', [
+  'deadpool-duelist': ['2026-10-03', [
     ['Dual Desert Eagles', 'attack', 'Rapid pistol fire, stronger than his other versions, that loses damage at range.'],
-    ['Kick@$$ Katana', 'attack', 'A three-hit sword combo with high damage per hit. He swaps between guns and katanas, and each set changes his other moves.'],
+    ['Kick@$$ Katana', 'attack', 'A three-hit sword combo with high damage per hit.'],
+    ['Slice and Dice! / Lock and Load!', 'ability', 'Swaps between his guns and katanas. Each set changes his attacks, abilities and ultimate.'],
     ['Headshot!', 'ability', 'With guns: throws his own head like a boomerang, hitting enemies on the way out and back and leaving a small damaging zone.'],
     ['Hazardous Hijinks', 'ability', 'With katanas: a dashing slash that can be repeated when it hits an enemy.'],
     ['Deadpool In Your Area', 'ability', 'Taunts nearby enemies so they have to attack him, blurs their vision and damages them over time, while he takes less damage.'],
@@ -1231,9 +2359,10 @@ const ABILITIES = {
     ['Skill Issue', 'ultimate', 'With guns: taunts one chosen enemy. Every ability they miss while it lasts damages them.'],
     ['Pop Quiz!', 'ultimate', 'With katanas: a timed challenge that gives him speed and self-healing right away, roughly doubled if he completes it.'],
   ]],
-  'deadpool-strategist': ['2026-10-01', [
+  'deadpool-strategist': ['2026-10-03', [
     ['Dual Desert Eagles', 'attack', 'Pistol shots that damage enemies and heal allies they hit.'],
-    ['Kick@$$ Katana', 'attack', 'A three-hit sword combo whose hits also heal allies in a small area. He swaps between guns and katanas, and each set changes his other moves.'],
+    ['Kick@$$ Katana', 'attack', 'A three-hit sword combo whose hits also heal allies in a small area.'],
+    ['Slice and Dice! / Lock and Load!', 'ability', 'Swaps between his guns and katanas. Each set changes his attacks, abilities and ultimate.'],
     ['Bouncing Bobblehead', 'ability', 'With guns: throws a bobblehead that damages enemies and heals allies on the way out and back, leaving a healing field.'],
     ['Healing Hijinks', 'ability', 'With katanas: a dashing slash with two charges that damages enemies and heals allies along the way.'],
     ['Deadpool In Your Area', 'ability', 'Taunts nearby enemies so they have to attack him, blurs their vision and burns them, while healing allies nearby and powering up his weapons.'],
@@ -1510,14 +2639,14 @@ const ABILITIES = {
     ['Sparkle Mark', 'passive', 'Dazzling Detonation and Firework Finale mark enemies. Her plasmoids set the marks off, damaging enemies and giving allies a healing boost and bonus health.'],
     ['Firework Finale', 'ultimate', 'Charges a huge ring of fireworks that launches nearby enemies, then leaves a field of circling fireworks that damages enemies and heals allies.'],
   ]],
-  gambit: ['2026-10-01', [
+  gambit: ['2026-10-03', [
     ['Kinetic Cards', 'attack', 'Throws three charged cards in an arc. Each explodes on impact, damaging an enemy or healing an ally.'],
     ['Bayou Bash', 'ability', 'A staff strike and slam whose shockwave damages enemies and heals allies nearby. Two charges.'],
     ['Cajun Charge', 'ability', 'A short dash with his staff. Attacking during it turns it into Big Easy Impact, a sprint that sets off three kinetic explosions that heal and damage.'],
     ['Healing Hearts', 'ability', 'Spends a card stack to heal himself and switch to his healing deck for a few seconds: cards that bounce between allies to heal them, or exploding cards that heal and cleanse.'],
     ['Breaking Spades', 'ability', 'Spends a card stack to boost his damage and switch to his attack deck for a few seconds: exploding cards that cut enemy healing, or a spread that launches enemies up.'],
     ['Sleight of Hand', 'passive', 'Card stacks that recharge over time. His two decks spend them.'],
-    ['Ragin’ Royal Flush', 'ultimate', 'Locks onto an ally and throws Aces that heal and cleanse them both. Both move and jump faster and deal extra explosive damage, and the ally’s ultimate charges faster.'],
+    ['Ragin’ Royal Flush', 'ultimate', 'Puts Aces on himself and every ally in his line of sight: an instant heal and cleanse, then healing over time. While the Aces last, they move faster, jump higher and add bonus damage to hits, and allies charge ultimates faster.'],
   ]],
   loki: ['2026-10-01', [
     ['Mystical Missile', 'attack', 'Magic projectiles that damage enemies or heal allies. Direct hits on allies heal extra.'],
@@ -1528,22 +2657,23 @@ const ABILITIES = {
     ['Backstab', 'ability', 'Pulls a dagger for a strike that deals extra damage from behind.'],
     ['God of Mischief', 'ultimate', 'Transforms into a chosen ally or enemy hero and can use all of their abilities except team-ups.'],
   ]],
-  'cloak-and-dagger': ['2026-10-01', [
+  'cloak-and-dagger': ['2026-10-03', [
     ['Lightforce Dagger', 'attack', 'As Dagger: bouncing light daggers that damage enemies and heal nearby allies.'],
     ['Dagger Storm', 'ability', 'As Dagger: throws daggers that create a healing field, with an instant heal for allies inside when it lands.'],
-    ['Veil of Lightforce', 'ability', 'As Dagger: sends out a veil of light that heals allies it touches and boosts their healing. Shares two charges with Terror Cape.'],
+    ['Light Explosion', 'ability', 'As Dagger: sends out a veil of light that heals allies it touches and boosts their healing. Shares two charges with Terror Cape.'],
     ['Darkforce Cloak', 'attack', 'As Cloak: a continuous beam that damages one enemy.'],
     ['Terror Cape', 'ability', 'As Cloak: sends out a veil of darkness that damages enemies, blinds them and makes them take more damage.'],
     ['Dark Teleportation', 'ability', 'As Cloak: wraps nearby allies in darkness, making them invisible and untargetable for a short time.'],
     ['Shadow’s Embrace / Light’s Embrace', 'ability', 'Swaps between Cloak and Dagger.'],
     ['Eternal Bond', 'ultimate', 'Four quick dashes that heal allies and damage enemies along the path, leaving healing zones behind.'],
   ]],
-  'adam-warlock': ['2026-10-01', [
+  'adam-warlock': ['2026-10-03', [
     ['Quantum Magic', 'attack', 'Quantum energy shots. Critical hits shorten Avatar Life Stream’s cooldown.'],
     ['Cosmic Cluster', 'ability', 'Charges up and launches a cluster of quantum energy. Each hit shortens Avatar Life Stream’s cooldown.'],
     ['Soul Bond', 'ability', 'Links nearby allies: they heal over time and share incoming damage across the bond. He can hover and attack while it lasts.'],
     ['Avatar Life Stream', 'ability', 'A healing stream that bounces from his target to other allies and back to him.'],
     ['Soaring Surge', 'ability', 'Flies forward quickly.'],
+    ['Regenerative Cocoon', 'passive', 'When he’s knocked out, his soul can roam for a moment and re-form his body at a spot he picks. Long cooldown.'],
     ['Karmic Revival', 'ultimate', 'Revives knocked-out allies nearby with part of their health, extra bonus health and a moment of invulnerability.'],
   ]],
   'invisible-woman': ['2026-10-01', [
@@ -1568,12 +2698,12 @@ const ABILITIES = {
     ['Ninefold Slam', 'attack', 'As the Nine-Tailed Fox: a ground slam whose shockwave heals her and nearby allies when it hits.'],
     ['Blessed by the Nine', 'ability', 'As the Nine-Tailed Fox: gives an ally healing over time, lifesteal and immunity to crowd control for a short time.'],
   ]],
-  'luna-snow': ['2026-10-01', [
+  'luna-snow': ['2026-10-03', [
     ['Light & Dark Ice', 'attack', 'Ice shots that damage enemies or heal allies.'],
     ['Absolute Zero', 'ability', 'Throws ice that freezes the enemy hit in place and heals her. A hit gives her bonus health.'],
     ['Ice Arts', 'ability', 'Fires a burst of ice shards for a few seconds that damage enemies or heal allies, healing her too. Knockouts shorten its cooldown.'],
     ['Share the Stage', 'ability', 'Attaches Idol Aura to an ally, who heals whenever she heals others.'],
-    ['Number One Idol', 'passive', 'Boosts her healing, and healing others heals her too.'],
+    ['Number One Idol', 'ability', 'Puts a buff on herself: while it lasts, her healing is stronger and part of the healing she gives allies also heals her.'],
     ['Cryo Heart', 'passive', 'Heals her when she casts Ice Arts or Absolute Zero.'],
     ['Smooth Skate', 'passive', 'Skates when moving forward and jumps higher.'],
     ['Fate of Both Worlds', 'ultimate', 'Dances on the spot, switching between two performances: one heals allies around her, the other boosts their damage.'],
@@ -2292,7 +3422,7 @@ const HISTORY = [
   ['2026-01-16', 'blade', 'mixed', 'Hunter’s Shotgun', 'Pellets per shot 12 → 11; damage falloff now begins at 15m (was 20m); at 30m damage is 50% of base (was 40%)'],
   ['2026-01-16', 'captain-america', 'buff', 'Vibranium Energy Saw', 'Cooldown 8s → 6s'],
   ['2026-01-16', 'cloak-and-dagger', 'mixed', 'Dagger Storm', 'Healing 55/s → 45/s; new: when the Spell Field is created, allies inside receive a one-time 60 heal'],
-  ['2026-01-16', 'cloak-and-dagger', 'mixed', 'Veil of Lightforce + Terror Cape', 'The two abilities now share one charge pool (max 2 charges, 10s recharge each); using either puts both on a 2s cooldown (before: separate cooldowns)'],
+  ['2026-01-16', 'cloak-and-dagger', 'mixed', 'Light Explosion + Terror Cape', 'The two abilities now share one charge pool (max 2 charges, 10s recharge each); using either puts both on a 2s cooldown (before: separate cooldowns)'],
   ['2026-01-16', 'daredevil', 'nerf', 'Devil’s Chain', 'High-damage-range damage 80 → 75'],
   ['2026-01-16', 'daredevil', 'nerf', 'Devil’s Latch', 'Fury gained when grappling a surface 2 → 1'],
   ['2026-01-16', 'daredevil', 'nerf', 'Devil’s Throw', 'Per-projectile damage 32.5 → 30 (single-target total 65 → 60)'],
@@ -2544,7 +3674,7 @@ const HISTORY = [
   ['2026-06-09', 'blade', 'buff', 'Daywalker Dash (sword stance)', 'First hit 20 → 30; per spin 8 → 10 (total 52 → 70)'],
   ['2026-06-09', 'blade', 'buff', 'Scarlet Shroud', 'Unstoppable duration 0.4s → 1s'],
   ['2026-06-09', 'cloak-and-dagger', 'mixed', 'Lightforce Dagger', 'Direct healing 16 → 12; field healing 16 → 20'],
-  ['2026-06-09', 'cloak-and-dagger', 'buff', 'Veil of Lightforce', 'Healing boost 15% → 20%'],
+  ['2026-06-09', 'cloak-and-dagger', 'buff', 'Light Explosion', 'Healing boost 15% → 20%'],
   ['2026-06-09', 'daredevil', 'nerf', 'Objection!', 'Duration 1.5s → 1.2s'],
   ['2026-06-09', 'daredevil', 'nerf', 'Radar Sense', 'Max detection range 50m → 40m'],
   ['2026-06-09', 'daredevil', 'nerf', 'Sonic Pursuit', 'Dash targeting distance 20m → 12m'],
@@ -2585,7 +3715,7 @@ const HISTORY = [
   ['2026-07-06', 'captain-america', 'mixed', 'Health', '600 → 300 health + 300 Regenerative Shield'],
   ['2026-07-06', 'cloak-and-dagger', 'buff', 'Dagger Storm', '45/s → 50/s'],
   ['2026-07-06', 'cloak-and-dagger', 'buff', 'Lightforce Dagger', 'Direct heal 12 → 15; field heal 20 → 25'],
-  ['2026-07-06', 'cloak-and-dagger', 'buff', 'Veil of Lightforce', 'One-time heal 45 → 50'],
+  ['2026-07-06', 'cloak-and-dagger', 'buff', 'Light Explosion', 'One-time heal 45 → 50'],
   ['2026-07-06', 'cyclops', 'nerf', 'Optic Blast', 'Damage 25 → 21'],
   ['2026-07-06', 'cyclops', 'nerf', 'Propulsion Burst & Optic Ascent', 'Cooldown 12s → 15s'],
   ['2026-07-06', 'cyclops', 'nerf', 'Ricochet Force', 'Damage 80 → 70'],
@@ -2878,11 +4008,24 @@ const heroes = HEROES.map(([id, name, r, tiers, ban, extra = {}]) => {
     if (extra[k] !== undefined) hero[k] = extra[k];
   }
   if (STYLES[id]) hero.styles = STYLES[id];
+  if (DIFFICULTY[id]) hero.difficulty = DIFFICULTY[id];
+  if (SHINES[id]) hero.shines = SHINES[id];
   return hero;
 });
 
 const byId = new Map(heroes.map((h) => [h.id, h]));
 if (byId.size !== heroes.length) fail('duplicate hero ids');
+
+const MAX_SHINES = 150;
+for (const [id, stars] of Object.entries(DIFFICULTY)) {
+  if (!byId.has(id)) fail(`difficulty for unknown hero ${id}`);
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) fail(`${id}: difficulty must be 1 to 5 stars, got ${stars}`);
+}
+for (const [id, text] of Object.entries(SHINES)) {
+  if (!byId.has(id)) fail(`shines for unknown hero ${id}`);
+  if (typeof text !== 'string' || !/^Shines /.test(text)) fail(`${id}: shines must be a sentence starting "Shines"`);
+  else if (text.length > MAX_SHINES) fail(`${id}: shines is ${text.length} characters (max ${MAX_SHINES})`);
+}
 
 const STYLE_IDS = ['long-range', 'brawl', 'dive', 'flyer', 'area'];
 for (const [id, styles] of Object.entries(STYLES)) {
@@ -3062,6 +4205,44 @@ for (const [id, entry] of Object.entries(ABILITIES)) {
 }
 for (const h of heroes) if (!h.kit) fail(`${h.id}: no ability breakdown`);
 
+// Default PC keys
+const PC_KEY_IDS = ['lmb', 'rmb', 'shift', 'e', 'f', 'q', 'c', 'v', 'space'];
+for (const [id, keys] of Object.entries(PC_KEYS)) {
+  const hero = byId.get(id);
+  if (!hero?.kit) {
+    fail(`pc keys for unknown hero ${id}`);
+    continue;
+  }
+  const byName = new Map(hero.kit.abilities.map((a) => [a.name, a]));
+  for (const [name, key] of Object.entries(keys)) {
+    const ability = byName.get(name);
+    if (!ability) fail(`${id}: pc key for unknown ability ${name}`);
+    else if (!PC_KEY_IDS.includes(key)) fail(`${id}.${name}: bad pc key ${key}`);
+    else ability.keys = { pc: key };
+  }
+}
+
+// Default controller buttons
+const CONSOLE_KEY_IDS = ['rt', 'lt', 'rb', 'lb', 'a', 'b', 'x', 'y', 'ls', 'rs', 'ls+rs'];
+for (const [id, keys] of Object.entries(CONSOLE_KEYS)) {
+  const hero = byId.get(id);
+  if (!hero?.kit) {
+    fail(`console keys for unknown hero ${id}`);
+    continue;
+  }
+  const byName = new Map(hero.kit.abilities.map((a) => [a.name, a]));
+  for (const [name, key] of Object.entries(keys)) {
+    const ability = byName.get(name);
+    if (!ability) fail(`${id}: console key for unknown ability ${name}`);
+    else if (!CONSOLE_KEY_IDS.includes(key)) fail(`${id}.${name}: bad console key ${key}`);
+    else ability.keys = { ...ability.keys, console: key };
+  }
+  // A hero's layout goes in whole or not at all.
+  for (const a of hero.kit.abilities) {
+    if (a.keys?.pc && !a.keys.console) fail(`${id}.${a.name}: has a PC key but no console button`);
+  }
+}
+
 // Patch history
 const HISTORY_KINDS = { buff: 'b', nerf: 'n', mixed: 'm', change: 'c', fix: 'f' };
 const MAX_HISTORY_TEXT = 200;
@@ -3166,9 +4347,14 @@ writeFileSync(out, json + '\n');
 
 const perRole = ROLE_KEYS.map((r) => `${heroes.filter((h) => h.role === r).length} ${r}s`).join(', ');
 const withTips = heroes.filter((h) => h.tips).length;
+const withStars = heroes.filter((h) => h.difficulty).length;
+const withShines = heroes.filter((h) => h.shines).length;
+const withKeys = heroes.reduce((n, h) => n + (h.kit?.abilities.filter((a) => a.keys?.pc).length ?? 0), 0);
+const withPads = heroes.filter((h) => h.kit?.abilities.some((a) => a.keys?.console)).length;
 const abilityCount = heroes.reduce((n, h) => n + (h.kit?.abilities.length ?? 0), 0);
 console.log(
   `Wrote ${out}\nrevision ${REVISION}: ${heroes.length} hero entries (${perRole}), ${comps.length} comps, ` +
     `${maps.length} maps, ${teamUps.length} team-ups, ${abilityCount} abilities, tips for ${withTips} heroes, ` +
-    `${historyChanges.length} patch history entries`,
+    `${historyChanges.length} patch history entries, difficulty for ${withStars} heroes, Shines when for ${withShines}, ` +
+    `PC keys for ${withKeys} abilities, controller layouts for ${withPads} heroes`,
 );

@@ -53,7 +53,8 @@ export default function TierListScreen({
         ))}
         <Text style={st.foot}>
           {bracketLabel} on {platform === 'pc' ? 'PC' : 'console'}. A red dot means often banned at Gold III and above.
-          {shifts.size ? ' Arrows mark heroes buffed or nerfed this season.' : ''} Tap any hero for counters.
+          {shifts.size ? ' Arrows mark heroes buffed or nerfed this season.' : ''} Tap any hero for counters, and for when
+          even a low-tier hero shines.
         </Text>
         <View style={st.more}>
           <LinkButton label="What tiers and tags mean" onPress={() => setInfo(true)} />

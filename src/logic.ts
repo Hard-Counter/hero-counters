@@ -7,6 +7,7 @@ import type {
   ChangeKind,
   CounterPick,
   Dataset,
+  Difficulty,
   FocusLevel,
   GameMap,
   Hero,
@@ -16,6 +17,9 @@ import type {
   MapMode,
   MapSide,
   MapTrait,
+  PadKey,
+  PadStyle,
+  PcKey,
   Platform,
   Quirk,
   RoleId,
@@ -653,6 +657,26 @@ export function banSuggestions(
     .map(({ hero: h, pick }) => ({ hero: h, pick }));
 }
 
+// ---- When to pick: difficulty and "Shines when" ----
+
+/** The game rates difficulty from one star to five. */
+export const MAX_DIFFICULTY = 5;
+
+export interface WhenToPick {
+  /** The game's own difficulty rating in stars. */
+  difficulty: Difficulty | null;
+  /** One sentence starting "Shines". */
+  shines: string | null;
+}
+
+/** The game's difficulty rating and when the hero shines. Null when the data has neither. */
+export function whenToPick(hero: Hero): WhenToPick | null {
+  const d = hero.difficulty;
+  const difficulty = Number.isInteger(d) && (d as number) >= 1 && (d as number) <= MAX_DIFFICULTY ? (d as Difficulty) : null;
+  const shines = typeof hero.shines === 'string' && hero.shines.trim() ? hero.shines.trim() : null;
+  return difficulty || shines ? { difficulty, shines } : null;
+}
+
 // ---- Focus, tips and team makeup ----
 
 export const FOCUS_LABEL: Record<FocusLevel, string> = { high: 'High', medium: 'Medium', low: 'Low' };
@@ -730,6 +754,85 @@ export const ABILITY_KIND_LABEL: Record<AbilityKind, string> = {
   ultimate: 'Ultimate',
   passive: 'Passives',
 };
+
+export const PC_KEYS: PcKey[] = ['lmb', 'rmb', 'shift', 'e', 'f', 'q', 'c', 'v', 'space'];
+export const PC_KEY_LABEL: Record<PcKey, string> = {
+  lmb: 'LMB',
+  rmb: 'RMB',
+  shift: 'Shift',
+  e: 'E',
+  f: 'F',
+  q: 'Q',
+  c: 'C',
+  v: 'V',
+  space: 'Space',
+};
+/** What a screen reader says for each key. */
+export const PC_KEY_NAME: Record<PcKey, string> = {
+  lmb: 'left mouse button',
+  rmb: 'right mouse button',
+  shift: 'Shift',
+  e: 'E',
+  f: 'F',
+  q: 'Q',
+  c: 'C',
+  v: 'V',
+  space: 'Space',
+};
+
+export const PAD_KEYS: PadKey[] = ['rt', 'lt', 'rb', 'lb', 'a', 'b', 'x', 'y', 'ls', 'rs', 'ls+rs'];
+export const PAD_STYLES: PadStyle[] = ['xbox', 'playstation'];
+export const PAD_STYLE_LABEL: Record<PadStyle, string> = { xbox: 'Xbox', playstation: 'PlayStation' };
+export const PAD_LABEL: Record<PadStyle, Record<PadKey, string>> = {
+  xbox: { rt: 'RT', lt: 'LT', rb: 'RB', lb: 'LB', a: 'A', b: 'B', x: 'X', y: 'Y', ls: 'LS', rs: 'RS', 'ls+rs': 'LS+RS' },
+  playstation: { rt: 'R2', lt: 'L2', rb: 'R1', lb: 'L1', a: '✕', b: '○', x: '□', y: '△', ls: 'L3', rs: 'R3', 'ls+rs': 'L3+R3' },
+};
+/** What a screen reader says for each button. */
+export const PAD_NAME: Record<PadStyle, Record<PadKey, string>> = {
+  xbox: {
+    rt: 'right trigger',
+    lt: 'left trigger',
+    rb: 'right bumper',
+    lb: 'left bumper',
+    a: 'A',
+    b: 'B',
+    x: 'X',
+    y: 'Y',
+    ls: 'left stick click',
+    rs: 'right stick click',
+    'ls+rs': 'both stick clicks',
+  },
+  playstation: {
+    rt: 'R2',
+    lt: 'L2',
+    rb: 'R1',
+    lb: 'L1',
+    a: 'Cross',
+    b: 'Circle',
+    x: 'Square',
+    y: 'Triangle',
+    ls: 'L3',
+    rs: 'R3',
+    'ls+rs': 'L3 and R3',
+  },
+};
+
+export type AbilityInput = { kind: 'pc'; key: PcKey } | { kind: 'pad'; key: PadKey };
+
+/** The ability's default key or controller button on a platform, when the data has one. */
+export function abilityInput(a: Ability, platform: Platform): AbilityInput | null {
+  if (platform === 'pc') {
+    const k = a.keys?.pc;
+    return k && PC_KEYS.includes(k) ? { kind: 'pc', key: k } : null;
+  }
+  const k = a.keys?.console;
+  return k && PAD_KEYS.includes(k) ? { kind: 'pad', key: k } : null;
+}
+
+/** True when the data has this hero's controller layout. */
+export function hasPadLayout(hero: Hero): boolean {
+  return !!hero.kit?.abilities?.some((a) => !!a?.keys?.console && PAD_KEYS.includes(a.keys.console));
+}
 
 export interface KitView {
   checked: string;
@@ -950,6 +1053,14 @@ export const GLOSSARY: GlossaryGroup[] = [
       {
         term: 'Buffed or nerfed',
         text: 'An up arrow marks a hero made stronger this season, a down arrow one made weaker, and a double arrow a mix of both. Each hero’s History tab lists every change.',
+      },
+      {
+        term: 'Difficulty',
+        text: 'The game’s own rating, from one star to five. More stars means a hero takes more practice to play well.',
+      },
+      {
+        term: 'Shines when',
+        text: 'The maps, teams and enemy picks where a hero beats their tier. A low tier doesn’t mean a hero is never a good pick.',
       },
     ],
   },

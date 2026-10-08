@@ -10,9 +10,9 @@ import { Barlow_700Bold } from '@expo-google-fonts/barlow/700Bold';
 import { BarlowCondensed_700Bold } from '@expo-google-fonts/barlow-condensed/700Bold';
 import { BarlowCondensed_800ExtraBold } from '@expo-google-fonts/barlow-condensed/800ExtraBold';
 
-import type { BracketId, Platform } from './src/data/types';
+import type { BracketId, PadStyle, Platform } from './src/data/types';
 import { useDataset } from './src/data/useDataset';
-import { DRAFT_ROLES, DraftRole, HeroTab, MAX_MY_HEROES, formatDate, indexHeroes } from './src/logic';
+import { DRAFT_ROLES, DraftRole, HeroTab, MAX_MY_HEROES, PAD_STYLES, formatDate, indexHeroes } from './src/logic';
 import { FONT, Theme, useStyles, useTheme } from './src/theme';
 import { usePersisted, usePersistedList } from './src/usePersisted';
 import { Segmented, SlantChip } from './src/components/ui';
@@ -66,6 +66,7 @@ function Root() {
   const [platform, setPlatform] = usePersisted<Platform>('platform', 'pc', PLATFORMS);
   const [bracket, setBracket] = usePersisted<BracketId>('bracket', 'plat_diamond', BRACKETS);
   const [myRole, setMyRole] = usePersisted<DraftRole>('role', 'duelist', DRAFT_ROLES);
+  const [pad, setPad] = usePersisted<PadStyle>('pad', 'xbox', PAD_STYLES);
   // Heroes you starred as ones you're good at. The draft helper ranks them higher.
   const [starred, setStarred] = usePersistedList('myHeroes');
   const mine = useMemo(() => starred.filter((id) => !!idx[id]), [starred, idx]);
@@ -193,6 +194,8 @@ function Root() {
         platform={platform}
         bracket={bracket}
         myRole={myRole}
+        pad={pad}
+        onPad={setPad}
         starred={!!detail && mine.includes(detail.id)}
         starFull={mine.length >= MAX_MY_HEROES}
         onStar={toggleMine}

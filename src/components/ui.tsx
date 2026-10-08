@@ -1,7 +1,19 @@
 import React from 'react';
 import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
-import type { Confidence, FocusLevel, Hero, RoleId, Tier } from '../data/types';
-import { CONFIDENCE_LABEL, FOCUS_LABEL, ROLE_LABEL, ROLES, SEASON_SHIFT_LABEL, SeasonShift } from '../logic';
+import type { Confidence, Difficulty, FocusLevel, Hero, PadKey, PadStyle, PcKey, RoleId, Tier } from '../data/types';
+import {
+  CONFIDENCE_LABEL,
+  FOCUS_LABEL,
+  MAX_DIFFICULTY,
+  PAD_LABEL,
+  PAD_NAME,
+  PC_KEY_LABEL,
+  PC_KEY_NAME,
+  ROLE_LABEL,
+  ROLES,
+  SEASON_SHIFT_LABEL,
+  SeasonShift,
+} from '../logic';
 import { FONT, Theme, alpha, useStyles, useTheme } from '../theme';
 import { Icon } from './icons';
 
@@ -135,6 +147,79 @@ export function FocusTag({ level }: { level: FocusLevel }) {
   return (
     <View style={[s.pill, { borderColor: alpha(c, 0.5) }]} accessible accessibilityLabel={`Focus priority ${FOCUS_LABEL[level]}`}>
       <Text style={[s.pillText, { color: c }]}>{`FOCUS · ${FOCUS_LABEL[level].toUpperCase()}`}</Text>
+    </View>
+  );
+}
+
+/** The game's own difficulty rating: a label and five stars, filled up to the rating. */
+export function DifficultyTag({ stars }: { stars: Difficulty }) {
+  const t = useTheme();
+  return (
+    <View
+      style={[s.pill, { borderColor: t.line }]}
+      accessible
+      accessibilityLabel={`Difficulty ${stars} of ${MAX_DIFFICULTY} stars, the game’s own rating`}
+    >
+      <Text style={[s.pillText, { color: t.ink2 }]}>DIFFICULTY</Text>
+      <View style={s.stars}>
+        {Array.from({ length: MAX_DIFFICULTY }, (_, i) => (
+          <Icon key={i} name={i < stars ? 'starred' : 'star'} size={11} color={i < stars ? t.accent : t.ink3} />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+// Shift and Space caps are wider, like the real keys.
+const KEY_WIDTH: Partial<Record<PcKey, number>> = { shift: 1.5, space: 2 };
+
+/** A key cap for an ability's default key. A stand-in until the rune art arrives. */
+export function KeyCap({ k, size = 22 }: { k: PcKey; size?: number }) {
+  const t = useTheme();
+  const label = PC_KEY_LABEL[k];
+  return (
+    <View
+      accessible
+      accessibilityLabel={`Key: ${PC_KEY_NAME[k]}`}
+      style={[
+        s.key,
+        { width: size * (KEY_WIDTH[k] ?? 1), height: size, borderColor: alpha(t.ink, 0.3), backgroundColor: t.surface2 },
+      ]}
+    >
+      <Text style={[s.keyText, { color: t.ink, fontSize: size * (label.length > 1 ? 0.4 : 0.52) }]} numberOfLines={1}>
+        {label}
+      </Text>
+    </View>
+  );
+}
+
+// Face buttons and stick clicks are round; triggers and bumpers are wider.
+const PAD_WIDTH: Partial<Record<PadKey, number>> = { rt: 1.3, lt: 1.3, rb: 1.3, lb: 1.3, 'ls+rs': 2.1 };
+const ROUND: PadKey[] = ['a', 'b', 'x', 'y', 'ls', 'rs'];
+
+/** A controller button for an ability. A stand-in until the rune art arrives. */
+export function PadButton({ k, pad, size = 22 }: { k: PadKey; pad: PadStyle; size?: number }) {
+  const t = useTheme();
+  const label = PAD_LABEL[pad][k];
+  const round = ROUND.includes(k);
+  return (
+    <View
+      accessible
+      accessibilityLabel={`Button: ${PAD_NAME[pad][k]}`}
+      style={[
+        s.key,
+        {
+          width: size * (PAD_WIDTH[k] ?? 1),
+          height: size,
+          borderRadius: round ? size / 2 : 6,
+          borderColor: alpha(t.ink, 0.3),
+          backgroundColor: t.surface2,
+        },
+      ]}
+    >
+      <Text style={[s.keyText, { color: t.ink, fontSize: size * (label.length > 2 ? 0.36 : label.length > 1 ? 0.42 : 0.5) }]} numberOfLines={1}>
+        {label}
+      </Text>
     </View>
   );
 }
@@ -303,6 +388,9 @@ const s = StyleSheet.create({
   unslant: { transform: [{ skewX: '12deg' }] },
   roleTagText: { fontFamily: FONT.displayBold, fontSize: 11.5, letterSpacing: 1.1 },
   banDot: { width: 7, height: 7, borderRadius: 4 },
+  stars: { flexDirection: 'row', alignItems: 'center', gap: 1.5 },
+  key: { flexShrink: 0, alignItems: 'center', justifyContent: 'center', borderRadius: 5, borderWidth: 1, borderBottomWidth: 2.5 },
+  keyText: { fontFamily: FONT.displayBold, letterSpacing: 0.3 },
 });
 
 const makeStyles = (t: Theme) =>

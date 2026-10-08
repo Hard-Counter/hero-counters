@@ -720,7 +720,21 @@
   .tips { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; font-size: 14.5px; line-height: 1.38; }
   .tips li { display: flex; gap: 9px; }
   .tips li::before { content: ""; flex: none; width: 5px; height: 5px; margin-top: .55em; border-radius: 50%; background: var(--ink-3); }
-  .focus-box { display: grid; gap: 6px; margin-bottom: 10px; }
+  .focus-box { display: grid; gap: 6px; margin-bottom: 10px; justify-items: start; }
+  .difficulty {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    font: 700 10.5px/1.2 var(--font-display);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+  .difficulty-stars { display: inline-flex; align-items: center; gap: 1.5px; font-size: 11px; color: var(--ink-3); }
+  .difficulty-stars .on { color: var(--accent); }
   .focus-box p { font-size: 13.5px; color: var(--ink-2); }
   .quirks { display: grid; gap: 10px; }
   .quirk { padding-left: 10px; border-left: 2px solid var(--line); font-size: 14px; }
@@ -734,6 +748,29 @@
   .dtab[aria-selected="true"]::after { background: var(--accent); }
   .abilities { display: grid; gap: 12px; }
   .ability b { display: block; font-size: 15px; }
+  .ability-head { display: flex; align-items: center; gap: 8px; }
+  .ability-head b { min-width: 0; }
+  .keycap {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    border: 1px solid color-mix(in srgb, var(--ink) 30%, transparent);
+    border-bottom-width: 2.5px;
+    background: var(--surface-2);
+    color: var(--ink);
+    font: 700 11.5px/1 var(--font-display);
+    letter-spacing: .02em;
+  }
+  .keycap.wide { font-size: 9px; }
+  .keycap.shift { width: 33px; }
+  .keycap.space { width: 44px; }
+  .keycap.pad { width: 29px; border-radius: 6px; font-size: 9.5px; }
+  .keycap.pad.round { width: 22px; border-radius: 50%; font-size: 11px; }
+  .keycap.pad.both { width: 46px; border-radius: 11px; font-size: 8.5px; }
+  .pad-row { margin-top: 14px; }
   .ability b small { font-size: 13.5px; font-weight: 400; color: var(--ink-3); }
   .ability p { margin-top: 3px; font-size: 14px; line-height: 1.4; color: var(--ink-2); }
   .ability p em { font-style: normal; font-weight: 600; color: var(--ink); }
@@ -930,6 +967,7 @@
     platform: oneOf(store.get('platform', 'pc'), ['pc', 'console'], 'pc'),
     bracket: oneOf(store.get('bracket', 'plat_diamond'), DATA.brackets.map((b) => b.id), 'plat_diamond'),
     role: oneOf(store.get('role', 'duelist'), DRAFT_ROLES, 'duelist'),
+    pad: oneOf(store.get('pad', 'xbox'), PAD_STYLES, 'xbox'),
     mine: loadMine(),
     // Shown on a hero page when every My heroes slot is taken.
     starNote: false,
@@ -1004,6 +1042,29 @@
   const confTag = (c) => h('span', { class: `conf ${c}` }, CONFIDENCE_LABEL[c]);
   const roleTag = (role) => h('span', { class: `role-tag ${role}` }, icon(role), ROLE_LABEL[role]);
   const focusTag = (level) => h('span', { class: `focus-tag ${level}` }, `Focus · ${FOCUS_LABEL[level]}`);
+  const keyCap = (k) =>
+    h(
+      'span',
+      { class: `keycap ${k}${k === 'lmb' || k === 'rmb' ? ' wide' : ''}`, role: 'img', 'aria-label': `Key: ${PC_KEY_NAME[k]}` },
+      PC_KEY_LABEL[k],
+    );
+  const padButton = (k) =>
+    h(
+      'span',
+      {
+        class: `keycap pad${['a', 'b', 'x', 'y', 'ls', 'rs'].includes(k) ? ' round' : ''}${k === 'ls+rs' ? ' both' : ''}`,
+        role: 'img',
+        'aria-label': `Button: ${PAD_NAME[state.pad][k]}`,
+      },
+      PAD_LABEL[state.pad][k],
+    );
+  const difficultyTag = (stars) =>
+    h(
+      'span',
+      { class: 'difficulty', role: 'img', 'aria-label': `Difficulty ${stars} of ${MAX_DIFFICULTY} stars, the game’s own rating` },
+      h('span', { 'aria-hidden': 'true' }, 'Difficulty'),
+      h('span', { class: 'difficulty-stars', 'aria-hidden': 'true' }, Array.from({ length: MAX_DIFFICULTY }, (_, i) => icon(i < stars ? 'starred' : 'star', i < stars ? 'on' : ''))),
+    );
   const tipList = (items) => h('ul', { class: 'tips' }, items.map((t) => h('li', null, t)));
   const linkBtn = (label, onClick, aria) => h('button', { type: 'button', class: 'link', onClick, 'aria-label': aria || null }, label);
 
@@ -1134,7 +1195,7 @@
       null,
       roleFilters(state.roleFilter, (value) => set({ roleFilter: value })),
       list,
-      h('p', { class: 'foot' }, `${bracketById(state.bracket).label} on ${platformName()}. `, h('span', { class: 'ban inline' }), 'Often banned at Gold III and above.', SHIFTS.size ? ' Arrows mark heroes buffed or nerfed this season.' : '', ' Tap any hero for counters.'),
+      h('p', { class: 'foot' }, `${bracketById(state.bracket).label} on ${platformName()}. `, h('span', { class: 'ban inline' }), 'Often banned at Gold III and above.', SHIFTS.size ? ' Arrows mark heroes buffed or nerfed this season.' : '', ' Tap any hero for counters, and for when even a low-tier hero shines.'),
       h('p', { class: 'foot', style: 'margin-top:10px' }, linkBtn('What tiers and tags mean', () => openInfo('tiers'))),
     );
   }
@@ -2051,6 +2112,7 @@
     const backTo = stack.length > 1 ? IDX[stack[stack.length - 2].id] : null;
     const tips = tipsFor(hero);
     const focus = focusFor(hero);
+    const pick = whenToPick(hero);
     const kit = kitFor(hero);
     const history = historyFor(DATA, hero.id);
     const ups = heroTeamUps(hero.id, usableTeamUps(DATA, IDX), IDX);
@@ -2112,6 +2174,10 @@
         body.append(tipList(tips.against));
       }
     } else if (active === 'as') {
+      if (pick) {
+        body.append(sectionHead('When to pick', { info: 'tiers', infoLabel: 'What difficulty and Shines when mean' }));
+        body.append(h('div', { class: 'focus-box' }, pick.difficulty ? difficultyTag(pick.difficulty) : null, pick.shines ? h('p', null, pick.shines) : null));
+      }
       if (hero.styles && hero.styles.length) {
         body.append(sectionHead('Play style', { info: 'styles', infoLabel: 'What play styles mean' }));
         body.append(h('div', { class: 'style-list' }, hero.styles.filter((s) => HERO_STYLE_LABEL[s]).map((s) => h('p', null, h('b', null, HERO_STYLE_LABEL[s] + '. '), HERO_STYLE_INFO[s]))));
@@ -2135,16 +2201,46 @@
         body.append(sectionHead('Strong against'));
         body.append(h('div', { class: 'tier-heroes' }, strong.map((x) => heroChip(x, () => openPeek({ kind: 'strong', heroId: x.id })))));
       }
-      if (!(hero.styles && hero.styles.length) && !(tips && tips.as.length) && !ups.own.length && !ups.boosts.length && !strong.length) {
+      if (!pick && !(hero.styles && hero.styles.length) && !(tips && tips.as.length) && !ups.own.length && !ups.boosts.length && !strong.length) {
         body.append(h('p', { class: 'empty-note' }, `No play notes for ${hero.name} yet.`));
       }
     } else if (active === 'history' && history) {
       body.append(...historyView(history));
     } else {
+      const padLayout = state.platform === 'console' && hasPadLayout(hero);
+      if (padLayout) {
+        body.append(
+          h(
+            'div',
+            { class: 'pad-row' },
+            h(
+              'div',
+              { class: 'seg', role: 'group', 'aria-label': 'Controller' },
+              PAD_STYLES.map((p) =>
+                h('button', { type: 'button', 'aria-pressed': String(state.pad === p), onClick: () => { state.pad = p; store.set('pad', p); renderDetail(true); } }, PAD_STYLE_LABEL[p]),
+              ),
+            ),
+          ),
+        );
+      }
       if (kit) {
         kit.groups.forEach((g, i) => {
           body.append(sectionHead(g.label, i === 0 ? { info: 'abilities', infoLabel: 'What the ability terms mean' } : {}));
-          body.append(h('div', { class: 'abilities' }, g.abilities.map((a) => h('div', { class: 'ability' }, h('b', null, a.name), h('p', null, a.text)))));
+          body.append(
+            h(
+              'div',
+              { class: 'abilities' },
+              g.abilities.map((a) => {
+                const input = abilityInput(a, state.platform);
+                return h(
+                  'div',
+                  { class: 'ability' },
+                  h('div', { class: 'ability-head' }, input ? (input.kind === 'pc' ? keyCap(input.key) : padButton(input.key)) : null, h('b', null, a.name)),
+                  h('p', null, a.text),
+                );
+              }),
+            ),
+          );
         });
       }
       if (ups.own.length) {
@@ -2172,7 +2268,16 @@
       }
       if (kit && kit.checked) {
         body.append(
-          h('p', { class: 'kit-checked' }, `Checked against every patch since launch, last on ${formatDate(kit.checked)}. Written in our own words, so in-game names and numbers may differ slightly.`),
+          h(
+            'p',
+            { class: 'kit-checked' },
+            `Checked against every patch since launch, last on ${formatDate(kit.checked)}. Written in our own words, so in-game names and numbers may differ slightly.`,
+            state.platform === 'pc'
+              ? ' Keys are the default PC bindings.'
+              : padLayout
+                ? ' Buttons are the default controller layout.'
+                : ' Controller buttons for this hero are coming soon.',
+          ),
         );
       }
     }

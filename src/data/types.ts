@@ -10,6 +10,8 @@ export type MapMode = 'domination' | 'convoy' | 'convergence';
 export type MapTrait = 'long-sightlines' | 'close-quarters' | 'high-ground' | 'chokepoints' | 'flank-routes';
 /** How a hero plays, for matching heroes to map layouts. */
 export type HeroStyle = 'long-range' | 'brawl' | 'dive' | 'flyer' | 'area';
+/** The game's own difficulty rating, in stars. */
+export type Difficulty = 1 | 2 | 3 | 4 | 5;
 /** Which side you're on. Only Convoy and Convergence have sides. */
 export type MapSide = 'either' | 'attack' | 'defense';
 
@@ -43,11 +45,20 @@ export interface HeroTips {
 
 export type AbilityKind = 'attack' | 'ability' | 'ultimate' | 'passive';
 
+/** A default PC key: mouse buttons, ability keys, ultimate, melee, jump. */
+export type PcKey = 'lmb' | 'rmb' | 'shift' | 'e' | 'f' | 'q' | 'c' | 'v' | 'space';
+/** A controller button by its Xbox name. PlayStation buttons sit in the same spots. */
+export type PadKey = 'rt' | 'lt' | 'rb' | 'lb' | 'a' | 'b' | 'x' | 'y' | 'ls' | 'rs' | 'ls+rs';
+/** Which controller's button names to show. */
+export type PadStyle = 'xbox' | 'playstation';
+
 export interface Ability {
   name: string;
   kind: AbilityKind;
   /** What it does, in plain words. */
   text: string;
+  /** Default keys and controller buttons. Missing when the ability has no key of its own. */
+  keys?: { pc?: PcKey; console?: PadKey };
 }
 
 export interface HeroKit {
@@ -84,6 +95,10 @@ export interface Hero {
   variant?: boolean;
   /** Play styles for map matching. Missing or empty means no map nudge either way. */
   styles?: HeroStyle[];
+  /** The game's own difficulty rating, 1 to 5 stars. */
+  difficulty?: Difficulty;
+  /** One sentence on the matches where the hero beats their tier. Starts with "Shines". */
+  shines?: string;
   /** Optional tips. Heroes without them simply show none. */
   tips?: HeroTips;
   /** How high a priority this hero is when they're on the enemy team. */

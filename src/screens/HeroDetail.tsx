@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { LayoutChangeEvent, Platform as RNPlatform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import type { BracketId, CounterPick, Dataset, Hero, Platform, RoleId } from '../data/types';
+import type { BracketId, CounterPick, Dataset, Hero, PadStyle, Platform, RoleId } from '../data/types';
 import {
   BAN_LABEL,
   DraftRole,
@@ -13,20 +13,38 @@ import {
   HeroTab,
   HeroTeamUp,
   MAX_MY_HEROES,
+  PAD_STYLES,
+  PAD_STYLE_LABEL,
   ROLES,
+  abilityInput,
   focusFor,
   formatDate,
   goodAgainst,
   heroTeamUps,
+  hasPadLayout,
   historyFor,
   kitFor,
   sortHeroes,
   tierFor,
   tipsFor,
   usableTeamUps,
+  whenToPick,
 } from '../logic';
 import { FONT, Theme, useStyles, useTheme } from '../theme';
-import { Avatar, ConfTag, FocusTag, HeroChip, RoleTag, SectionHead, TierBadge, TipList } from '../components/ui';
+import {
+  Avatar,
+  ConfTag,
+  DifficultyTag,
+  FocusTag,
+  HeroChip,
+  KeyCap,
+  PadButton,
+  RoleTag,
+  SectionHead,
+  Segmented,
+  TierBadge,
+  TipList,
+} from '../components/ui';
 import { Icon } from '../components/icons';
 import { Sheet } from '../components/Sheet';
 import { Overlay } from '../components/Overlay';
@@ -48,6 +66,8 @@ export default function HeroDetail({
   platform,
   bracket,
   myRole,
+  pad,
+  onPad,
   starred,
   starFull,
   onStar,
@@ -66,6 +86,9 @@ export default function HeroDetail({
   platform: Platform;
   bracket: BracketId;
   myRole: DraftRole;
+  /** Controller button names to show on console. */
+  pad: PadStyle;
+  onPad: (pad: PadStyle) => void;
   /** The hero is one of yours (starred). */
   starred: boolean;
   /** You've starred as many heroes as you can. */
@@ -118,6 +141,8 @@ export default function HeroDetail({
   const tips = hero ? tipsFor(hero) : null;
   const kit = hero ? kitFor(hero) : null;
   const focus = hero ? focusFor(hero) : null;
+  const pickNotes = hero ? whenToPick(hero) : null;
+  const padLayout = !!hero && platform === 'console' && hasPadLayout(hero);
   // Flex has no role of its own, so the roles keep their usual order.
   const roleOrder: RoleId[] = myRole === 'flex' ? ROLES : [myRole, ...ROLES.filter((r) => r !== myRole)];
 
@@ -318,6 +343,18 @@ export default function HeroDetail({
 
                 {active === 'as' ? (
                   <>
+                    {pickNotes ? (
+                      <>
+                        <SectionHead onInfo={() => setInfo('tiers')} infoLabel="What difficulty and Shines when mean">
+                          When to pick
+                        </SectionHead>
+                        <View style={st.focus}>
+                          {pickNotes.difficulty ? <DifficultyTag stars={pickNotes.difficulty} /> : null}
+                          {pickNotes.shines ? <Text style={st.focusWhy}>{pickNotes.shines}</Text> : null}
+                        </View>
+                      </>
+                    ) : null}
+
                     {hero.styles && hero.styles.length ? (
                       <>
                         <SectionHead onInfo={() => setInfo('styles')} infoLabel="What play styles mean">
@@ -382,7 +419,7 @@ export default function HeroDetail({
                       </>
                     ) : null}
 
-                    {!hero.styles?.length && !tips?.as.length && !teamUps.own.length && !teamUps.boosts.length && !strongAgainst.length ? (
+                    {!pickNotes && !hero.styles?.length && !tips?.as.length && !teamUps.own.length && !teamUps.boosts.length && !strongAgainst.length ? (
                       <Text style={st.empty}>No play notes for {hero.name} yet.</Text>
                     ) : null}
                   </>
@@ -392,6 +429,15 @@ export default function HeroDetail({
 
                 {active === 'abilities' ? (
                   <>
+                    {padLayout ? (
+                      <View style={st.padRow}>
+                        <Segmented
+                          value={pad}
+                          onChange={onPad}
+                          options={PAD_STYLES.map((p) => ({ value: p, label: PAD_STYLE_LABEL[p] }))}
+                        />
+                      </View>
+                    ) : null}
                     {kit
                       ? kit.groups.map((g, i) => (
                           <View key={g.kind}>
@@ -402,12 +448,19 @@ export default function HeroDetail({
                               {g.label}
                             </SectionHead>
                             <View style={st.abilities}>
-                              {g.abilities.map((a) => (
-                                <View key={a.name} style={st.ability}>
-                                  <Text style={st.abilityName}>{a.name}</Text>
-                                  <Text style={st.abilityText}>{a.text}</Text>
-                                </View>
-                              ))}
+                              {g.abilities.map((a) => {
+                                const input = abilityInput(a, platform);
+                                return (
+                                  <View key={a.name} style={st.ability}>
+                                    <View style={st.abilityHead}>
+                                      {input?.kind === 'pc' ? <KeyCap k={input.key} /> : null}
+                                      {input?.kind === 'pad' ? <PadButton k={input.key} pad={pad} /> : null}
+                                      <Text style={st.abilityName}>{a.name}</Text>
+                                    </View>
+                                    <Text style={st.abilityText}>{a.text}</Text>
+                                  </View>
+                                );
+                              })}
                             </View>
                           </View>
                         ))
@@ -458,6 +511,11 @@ export default function HeroDetail({
                       <Text style={st.checked}>
                         Checked against every patch since launch, last on {formatDate(kit.checked)}. Written in our own words, so in-game
                         names and numbers may differ slightly.
+                        {platform === 'pc'
+                          ? ' Keys are the default PC bindings.'
+                          : padLayout
+                            ? ' Buttons are the default controller layout.'
+                            : ' Controller buttons for this hero are coming soon.'}
                       </Text>
                     ) : null}
                   </>
@@ -785,7 +843,7 @@ const makeStyles = (t: Theme) =>
     why: { color: t.ink, fontFamily: FONT.body, fontSize: 14, lineHeight: 19 },
     small: { color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
     flexText: { flexShrink: 1 },
-    focus: { gap: 6 },
+    focus: { gap: 6, alignItems: 'flex-start' },
     focusWhy: { color: t.ink2, fontFamily: FONT.body, fontSize: 13.5, lineHeight: 19 },
     list: { gap: 6 },
     teamRow: {
@@ -803,7 +861,9 @@ const makeStyles = (t: Theme) =>
     teamName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
     abilities: { gap: 12 },
     ability: { gap: 3 },
-    abilityName: { color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
+    abilityHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+    padRow: { flexDirection: 'row', marginTop: 14 },
+    abilityName: { flexShrink: 1, color: t.ink, fontFamily: FONT.bodyBold, fontSize: 15 },
     abilityWith: { color: t.ink3, fontFamily: FONT.body, fontSize: 13.5 },
     abilityText: { color: t.ink2, fontFamily: FONT.body, fontSize: 14, lineHeight: 19.5 },
     abilityBonus: { color: t.ink, fontFamily: FONT.bodySemi },
