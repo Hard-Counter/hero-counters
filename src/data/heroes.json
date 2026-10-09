@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "revision": 15,
-  "season": "Season 10: Butcher's Blasphemy",
-  "seasonShort": "Season 10",
-  "patch": "Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1",
-  "updated": "2026-10-08",
-  "nextReview": "2026-10-09",
+  "revision": 16,
+  "season": "Season 10.5: Butcher's Blasphemy",
+  "seasonShort": "Season 10.5",
+  "patch": "Season 10.5 update, Oct 9 (balance post Oct 6)",
+  "updated": "2026-10-09",
+  "nextReview": "2026-10-10",
   "brackets": [
     {
       "id": "bronze_gold",
@@ -45,19 +45,19 @@
     "The meta shifts with every patch. The data is reviewed weekly and after each balance update."
   ],
   "seasonNotes": [
-    "Gorr the God Butcher (Duelist) is new this season.",
-    "Every Strategist now charges their ultimate more slowly.",
-    "Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match.",
-    "God Quarry, a new Domination map, appeared in a limited Quick Match event that ran through Sept 29. It is not yet confirmed for the ranked map pool.",
-    "Season 10.5 arrives October 9."
+    "Season 10.5 began October 9. Ranks carry over from the first half of the season, and the ranked map pool is unchanged.",
+    "Iron Man’s Micro-Missile Barrage now locks on to enemies by itself, and Phoenix’s Sparks give her bonus health instead of healing.",
+    "Gorr the God Butcher (Duelist) joined in Season 10. Season 10.5 trimmed his damage and shortened his ultimate.",
+    "Every Strategist has charged their ultimate more slowly since Season 10.",
+    "Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match."
   ],
   "changelog": [
+    "Season 10.5 update: Iron Man’s missiles now lock on, Phoenix and Cyclops hit harder, Jubilee heals herself while sprinting, and Gorr, Scarlet Witch and Devil Dinosaur were trimmed. Tiers hold for now until results from the new patch come in.",
     "Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.",
     "Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.",
     "Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).",
     "Weekly review, Oct 3: no tier or counter changes.",
-    "Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.",
-    "Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter."
+    "Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage."
   ],
   "heroes": [
     {
@@ -72,7 +72,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "high",
-      "patchNote": "Buffed this season: faster fire rate.",
+      "patchNote": "Buffed in Season 10: faster fire rate.",
       "styles": [
         "area"
       ],
@@ -230,7 +230,7 @@
         "eternity_oaa": "S"
       },
       "banRisk": "high",
-      "patchNote": "Buffed this season: more bleed damage. The most-banned hero at Gold III and above.",
+      "patchNote": "Season 10 buffed his bleed, and Season 10.5 trimmed his health slightly. The most-banned hero at Gold III and above.",
       "styles": [
         "brawl"
       ],
@@ -279,7 +279,7 @@
         "quirks": [
           {
             "text": "He takes reduced damage from critical hits, so headshots do less to him than usual.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           }
         ]
       },
@@ -288,7 +288,7 @@
         "why": "Very tough, and gains bonus health from his bleeds and bites. Pressure his backline, and burst him only after his barrier and Frenzied Feast are used."
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Primal Bite",
@@ -369,7 +369,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10.",
       "styles": [
         "brawl"
       ],
@@ -494,6 +494,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
+      "patchNote": "Buffed in Season 10.5: Banner’s shots fly faster, and his team-up with Wolverine is stronger.",
       "styles": [
         "brawl",
         "dive"
@@ -523,7 +524,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Gamma Ray Gun",
@@ -630,7 +631,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "brawl"
       ],
@@ -735,7 +736,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season: more health.",
+      "patchNote": "Buffed in Season 10: more health.",
       "styles": [
         "dive",
         "brawl"
@@ -845,7 +846,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "brawl"
       ],
@@ -962,7 +963,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "area"
       ],
@@ -1067,7 +1068,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed this season: less health and a smaller shield. Still the most-played Vanguard.",
+      "patchNote": "Season 10 cut his health and shield, and Season 10.5 buffed his team-up with Emma Frost. Still the most-played Vanguard.",
       "styles": [
         "area"
       ],
@@ -1113,11 +1114,11 @@
         "quirks": [
           {
             "text": "His meteor can overload and cancel if it absorbs too many projectiles.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           },
           {
             "text": "Guides that say his two shields share a cooldown are out of date. They have been separate since late 2025.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           }
         ]
       },
@@ -1126,7 +1127,7 @@
         "why": "Hard to hurt through his curtain and shields, but since Season 10 he drops fast once his shield is on cooldown."
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Iron Volley",
@@ -1314,7 +1315,7 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10.",
       "styles": [
         "dive",
         "flyer"
@@ -1431,7 +1432,7 @@
       "banRisk": "medium",
       "consoleShift": 1,
       "platformNote": "Official data shows him stronger on console.",
-      "patchNote": "Nerfed this season: less health and a longer charge cooldown. Stat sites disagree on him, so treat this tier as shaky.",
+      "patchNote": "Season 10 cut his health and slowed his charge, and Season 10.5 buffed his team-up with Invisible Woman. Stat sites disagree on him, so treat this tier as shaky.",
       "styles": [
         "brawl"
       ],
@@ -1460,7 +1461,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Rocky Jab",
@@ -1536,7 +1537,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "medium",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "brawl"
       ],
@@ -1758,7 +1759,7 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in all three roles this season.",
+      "patchNote": "Buffed in all three roles in Season 10.",
       "variant": true,
       "difficulty": 5,
       "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
@@ -1903,7 +1904,7 @@
         "eternity_oaa": "S"
       },
       "banRisk": "medium",
-      "patchNote": "Only her team-up with The Hood was nerfed this season.",
+      "patchNote": "Only her team-up with The Hood was nerfed in Season 10.",
       "styles": [
         "dive",
         "brawl"
@@ -2055,7 +2056,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "high",
-      "patchNote": "New this season. Each kill spawns a Berserker minion where the enemy fell.",
+      "patchNote": "New in Season 10, and nerfed slightly in Season 10.5: less damage and a shorter ultimate, but Living Abyss comes back sooner. Each kill spawns a Berserker minion where the enemy fell.",
       "isNew": true,
       "styles": [
         "brawl"
@@ -2109,11 +2110,11 @@
         "quirks": [
           {
             "text": "Kills don’t turn enemies into copies of themselves. Each kill spawns an ordinary Berserker where the enemy fell.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           },
           {
             "text": "Berserkers shoot from range, but fight in melee when you pull them in with Necro-Power.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           }
         ]
       },
@@ -2122,7 +2123,7 @@
         "why": "Snowballs off kills, since each one spawns a Berserker that heals him and gives him an escape. Clear his Berserkers, then catch him after his surge."
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "All-Black",
@@ -2289,7 +2290,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "medium",
-      "patchNote": "Reworked this season. A Sept 17 fix made her ultimate’s wind-up far less likely to block damage.",
+      "patchNote": "Reworked in Season 10. A Sept 17 fix made her ultimate’s wind-up far less likely to block damage, and Season 10.5 trimmed Chthonian Burst’s damage.",
       "styles": [
         "brawl"
       ],
@@ -2337,11 +2338,11 @@
         "quirks": [
           {
             "text": "Her ultimate wind-up can still randomly make her immune to damage, but since the Sept 17 patch it rarely happens. The odds were never published.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           },
           {
             "text": "Advice about Dark Seal stunning over and over is out of date. Since the Season 10 rework it stuns once.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-10-09"
           }
         ]
       },
@@ -2350,7 +2351,7 @@
         "why": "Squishy, and her escape is slower since her rework. Raise her priority when several of your team are marked or her ultimate is ready."
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Chaos Control",
@@ -2694,7 +2695,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "dive"
       ],
@@ -2914,7 +2915,7 @@
       "banRisk": "medium",
       "consoleShift": -1,
       "platformNote": "Official data shows her weaker on console.",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "dive"
       ],
@@ -3005,7 +3006,7 @@
         "eternity_oaa": "S"
       },
       "banRisk": "high",
-      "patchNote": "Buffed this season: shorter combo cooldown.",
+      "patchNote": "Buffed in Season 10: shorter combo cooldown.",
       "styles": [
         "dive"
       ],
@@ -3317,7 +3318,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Ancestral Sword",
@@ -3388,6 +3389,7 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
+      "patchNote": "Reworked in Season 10.5: Micro-Missile Barrage now locks on to enemies by itself, with less damage per missile.",
       "styles": [
         "flyer",
         "long-range"
@@ -3417,7 +3419,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Repulsor Blast",
@@ -3458,7 +3460,7 @@
           {
             "name": "Micro-Missile Barrage",
             "kind": "ability",
-            "text": "During Hyper-Velocity or Armor Overdrive, rains a missile barrage on an area.",
+            "text": "During Hyper-Velocity or Armor Overdrive, fires a barrage of fast missiles that lock on to nearby enemies, up to five per target. During Armor Overdrive they lock on to enemies in front of him.",
             "keys": {
               "pc": "f",
               "console": "a"
@@ -3588,7 +3590,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "medium",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "brawl",
         "dive"
@@ -3690,7 +3692,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "high",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10.",
       "difficulty": 3,
       "shines": "Shines against tanks and anyone leaning on shields or bonus health, which her seeking and elephant-gun rounds tear through.",
       "counters": {
@@ -3801,7 +3803,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "medium",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10. Season 10.5 made his punch and hook more responsive on laggy connections.",
       "styles": [
         "brawl"
       ],
@@ -3830,7 +3832,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Roterstern",
@@ -3897,7 +3899,7 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed this season: her dash lost its invincibility and her stealth leaves a trail.",
+      "patchNote": "Nerfed in Season 10: her dash lost its invincibility and her stealth leaves a trail.",
       "styles": [
         "dive"
       ],
@@ -4034,7 +4036,7 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "dive"
       ],
@@ -4127,7 +4129,7 @@
       "banRisk": "low",
       "consoleShift": -1,
       "platformNote": "Aim-heavy rifle: noticeably weaker on controller.",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10.",
       "styles": [
         "long-range"
       ],
@@ -4238,6 +4240,7 @@
       "banRisk": "low",
       "consoleShift": -1,
       "platformNote": "Precision aim: weaker on controller.",
+      "patchNote": "Buffed in Season 10.5: faster arrows and a wider Hypersonic Arrow, and his team-up with Cloak & Dagger now heals him too.",
       "styles": [
         "long-range"
       ],
@@ -4266,7 +4269,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Piercing Arrow",
@@ -4353,7 +4356,7 @@
       "banRisk": "medium",
       "consoleShift": 1,
       "platformNote": "His turrets don’t need aim, so he does better on console.",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "styles": [
         "area"
       ],
@@ -4674,7 +4677,7 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in all three roles this season.",
+      "patchNote": "Buffed in all three roles in Season 10.",
       "variant": true,
       "difficulty": 5,
       "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
@@ -4825,6 +4828,7 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
+      "patchNote": "Buffed in Season 10.5: more damage, faster Ricochet Force and a cheaper ultimate.",
       "styles": [
         "long-range"
       ],
@@ -4853,7 +4857,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Optic Blast",
@@ -5019,6 +5023,7 @@
         "eternity_oaa": "F"
       },
       "banRisk": "low",
+      "patchNote": "Mostly buffed in Season 10.5: more damage and more Sparks, though Sparks now give bonus health instead of healing her.",
       "difficulty": 3,
       "shines": "Shines against teams leaning on summons and shields, which her ultimate destroys, and against Devil Dinosaur.",
       "counters": {
@@ -5044,12 +5049,12 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Cosmic Flames",
             "kind": "attack",
-            "text": "Fiery projectiles that put Sparks on enemies (two on a critical hit). At three Sparks they explode, adding a Spark and healing her over time.",
+            "text": "Fiery projectiles that put Sparks on enemies (two on a critical hit). At three Sparks they explode, adding a Spark and giving her a little bonus health.",
             "keys": {
               "pc": "lmb",
               "console": "rt"
@@ -5085,7 +5090,7 @@
           {
             "name": "Endsong Inferno",
             "kind": "ultimate",
-            "text": "Soars up and crashes down on an area, destroying summons and shields. The shockwave adds a Spark to enemies hit.",
+            "text": "Soars up and crashes down on an area, destroying summons and shields. The explosion and its shockwave each add two Sparks to enemies hit.",
             "keys": {
               "pc": "q",
               "console": "ls+rs"
@@ -5106,7 +5111,7 @@
         "eternity_oaa": "S"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed slightly this season.",
+      "patchNote": "Nerfed slightly in Season 10.",
       "difficulty": 1,
       "shines": "Shines with a dive or brawl team she can boost, and against divers she can put to sleep.",
       "counters": {
@@ -5455,6 +5460,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
+      "patchNote": "Mostly buffed in Season 10.5: she heals herself while sprinting and her ultimate heals more, but her blind is shorter.",
       "difficulty": 4,
       "shines": "Shines when her team fights close together: her fireworks blind enemies, and her marks boost the team’s healing.",
       "counters": {
@@ -5480,7 +5486,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Energy Plasmoids",
@@ -5512,7 +5518,7 @@
           {
             "name": "Sparking Sprint",
             "kind": "ability",
-            "text": "A speed boost with higher jumps and faster plasmoid fire that costs no energy. When it ends, a burst knocks back enemies and heals allies.",
+            "text": "A speed boost with higher jumps and faster plasmoid fire that costs no energy, healing her while it lasts. When it ends, a burst knocks back enemies and heals allies.",
             "keys": {
               "pc": "shift",
               "console": "lb"
@@ -5547,7 +5553,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "high",
-      "patchNote": "His team-up with Magneto was nerfed this season.",
+      "patchNote": "Mixed changes in Season 10.5: his decks charge faster, but his ultimate has a shorter reach and a smaller jump boost.",
       "difficulty": 4,
       "shines": "Shines with a team that pushes together: his ultimate heals, speeds up and powers up every ally in sight, and his decks swap healing and damage.",
       "counters": {
@@ -5573,7 +5579,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Kinetic Cards",
@@ -5649,7 +5655,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "difficulty": 4,
       "shines": "Shines with a practiced player at higher ranks: illusions double up his healing, and his ultimate turns him into any hero in the match.",
       "counters": {
@@ -5755,7 +5761,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "medium",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10.",
       "difficulty": 3,
       "shines": "Shines when the team holds one spot: Dagger’s fields heal everyone inside, and Cloak can hide allies to escape a bad fight.",
       "counters": {
@@ -5781,7 +5787,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Lightforce Dagger",
@@ -5870,6 +5876,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "patchNote": "His team-up with Ultron heals more since Season 10.5.",
       "difficulty": 3,
       "shines": "Shines in a team that fights together: Soul Bond spreads damage across allies, and his ultimate revives several at once.",
       "counters": {
@@ -5895,7 +5902,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-03",
+        "checked": "2026-10-09",
         "abilities": [
           {
             "name": "Quantum Magic",
@@ -5971,7 +5978,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed this season.",
+      "patchNote": "Nerfed in Season 10.",
       "difficulty": 4,
       "shines": "Shines against long-range and burst damage: her shields block it, and her ultimate hides the whole team.",
       "counters": {
@@ -6082,7 +6089,7 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "difficulty": 3,
       "shines": "Shines against dive heroes like Spider-Man: her fox charms them and makes allies briefly invulnerable.",
       "counters": {
@@ -6323,7 +6330,7 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in all three roles this season.",
+      "patchNote": "Buffed in all three roles in Season 10.",
       "variant": true,
       "difficulty": 5,
       "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
@@ -6468,7 +6475,7 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
-      "patchNote": "Buffed this season.",
+      "patchNote": "Buffed in Season 10.",
       "difficulty": 1,
       "shines": "Shines on maps with ledges, where his ultimate can swallow grouped enemies and spit them out over the edge.",
       "counters": {
@@ -7777,7 +7784,7 @@
         "hawkeye",
         "cloak-and-dagger"
       ],
-      "effect": "Crescent Slash sends out a radiant wave that heals allies and makes enemies take more damage.",
+      "effect": "Crescent Slash sends out a radiant wave that heals allies and makes enemies take more damage. Hawkeye heals himself as much as he heals others.",
       "bonus": "It becomes a three-hit combo of light blades."
     },
     {
@@ -7957,7 +7964,7 @@
         "jubilee",
         "blade"
       ],
-      "effect": "Places a vampiric field where allies’ attacks steal health.",
+      "effect": "Places a vampiric field where allies’ attacks steal health, and heals allies around her while it lasts.",
       "bonus": "Allies inside also heal over time."
     },
     {
@@ -9385,7 +9392,43 @@
       ["2026-09-11",["winter-soldier"],"f","Ultimate (Kraken Impact) reset","Fixed: hitting a Thor who was in Ragnarok Rebirth’s feign-death state wrongly reset Winter Soldier’s ultimate; it no longer does"],
       ["2026-09-17",["deadpool"],"f","Team-up switching (Clone Rumble mode)","Fixed: in the Clone Rumble mode, players who were randomized into Deadpool could not switch team-ups"],
       ["2026-09-17",["scarlet-witch"],"n","Reality Erasure (Ultimate)","Much lower chance of ignoring damage during the wind-up"],
-      ["2026-10-01",["rogue"],"f","Ability Absorption","Fixed the description of the Adam Warlock ability she steals, which wrongly said she could fly freely"]
+      ["2026-10-01",["rogue"],"f","Ability Absorption","Fixed the description of the Adam Warlock ability she steals, which wrongly said she could fly freely"],
+      ["2026-10-06",["adam-warlock","ultron"],"c","Team-up: Flawless Design","Healing per Cosmic Cluster 16 → 18; Enhanced Effect: healing from the explosion field the cluster leaves 5 → 7"],
+      ["2026-10-06",["cyclops"],"b","Optic Blast","Single-hit damage 22 → 23"],
+      ["2026-10-06",["cyclops"],"b","Ricochet Force","Cooldown reduction per Optic Blast hit 0.25s → 0.3s"],
+      ["2026-10-06",["cyclops"],"b","Ruby Rage (ultimate)","Energy cost 3700 → 3400"],
+      ["2026-10-06",["cyclops","gambit"],"c","Team-up: Kinetic Kin","Duration 6s → 8s"],
+      ["2026-10-06",["devil-dinosaur"],"n","Base health","Base health 850 → 825"],
+      ["2026-10-06",["gambit"],"b","Healing Hearts / Breaking Spades","Charge time per stack 8s → 7s"],
+      ["2026-10-06",["gambit"],"n","Ragin’ Royal Flush (ultimate)","Range for finding targets 40m → 30m; extra jump boost for him and his allies 500 → 300"],
+      ["2026-10-06",["gambit","jubilee"],"c","Team-up: Sparkling Staff","Duration 1.5s → 2s"],
+      ["2026-10-06",["gorr"],"n","Shadow Scythe","Damage 55 + 2% of the target’s max health → 50 + 2%; shockwave damage 60 → 55"],
+      ["2026-10-06",["gorr"],"n","Twilight of the Gods (ultimate)","Duration 12s → 10s"],
+      ["2026-10-06",["gorr"],"m","Living Abyss","Cooldown 15s → 12s; movement speed during the surge 13 → 10 m/s"],
+      ["2026-10-06",["gorr"],"c","Shadow Harvest","Added a custom targeting sensitivity setting for Shadow Harvest"],
+      ["2026-10-06",["hawkeye"],"b","Piercing Arrow","Projectile speed 130–195 → 140–210 m/s"],
+      ["2026-10-06",["hawkeye"],"b","Crescent Slash","Slightly shorter recovery after the slash (no value given)"],
+      ["2026-10-06",["hawkeye"],"b","Hypersonic Arrow","Width of the first hit 3m → 5m"],
+      ["2026-10-06",["hawkeye","psylocke"],"c","Team-up: Senbonzakura Strike","Psionic Arrow single-shot damage 32 → 33"],
+      ["2026-10-06",["hawkeye","cloak-and-dagger"],"c","Team-up: Moonlit Slash","NEW: Hawkeye heals himself for as much as Moonlit Slash heals"],
+      ["2026-10-06",["hulk"],"b","Gamma Ray Gun (Banner form)","Projectile speed 80 → 120 m/s"],
+      ["2026-10-06",["hulk"],"b","Gamma Grenade (Banner form)","Gamma energy gained when the grenade hits himself 50 → 100"],
+      ["2026-10-06",["hulk","wolverine"],"c","Team-up: Gamma Fastball","Attack and movement speed boosts in the furious state 20% → 25%; health threshold for Unstoppable 300 → 400; Unstoppable cooldown 60s → 45s"],
+      ["2026-10-06",["iron-man"],"m","Micro-Missile Barrage","Reworked: missiles now lock on to nearby enemies on release, up to 5 per target; damage per missile 20 → 10; projectile speed 15 → 60 m/s"],
+      ["2026-10-06",["iron-man"],"m","Micro-Missile Barrage (Armor Overdrive)","Reworked: during Armor Overdrive the missiles lock on to enemies in front of him, up to 5 per target; damage per missile 15 → 10"],
+      ["2026-10-06",["iron-man","thor"],"c","Team-up: Thunder Overdrive","Unibeam outer ring damage 70/s → 80/s; with the Thunder Overdrive boost 85/s → 90/s"],
+      ["2026-10-06",["jubilee"],"b","Sparking Sprint","NEW: heals herself 25/s during Sparking Sprint"],
+      ["2026-10-06",["jubilee"],"n","Dazzling Detonation","Blind duration 1.5s → 0.8s"],
+      ["2026-10-06",["jubilee"],"b","Firework Finale (ultimate)","Healing from the firework field 150/s → 180/s"],
+      ["2026-10-06",["jubilee","blade"],"c","Team-up: Vampiric Kin","NEW Base Effect: heals nearby allies 15/s for 6s while Vampiric Kin lasts"],
+      ["2026-10-06",["magneto","emma-frost"],"c","Team-up: Magnetic Resonance","Damage dealt by the magnetic copy 45% → 50%; maximum duration 5s → 6s"],
+      ["2026-10-06",["phoenix"],"b","Cosmic Flames","Single-shot damage 60 → 65"],
+      ["2026-10-06",["phoenix"],"m","Sparks (Cosmic Flames)","Detonation damage 40 → 45 and explosion damage 15 → 20; the self-heal on detonation is replaced by 5 Bonus Health for 4s, stacking up to 25"],
+      ["2026-10-06",["phoenix"],"b","Endsong Inferno (ultimate)","Sparks added by the explosion field and shockwave 1 → 2"],
+      ["2026-10-06",["phoenix","hela"],"c","Team-up: Circle of Life","Cooldown 12s → 10s"],
+      ["2026-10-06",["scarlet-witch"],"n","Chthonian Burst","Spell field damage per shot 40 → 35"],
+      ["2026-10-06",["the-thing","invisible-woman"],"c","Team-up: Unbreakable Forces","Cooldown 20s → 15s; Enhanced Effect: damage he must take to trigger the healing pulse 150 → 125"],
+      ["2026-10-06",["winter-soldier"],"f","Trooper’s Fist / Bionic Hook","More responsive on high-latency connections"]
     ]
   }
 }

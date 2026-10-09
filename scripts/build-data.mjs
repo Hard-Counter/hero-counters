@@ -13,14 +13,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 15;
+const REVISION = 16;
 
 const META = {
-  season: "Season 10: Butcher's Blasphemy",
-  seasonShort: 'Season 10',
-  patch: 'Sept 11 balance patch, plus small fixes on Sept 17, Sept 24 and Oct 1',
-  updated: '2026-10-08',
-  nextReview: '2026-10-09',
+  season: "Season 10.5: Butcher's Blasphemy",
+  seasonShort: 'Season 10.5',
+  patch: 'Season 10.5 update, Oct 9 (balance post Oct 6)',
+  updated: '2026-10-09',
+  nextReview: '2026-10-10',
 };
 
 // Season start dates for the patch history in HISTORY. Add each new season and
@@ -68,20 +68,20 @@ const METHODOLOGY = [
 ];
 
 const SEASON_NOTES = [
-  'Gorr the God Butcher (Duelist) is new this season.',
-  'Every Strategist now charges their ultimate more slowly.',
+  'Season 10.5 began October 9. Ranks carry over from the first half of the season, and the ranked map pool is unchanged.',
+  'Iron Man’s Micro-Missile Barrage now locks on to enemies by itself, and Phoenix’s Sparks give her bonus health instead of healing.',
+  'Gorr the God Butcher (Duelist) joined in Season 10. Season 10.5 trimmed his damage and shortened his ultimate.',
+  'Every Strategist has charged their ultimate more slowly since Season 10.',
   'Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match.',
-  'God Quarry, a new Domination map, appeared in a limited Quick Match event that ran through Sept 29. It is not yet confirmed for the ranked map pool.',
-  'Season 10.5 arrives October 9.',
 ];
 
 const CHANGELOG = [
+  'Season 10.5 update: Iron Man’s missiles now lock on, Phoenix and Cyclops hit harder, Jubilee heals herself while sprinting, and Gorr, Scarlet Witch and Devil Dinosaur were trimmed. Tiers hold for now until results from the new patch come in.',
   'Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.',
   'Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.',
   'Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).',
   'Weekly review, Oct 3: no tier or counter changes.',
   'Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.',
-  'Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.',
 ];
 
 // ---------------------------------------------------------------------------
@@ -91,66 +91,66 @@ const CHANGELOG = [
 // ---------------------------------------------------------------------------
 const HEROES = [
   // Vanguards
-  ['peni-parker', 'Peni Parker', 'V', 'SSSA', 'h', { patchNote: 'Buffed this season: faster fire rate.' }],
-  ['devil-dinosaur', 'Devil Dinosaur', 'V', 'ASSS', 'h', { patchNote: 'Buffed this season: more bleed damage. The most-banned hero at Gold III and above.' }],
-  ['the-hood', 'The Hood', 'V', 'AABB', 'l', { patchNote: 'Nerfed this season.' }],
-  ['hulk', 'Hulk', 'V', 'BAAA', 'l'],
-  ['thor', 'Thor', 'V', 'BBAA', 'l', { patchNote: 'Buffed this season.' }],
-  ['captain-america', 'Captain America', 'V', 'CBAA', 'l', { patchNote: 'Buffed this season: more health.' }],
-  ['rogue', 'Rogue', 'V', 'BBBB', 'l', { patchNote: 'Buffed this season.' }],
-  ['doctor-strange', 'Doctor Strange', 'V', 'BBBB', 'l', { patchNote: 'Buffed this season.' }],
-  ['magneto', 'Magneto', 'V', 'BBBB', 'l', { patchNote: 'Nerfed this season: less health and a smaller shield. Still the most-played Vanguard.' }],
+  ['peni-parker', 'Peni Parker', 'V', 'SSSA', 'h', { patchNote: 'Buffed in Season 10: faster fire rate.' }],
+  ['devil-dinosaur', 'Devil Dinosaur', 'V', 'ASSS', 'h', { patchNote: 'Season 10 buffed his bleed, and Season 10.5 trimmed his health slightly. The most-banned hero at Gold III and above.' }],
+  ['the-hood', 'The Hood', 'V', 'AABB', 'l', { patchNote: 'Nerfed in Season 10.' }],
+  ['hulk', 'Hulk', 'V', 'BAAA', 'l', { patchNote: 'Buffed in Season 10.5: Banner’s shots fly faster, and his team-up with Wolverine is stronger.' }],
+  ['thor', 'Thor', 'V', 'BBAA', 'l', { patchNote: 'Buffed in Season 10.' }],
+  ['captain-america', 'Captain America', 'V', 'CBAA', 'l', { patchNote: 'Buffed in Season 10: more health.' }],
+  ['rogue', 'Rogue', 'V', 'BBBB', 'l', { patchNote: 'Buffed in Season 10.' }],
+  ['doctor-strange', 'Doctor Strange', 'V', 'BBBB', 'l', { patchNote: 'Buffed in Season 10.' }],
+  ['magneto', 'Magneto', 'V', 'BBBB', 'l', { patchNote: 'Season 10 cut his health and shield, and Season 10.5 buffed his team-up with Emma Frost. Still the most-played Vanguard.' }],
   ['venom', 'Venom', 'V', 'BBBB', 'l'],
-  ['angela', 'Angela', 'V', 'BBCC', 'l', { patchNote: 'Nerfed this season.' }],
-  ['the-thing', 'The Thing', 'V', 'BBCC', 'm', { consoleShift: 1, platformNote: 'Official data shows him stronger on console.', patchNote: 'Nerfed this season: less health and a longer charge cooldown. Stat sites disagree on him, so treat this tier as shaky.' }],
-  ['emma-frost', 'Emma Frost', 'V', 'CCBB', 'm', { patchNote: 'Buffed this season.' }],
+  ['angela', 'Angela', 'V', 'BBCC', 'l', { patchNote: 'Nerfed in Season 10.' }],
+  ['the-thing', 'The Thing', 'V', 'BBCC', 'm', { consoleShift: 1, platformNote: 'Official data shows him stronger on console.', patchNote: 'Season 10 cut his health and slowed his charge, and Season 10.5 buffed his team-up with Invisible Woman. Stat sites disagree on him, so treat this tier as shaky.' }],
+  ['emma-frost', 'Emma Frost', 'V', 'CCBB', 'm', { patchNote: 'Buffed in Season 10.' }],
   ['groot', 'Groot', 'V', 'CCCB', 'l'],
-  ['deadpool-vanguard', 'Deadpool', 'V', 'DDDD', 'l', { variant: true, patchNote: 'Buffed in all three roles this season.' }],
+  ['deadpool-vanguard', 'Deadpool', 'V', 'DDDD', 'l', { variant: true, patchNote: 'Buffed in all three roles in Season 10.' }],
 
   // Duelists
-  ['magik', 'Magik', 'D', 'SSSS', 'm', { patchNote: 'Only her team-up with The Hood was nerfed this season.' }],
-  ['gorr', 'Gorr the God Butcher', 'D', 'SSSA', 'h', { isNew: true, patchNote: 'New this season. Each kill spawns a Berserker minion where the enemy fell.' }],
+  ['magik', 'Magik', 'D', 'SSSS', 'm', { patchNote: 'Only her team-up with The Hood was nerfed in Season 10.' }],
+  ['gorr', 'Gorr the God Butcher', 'D', 'SSSA', 'h', { isNew: true, patchNote: 'New in Season 10, and nerfed slightly in Season 10.5: less damage and a shorter ultimate, but Living Abyss comes back sooner. Each kill spawns a Berserker minion where the enemy fell.' }],
   ['storm', 'Storm', 'D', 'AASA', 'l'],
-  ['scarlet-witch', 'Scarlet Witch', 'D', 'AAAA', 'm', { patchNote: 'Reworked this season. A Sept 17 fix made her ultimate’s wind-up far less likely to block damage.' }],
+  ['scarlet-witch', 'Scarlet Witch', 'D', 'AAAA', 'm', { patchNote: 'Reworked in Season 10. A Sept 17 fix made her ultimate’s wind-up far less likely to block damage, and Season 10.5 trimmed Chthonian Burst’s damage.' }],
   ['hela', 'Hela', 'D', 'AAAS', 'm'],
   ['daredevil', 'Daredevil', 'D', 'AAAB', 'l'],
-  ['iron-fist', 'Iron Fist', 'D', 'AABB', 'l', { patchNote: 'Buffed this season.' }],
+  ['iron-fist', 'Iron Fist', 'D', 'AABB', 'l', { patchNote: 'Buffed in Season 10.' }],
   ['mister-fantastic', 'Mister Fantastic', 'D', 'ABBB', 'l'],
-  ['psylocke', 'Psylocke', 'D', 'BBAA', 'm', { consoleShift: -1, platformNote: 'Official data shows her weaker on console.', patchNote: 'Buffed this season.' }],
-  ['spider-man', 'Spider-Man', 'D', 'CBAS', 'h', { patchNote: 'Buffed this season: shorter combo cooldown.' }],
+  ['psylocke', 'Psylocke', 'D', 'BBAA', 'm', { consoleShift: -1, platformNote: 'Official data shows her weaker on console.', patchNote: 'Buffed in Season 10.' }],
+  ['spider-man', 'Spider-Man', 'D', 'CBAS', 'h', { patchNote: 'Buffed in Season 10: shorter combo cooldown.' }],
   ['black-panther', 'Black Panther', 'D', 'CBAA', 'm'],
   ['blade', 'Blade', 'D', 'BBBB', 'l'],
-  ['iron-man', 'Iron Man', 'D', 'ABCC', 'l'],
+  ['iron-man', 'Iron Man', 'D', 'ABCC', 'l', { patchNote: 'Reworked in Season 10.5: Micro-Missile Barrage now locks on to enemies by itself, with less damage per missile.' }],
   ['human-torch', 'Human Torch', 'D', 'BBCC', 'l'],
-  ['wolverine', 'Wolverine', 'D', 'CBBB', 'm', { patchNote: 'Buffed this season.' }],
-  ['elsa-bloodstone', 'Elsa Bloodstone', 'D', 'CBBB', 'h', { patchNote: 'Nerfed this season.' }],
-  ['winter-soldier', 'Winter Soldier', 'D', 'BCCB', 'm', { patchNote: 'Nerfed this season.' }],
-  ['black-cat', 'Black Cat', 'D', 'BCCC', 'l', { patchNote: 'Nerfed this season: her dash lost its invincibility and her stealth leaves a trail.' }],
-  ['star-lord', 'Star-Lord', 'D', 'CCCC', 'l', { patchNote: 'Buffed this season.' }],
-  ['black-widow', 'Black Widow', 'D', 'DCCB', 'l', { consoleShift: -1, platformNote: 'Aim-heavy rifle: noticeably weaker on controller.', patchNote: 'Nerfed this season.' }],
-  ['hawkeye', 'Hawkeye', 'D', 'DDCC', 'l', { consoleShift: -1, platformNote: 'Precision aim: weaker on controller.' }],
-  ['namor', 'Namor', 'D', 'CCDD', 'm', { consoleShift: 1, platformNote: 'His turrets don’t need aim, so he does better on console.', patchNote: 'Buffed this season.' }],
+  ['wolverine', 'Wolverine', 'D', 'CBBB', 'm', { patchNote: 'Buffed in Season 10.' }],
+  ['elsa-bloodstone', 'Elsa Bloodstone', 'D', 'CBBB', 'h', { patchNote: 'Nerfed in Season 10.' }],
+  ['winter-soldier', 'Winter Soldier', 'D', 'BCCB', 'm', { patchNote: 'Nerfed in Season 10. Season 10.5 made his punch and hook more responsive on laggy connections.' }],
+  ['black-cat', 'Black Cat', 'D', 'BCCC', 'l', { patchNote: 'Nerfed in Season 10: her dash lost its invincibility and her stealth leaves a trail.' }],
+  ['star-lord', 'Star-Lord', 'D', 'CCCC', 'l', { patchNote: 'Buffed in Season 10.' }],
+  ['black-widow', 'Black Widow', 'D', 'DCCB', 'l', { consoleShift: -1, platformNote: 'Aim-heavy rifle: noticeably weaker on controller.', patchNote: 'Nerfed in Season 10.' }],
+  ['hawkeye', 'Hawkeye', 'D', 'DDCC', 'l', { consoleShift: -1, platformNote: 'Precision aim: weaker on controller.', patchNote: 'Buffed in Season 10.5: faster arrows and a wider Hypersonic Arrow, and his team-up with Cloak & Dagger now heals him too.' }],
+  ['namor', 'Namor', 'D', 'CCDD', 'm', { consoleShift: 1, platformNote: 'His turrets don’t need aim, so he does better on console.', patchNote: 'Buffed in Season 10.' }],
   ['moon-knight', 'Moon Knight', 'D', 'CDDD', 'l'],
   ['the-punisher', 'The Punisher', 'D', 'CDDD', 'l'],
-  ['deadpool-duelist', 'Deadpool', 'D', 'DDDD', 'l', { variant: true, patchNote: 'Buffed in all three roles this season.' }],
-  ['cyclops', 'Cyclops', 'D', 'DDDD', 'l'],
+  ['deadpool-duelist', 'Deadpool', 'D', 'DDDD', 'l', { variant: true, patchNote: 'Buffed in all three roles in Season 10.' }],
+  ['cyclops', 'Cyclops', 'D', 'DDDD', 'l', { patchNote: 'Buffed in Season 10.5: more damage, faster Ricochet Force and a cheaper ultimate.' }],
   ['squirrel-girl', 'Squirrel Girl', 'D', 'FFFF', 'l'],
-  ['phoenix', 'Phoenix', 'D', 'FFFF', 'l'],
+  ['phoenix', 'Phoenix', 'D', 'FFFF', 'l', { patchNote: 'Mostly buffed in Season 10.5: more damage and more Sparks, though Sparks now give bonus health instead of healing her.' }],
 
   // Strategists
-  ['mantis', 'Mantis', 'S', 'SSSS', 'l', { patchNote: 'Nerfed slightly this season.' }],
+  ['mantis', 'Mantis', 'S', 'SSSS', 'l', { patchNote: 'Nerfed slightly in Season 10.' }],
   ['ultron', 'Ultron', 'S', 'SSSS', 'l'],
   ['rocket-raccoon', 'Rocket Raccoon', 'S', 'SSAA', 'l'],
-  ['jubilee', 'Jubilee', 'S', 'BBAA', 'l'],
-  ['gambit', 'Gambit', 'S', 'BBAA', 'h', { patchNote: 'His team-up with Magneto was nerfed this season.' }],
-  ['loki', 'Loki', 'S', 'CBAA', 'l', { patchNote: 'Buffed this season.' }],
-  ['cloak-and-dagger', 'Cloak & Dagger', 'S', 'BBBB', 'm', { patchNote: 'Nerfed this season.' }],
-  ['adam-warlock', 'Adam Warlock', 'S', 'CCBB', 'l'],
-  ['invisible-woman', 'Invisible Woman', 'S', 'CCBB', 'l', { patchNote: 'Nerfed this season.' }],
-  ['white-fox', 'White Fox', 'S', 'CCCC', 'l', { patchNote: 'Buffed this season.' }],
+  ['jubilee', 'Jubilee', 'S', 'BBAA', 'l', { patchNote: 'Mostly buffed in Season 10.5: she heals herself while sprinting and her ultimate heals more, but her blind is shorter.' }],
+  ['gambit', 'Gambit', 'S', 'BBAA', 'h', { patchNote: 'Mixed changes in Season 10.5: his decks charge faster, but his ultimate has a shorter reach and a smaller jump boost.' }],
+  ['loki', 'Loki', 'S', 'CBAA', 'l', { patchNote: 'Buffed in Season 10.' }],
+  ['cloak-and-dagger', 'Cloak & Dagger', 'S', 'BBBB', 'm', { patchNote: 'Nerfed in Season 10.' }],
+  ['adam-warlock', 'Adam Warlock', 'S', 'CCBB', 'l', { patchNote: 'His team-up with Ultron heals more since Season 10.5.' }],
+  ['invisible-woman', 'Invisible Woman', 'S', 'CCBB', 'l', { patchNote: 'Nerfed in Season 10.' }],
+  ['white-fox', 'White Fox', 'S', 'CCCC', 'l', { patchNote: 'Buffed in Season 10.' }],
   ['luna-snow', 'Luna Snow', 'S', 'CCCC', 'l'],
-  ['deadpool-strategist', 'Deadpool', 'S', 'DDDD', 'l', { variant: true, patchNote: 'Buffed in all three roles this season.' }],
-  ['jeff-the-land-shark', 'Jeff the Land Shark', 'S', 'DDDD', 'l', { patchNote: 'Buffed this season.' }],
+  ['deadpool-strategist', 'Deadpool', 'S', 'DDDD', 'l', { variant: true, patchNote: 'Buffed in all three roles in Season 10.' }],
+  ['jeff-the-land-shark', 'Jeff the Land Shark', 'S', 'DDDD', 'l', { patchNote: 'Buffed in Season 10.' }],
 ];
 
 // ---------------------------------------------------------------------------
@@ -863,7 +863,7 @@ const TIPS = {
       'You gain less ultimate charge from taking damage than most tanks, so build it by dealing damage.',
       'Team up with The Punisher. Season 10 gave that team-up faster projectiles.',
     ],
-    quirks: [['He takes reduced damage from critical hits, so headshots do less to him than usual.', '2026-10-01']],
+    quirks: [['He takes reduced damage from critical hits, so headshots do less to him than usual.', '2026-10-09']],
   },
   magneto: {
     focus: ['m', 'Hard to hurt through his curtain and shields, but since Season 10 he drops fast once his shield is on cooldown.'],
@@ -882,8 +882,8 @@ const TIPS = {
       'Metallic Chaos with Scarlet Witch has a longer cooldown since Season 10, so don’t build your fights around it.',
     ],
     quirks: [
-      ['His meteor can overload and cancel if it absorbs too many projectiles.', '2026-10-01'],
-      ['Guides that say his two shields share a cooldown are out of date. They have been separate since late 2025.', '2026-10-01'],
+      ['His meteor can overload and cancel if it absorbs too many projectiles.', '2026-10-09'],
+      ['Guides that say his two shields share a cooldown are out of date. They have been separate since late 2025.', '2026-10-09'],
     ],
   },
   'the-hood': {
@@ -921,8 +921,8 @@ const TIPS = {
       'Harvest healthy Berserkers. The bonus health you get depends on how much health they have left.',
     ],
     quirks: [
-      ['Kills don’t turn enemies into copies of themselves. Each kill spawns an ordinary Berserker where the enemy fell.', '2026-10-01'],
-      ['Berserkers shoot from range, but fight in melee when you pull them in with Necro-Power.', '2026-10-01'],
+      ['Kills don’t turn enemies into copies of themselves. Each kill spawns an ordinary Berserker where the enemy fell.', '2026-10-09'],
+      ['Berserkers shoot from range, but fight in melee when you pull them in with Necro-Power.', '2026-10-09'],
     ],
   },
   magik: {
@@ -981,8 +981,8 @@ const TIPS = {
       'Don’t count on ultimate immunity. Ult from cover or after the enemy has committed.',
     ],
     quirks: [
-      ['Her ultimate wind-up can still randomly make her immune to damage, but since the Sept 17 patch it rarely happens. The odds were never published.', '2026-10-01'],
-      ['Advice about Dark Seal stunning over and over is out of date. Since the Season 10 rework it stuns once.', '2026-10-01'],
+      ['Her ultimate wind-up can still randomly make her immune to damage, but since the Sept 17 patch it rarely happens. The odds were never published.', '2026-10-09'],
+      ['Advice about Dark Seal stunning over and over is out of date. Since the Season 10 rework it stuns once.', '2026-10-09'],
     ],
   },
   hela: {
@@ -1165,7 +1165,7 @@ const TEAMUPS = [
   ['Binding Ties', ['black-cat', 'spider-man'], 'Turn of Fortune becomes a two-charge web grapple that steals Fortune and tags enemies with Spider-Tracers.', 'Hitting a tagged enemy holds them in place briefly.'],
   ['Flora Munitions', ['star-lord', 'groot'], 'Tosses thorn seeds that sprout into snares, damaging and rooting enemies who step on them.', 'More snares, and they hit harder.'],
   ['Star-Soul', ['star-lord', 'adam-warlock'], 'Places a beacon he can teleport to from anywhere, and he can respawn at it.', 'Knockouts he takes part in shorten the beacon’s cooldown.'],
-  ['Moonlit Slash', ['hawkeye', 'cloak-and-dagger'], 'Crescent Slash sends out a radiant wave that heals allies and makes enemies take more damage.', 'It becomes a three-hit combo of light blades.'],
+  ['Moonlit Slash', ['hawkeye', 'cloak-and-dagger'], 'Crescent Slash sends out a radiant wave that heals allies and makes enemies take more damage. Hawkeye heals himself as much as he heals others.', 'It becomes a three-hit combo of light blades.'],
   ['Senbonzakura Strike', ['hawkeye', 'psylocke'], 'Blast Arrow becomes psionic arrows he can stockpile and fire together.', 'Faster nocking, and the arrows explode on impact.'],
   ['Chilling Charisma', ['namor', 'luna-snow'], 'Sends a frost tide that damages, pushes back and slows enemies, and his Monstro Spawns become Frozen Spawns that slow.', 'The tide can be charged to crash for area damage at max range.'],
   ['Gamma Monstro', ['namor', 'hulk'], 'Summons an extra Gamma Monstro that keeps damaging the nearest enemy.', 'Blessing of the Deep’s barrier fills with gamma energy, speeding up his cooldowns and boosting damage.'],
@@ -1185,7 +1185,7 @@ const TEAMUPS = [
   ['SP//DR Sync', ['ultron', 'peni-parker'], 'Imperative: Patch covers all allies at once.', 'Imperative: Firewall triggers through every drone at once.'],
   ['Planet X Pals', ['rocket-raccoon', 'groot'], 'Bombard Mode launches thorny spores that damage enemies and heal allies.', 'He can ride on Groot, and the spore field lasts longer.'],
   ['Mammalian Bond', ['rocket-raccoon', 'squirrel-girl'], 'Tosses vitality acorns that heal allies and shorten their cooldowns.', 'More acorn charges.'],
-  ['Vampiric Kin', ['jubilee', 'blade'], 'Places a vampiric field where allies’ attacks steal health.', 'Allies inside also heal over time.'],
+  ['Vampiric Kin', ['jubilee', 'blade'], 'Places a vampiric field where allies’ attacks steal health, and heals allies around her while it lasts.', 'Allies inside also heal over time.'],
   ['Hellfire Sparks', ['jubilee', 'the-hood'], 'While her attack speed is boosted, her plasmoids become instant-hit shots that can crit and heal her.', 'She can keep that form indefinitely.'],
   ['Sparkling Staff', ['gambit', 'jubilee'], 'Twirls a firework-charged staff that heals allies, damages close enemies and blocks projectiles.', 'Bayou Bash and Big Easy Impact also leave a healing aura.'],
   ['Favorable Odds', ['gambit', 'magneto'], 'Throws two magnetic cards that spin in place, healing allies and damaging enemies, and launch enemies when they detonate.', 'The cards slam together and explode for extra healing and damage.'],
@@ -2228,7 +2228,7 @@ const ABILITIES = {
     ['Wall Crawl', 'passive', 'Climbs walls.'],
     ['Spider-Sweeper', 'ultimate', 'Her mech becomes much faster and gains a large pool of bonus health. Enemies it runs into are launched up, and it scatters mines, drones and webs as it goes.'],
   ]],
-  'devil-dinosaur': ['2026-10-01', [
+  'devil-dinosaur': ['2026-10-09', [
     ['Primal Bite', 'attack', 'A close-range bite that makes the target bleed: damage over time based on their max health.'],
     ['Impact Beam', 'attack', 'An energy beam that makes enemies bleed and slows them.'],
     ['Buddy Barrier', 'ability', 'A heart-shaped generator raises a dome shield around him that blocks damage. Enemies inside the dome are slowed.'],
@@ -2247,7 +2247,7 @@ const ABILITIES = {
     ['Leaded Transformation', 'ability', 'In Half-Demon State both arms become rifles that fire very fast without reloading, and hits heal him. His right hand becomes a second gun, so Mantle of Oblivion is unavailable.'],
     ['Demon of the End', 'ultimate', 'Becomes a full demon with a large health pool and fires up to six shots that pierce enemies and barriers. Hits give him and nearby allies bonus health. The last shot hits hardest.'],
   ]],
-  hulk: ['2026-10-01', [
+  hulk: ['2026-10-09', [
     ['Gamma Ray Gun', 'attack', 'Bruce Banner’s gun. He is fragile in this form and meant to transform quickly.'],
     ['Gamma Grenade', 'ability', 'Banner throws a grenade that damages and launches up enemies.'],
     ['Puny Banner', 'ability', 'Banner turns into Hero Hulk once his gamma meter is full.'],
@@ -2295,7 +2295,7 @@ const ABILITIES = {
     ['Price of Magic', 'passive', 'Hits build Dark Magic. If it stays full for too long he is cursed and can’t be healed, so he needs to spend it.'],
     ['Eye of Agamotto', 'ultimate', 'Pulls the souls out of nearby enemies. Damage dealt to a soul passes to its body, so hitting the clustered souls hurts the whole group.'],
   ]],
-  magneto: ['2026-10-01', [
+  magneto: ['2026-10-09', [
     ['Iron Volley', 'attack', 'Fires magnetic orbs that explode. The explosion grows the further they fly.'],
     ['Mag-Cannon', 'attack', 'Launches a heavy metal mass. Rings gathered from his shields add damage, and at full rings it also knocks enemies back.'],
     ['Metallic Curtain', 'ability', 'Raises a magnetic curtain that blocks incoming enemy projectiles.'],
@@ -2323,7 +2323,7 @@ const ABILITIES = {
     ['Seraphic Soar', 'passive', 'Flies freely. Time in the air builds her attack charge.'],
     ['Heven’s Retribution', 'ultimate', 'Hurls her spear, binding enemies near the impact with ribbons. She then leaps to it, damaging enemies and creating a Divine Judgement zone.'],
   ]],
-  'the-thing': ['2026-10-01', [
+  'the-thing': ['2026-10-09', [
     ['Rocky Jab', 'attack', 'Fast punches.'],
     ['Stone Haymaker', 'ability', 'A heavy punch that deals extra damage based on the target’s max health and gives him bonus health. Knocks flying enemies to the ground.'],
     ['Yancy Street Charge', 'ability', 'Charges forward, knocking enemies up, and leaves a zone where enemies can’t use movement abilities.'],
@@ -2403,7 +2403,7 @@ const ABILITIES = {
     ['Limbo’s Might', 'passive', 'Damage she deals becomes bonus health.'],
     ['Darkchild', 'ultimate', 'Transforms into Darkchild for a while, strengthening all of her abilities.'],
   ]],
-  gorr: ['2026-10-01', [
+  gorr: ['2026-10-09', [
     ['All-Black', 'attack', 'A four-hit Necrosword combo with long reach.'],
     ['Necro-Power', 'ability', 'Throws a symbiote mass that slows the target and brings a Black Berserker to them, moving a nearby one or creating one. Arriving Berserkers strike twice in melee.'],
     ['Black Berserker', 'ability', 'Lobs a symbiote that becomes a Black Berserker for a few seconds, shooting the nearest enemy. Two charges.'],
@@ -2419,7 +2419,7 @@ const ABILITIES = {
     ['Goddess Boost', 'ability', 'Empowers herself with the current weather: Tornado speeds her up and slows enemies, Thunder boosts her damage and calls lightning on enemies.'],
     ['Omega Hurricane', 'ultimate', 'Becomes a hurricane that pulls in nearby enemies and damages them, with bonus health that drains after it ends.'],
   ]],
-  'scarlet-witch': ['2026-10-01', [
+  'scarlet-witch': ['2026-10-09', [
     ['Chaos Control', 'attack', 'Chaos magic that damages every Chaos-Marked enemy in a wide cone in front of her at once, and restores her Chaos Energy. She needs to mark enemies first.'],
     ['Chthonian Burst', 'attack', 'Spends Chaos Energy to fire explosive magic missiles.'],
     ['Scarlet Hex', 'ability', 'A shockwave in a long strip in front of her that damages and Chaos-Marks every enemy it hits.'],
@@ -2495,7 +2495,7 @@ const ABILITIES = {
     ['Panther’s Cunning', 'passive', 'Deals more damage when his health is low.'],
     ['Bast’s Descent', 'ultimate', 'Summons Bast, who pounces forward, damaging and marking enemies and refreshing Spirit Rend. He takes less damage while it starts.'],
   ]],
-  blade: ['2026-10-01', [
+  blade: ['2026-10-09', [
     ['Ancestral Sword', 'attack', 'Close-range sword slashes.'],
     ['Hunter’s Shotgun', 'attack', 'A shotgun for mid range. He swaps between it and the sword.'],
     ['Scarlet Shroud', 'ability', 'A parry: for a moment he can’t be crowd-controlled, takes less damage from the front, and Daywalker Dash recharges faster.'],
@@ -2503,12 +2503,12 @@ const ABILITIES = {
     ['Bloodline Awakening', 'ability', 'Speeds up his slashes, adds a Whirlwind Slash and gives him lifesteal (extra becomes bonus health). He receives less healing while it is active.'],
     ['Thousand-Fold Slash', 'ultimate', 'Charges and dashes with the Sword of Dracula for one big strike, then leaves a zone that keeps slashing enemies and cuts their healing. He lifesteals during it.'],
   ]],
-  'iron-man': ['2026-10-01', [
+  'iron-man': ['2026-10-09', [
     ['Repulsor Blast', 'attack', 'Pulse cannon shots. He can fly.'],
     ['Unibeam', 'attack', 'A continuous beam from his chest.'],
     ['Hyper-Velocity', 'ability', 'Flies forward at high speed.'],
     ['Armor Overdrive', 'ability', 'Boosts Repulsor Blast and Unibeam damage and gives bonus health. Knockouts extend it.'],
-    ['Micro-Missile Barrage', 'ability', 'During Hyper-Velocity or Armor Overdrive, rains a missile barrage on an area.'],
+    ['Micro-Missile Barrage', 'ability', 'During Hyper-Velocity or Armor Overdrive, fires a barrage of fast missiles that lock on to nearby enemies, up to five per target. During Armor Overdrive they lock on to enemies in front of him.'],
     ['Invincible Pulse Cannon', 'ultimate', 'Fires a huge pulse cannon blast that deals heavy damage where it lands.'],
   ]],
   'human-torch': ['2026-10-01', [
@@ -2538,7 +2538,7 @@ const ABILITIES = {
     ['Inherited Instinct', 'passive', 'Dealing damage and knocking enemies out builds Instinct, which shortens Helix Advance’s cooldown. She loses some when knocked out.'],
     ['Apex Predator', 'ultimate', 'Summons the monster Glartrox, which charges forward and seizes enemies so they can’t use abilities. She can recall it for a heavy bite.'],
   ]],
-  'winter-soldier': ['2026-10-01', [
+  'winter-soldier': ['2026-10-09', [
     ['Roterstern', 'attack', 'Explosive rounds that also hit enemies behind the target.'],
     ['Bionic Hook', 'ability', 'A charged hook that reels in the first enemy hit and those behind them.'],
     ['Trooper’s Fist', 'ability', 'Dashes forward grabbing enemies and launches them up at the end of the dash.'],
@@ -2566,7 +2566,7 @@ const ABILITIES = {
     ['Blaster Barrage', 'ability', 'Fires a frenzy of shots at every enemy around him. Best up close.'],
     ['Galactic Legend', 'ultimate', 'Flies freely while his guns lock onto enemies in sight automatically.'],
   ]],
-  hawkeye: ['2026-10-01', [
+  hawkeye: ['2026-10-09', [
     ['Piercing Arrow', 'attack', 'Charged bow shots with a long range.'],
     ['Blast Arrow', 'ability', 'Fires three explosive arrows at once.'],
     ['Hypersonic Arrow', 'ability', 'An arrow that hits enemies in its path twice and slows them. Knocks flying heroes down.'],
@@ -2603,7 +2603,7 @@ const ABILITIES = {
     ['Warrior’s Gaze', 'passive', 'Keeps seeing enemies for a short time after they leave his view.'],
     ['Final Judgement', 'ultimate', 'Unleashes two gatling guns and a missile barrage.'],
   ]],
-  cyclops: ['2026-10-01', [
+  cyclops: ['2026-10-09', [
     ['Optic Blast', 'attack', 'Bursts of kinetic force. Hits charge Ricochet Force faster.'],
     ['Concussive Beam', 'attack', 'A continuous beam that bounces between enemies and walls. Hits charge Ricochet Force faster.'],
     ['Ricochet Force', 'ability', 'Fires a beam that splits off terrain and tracks nearby enemies. Gives him bonus health.'],
@@ -2619,12 +2619,12 @@ const ABILITIES = {
     ['Mammal Bond', 'ability', 'Reloads her acorns and, for a short time, lets her use one ability without waiting for its cooldown.'],
     ['Unbeatable Squirrel Tsunami', 'ultimate', 'Sends a horde of squirrels charging forward. They bounce off walls toward the nearest enemies.'],
   ]],
-  phoenix: ['2026-10-01', [
-    ['Cosmic Flames', 'attack', 'Fiery projectiles that put Sparks on enemies (two on a critical hit). At three Sparks they explode, adding a Spark and healing her over time.'],
+  phoenix: ['2026-10-09', [
+    ['Cosmic Flames', 'attack', 'Fiery projectiles that put Sparks on enemies (two on a critical hit). At three Sparks they explode, adding a Spark and giving her a little bonus health.'],
     ['Psionic Detonation', 'ability', 'Marks an area: the first blast stuns enemies and two more slow them. Each blast adds a Spark.'],
     ['Telepathic Illusion', 'ability', 'Leaves an illusion behind and teleports, then the illusion explodes, adding a Spark to enemies hit.'],
     ['Dark Ascent', 'ability', 'Merges with the Phoenix force to fly freely with a speed boost.'],
-    ['Endsong Inferno', 'ultimate', 'Soars up and crashes down on an area, destroying summons and shields. The shockwave adds a Spark to enemies hit.'],
+    ['Endsong Inferno', 'ultimate', 'Soars up and crashes down on an area, destroying summons and shields. The explosion and its shockwave each add two Sparks to enemies hit.'],
   ]],
   mantis: ['2026-10-01', [
     ['Life Energy Blast', 'attack', 'Energy thorns. Critical hits give back a Life Orb.'],
@@ -2651,15 +2651,15 @@ const ABILITIES = {
     ['Flying Ace', 'passive', 'Can fall slowly.'],
     ['C.Y.A.', 'ultimate', 'Deploys an amplifier that links to nearby allies, boosting their damage and giving them bonus health.'],
   ]],
-  jubilee: ['2026-10-01', [
+  jubilee: ['2026-10-09', [
     ['Energy Plasmoids', 'attack', 'Exploding light blasts that damage enemies and heal allies.'],
     ['Blooming Ball', 'ability', 'Launches a homing orb that damages enemies and heals allies near it. Hitting it with her shots charges it, making it bigger and stronger.'],
     ['Dazzling Detonation', 'ability', 'Sets off a firework orb that blinds enemies and makes them take more damage. She can send its energy to an ally instead, to heal and speed them up.'],
-    ['Sparking Sprint', 'ability', 'A speed boost with higher jumps and faster plasmoid fire that costs no energy. When it ends, a burst knocks back enemies and heals allies.'],
+    ['Sparking Sprint', 'ability', 'A speed boost with higher jumps and faster plasmoid fire that costs no energy, healing her while it lasts. When it ends, a burst knocks back enemies and heals allies.'],
     ['Sparkle Mark', 'passive', 'Dazzling Detonation and Firework Finale mark enemies. Her plasmoids set the marks off, damaging enemies and giving allies a healing boost and bonus health.'],
     ['Firework Finale', 'ultimate', 'Charges a huge ring of fireworks that launches nearby enemies, then leaves a field of circling fireworks that damages enemies and heals allies.'],
   ]],
-  gambit: ['2026-10-03', [
+  gambit: ['2026-10-09', [
     ['Kinetic Cards', 'attack', 'Throws three charged cards in an arc. Each explodes on impact, damaging an enemy or healing an ally.'],
     ['Bayou Bash', 'ability', 'A staff strike and slam whose shockwave damages enemies and heals allies nearby. Two charges.'],
     ['Cajun Charge', 'ability', 'A short dash with his staff. Attacking during it turns it into Big Easy Impact, a sprint that sets off three kinetic explosions that heal and damage.'],
@@ -2677,7 +2677,7 @@ const ABILITIES = {
     ['Backstab', 'ability', 'Pulls a dagger for a strike that deals extra damage from behind.'],
     ['God of Mischief', 'ultimate', 'Transforms into a chosen ally or enemy hero and can use all of their abilities except team-ups.'],
   ]],
-  'cloak-and-dagger': ['2026-10-03', [
+  'cloak-and-dagger': ['2026-10-09', [
     ['Lightforce Dagger', 'attack', 'As Dagger: bouncing light daggers that damage enemies and heal nearby allies.'],
     ['Dagger Storm', 'ability', 'As Dagger: throws daggers that create a healing field, with an instant heal for allies inside when it lands.'],
     ['Light Explosion', 'ability', 'As Dagger: sends out a veil of light that heals allies it touches and boosts their healing. Shares two charges with Terror Cape.'],
@@ -2687,7 +2687,7 @@ const ABILITIES = {
     ['Shadow’s Embrace / Light’s Embrace', 'ability', 'Swaps between Cloak and Dagger.'],
     ['Eternal Bond', 'ultimate', 'Four quick dashes that heal allies and damage enemies along the path, leaving healing zones behind.'],
   ]],
-  'adam-warlock': ['2026-10-03', [
+  'adam-warlock': ['2026-10-09', [
     ['Quantum Magic', 'attack', 'Quantum energy shots. Critical hits shorten Avatar Life Stream’s cooldown.'],
     ['Cosmic Cluster', 'ability', 'Charges up and launches a cluster of quantum energy. Each hit shortens Avatar Life Stream’s cooldown.'],
     ['Soul Bond', 'ability', 'Links nearby allies: they heal over time and share incoming damage across the bond. He can hover and attack while it lasts.'],
@@ -3987,6 +3987,42 @@ const HISTORY = [
   ['2026-09-17', 'deadpool', 'fix', 'Team-up switching (Clone Rumble mode)', 'Fixed: in the Clone Rumble mode, players who were randomized into Deadpool could not switch team-ups'],
   ['2026-09-17', 'scarlet-witch', 'nerf', 'Reality Erasure (Ultimate)', 'Much lower chance of ignoring damage during the wind-up'],
   ['2026-10-01', 'rogue', 'fix', 'Ability Absorption', 'Fixed the description of the Adam Warlock ability she steals, which wrongly said she could fly freely'],
+  ['2026-10-06', 'adam-warlock+ultron', 'change', 'Team-up: Flawless Design', 'Healing per Cosmic Cluster 16 → 18; Enhanced Effect: healing from the explosion field the cluster leaves 5 → 7'],
+  ['2026-10-06', 'cyclops', 'buff', 'Optic Blast', 'Single-hit damage 22 → 23'],
+  ['2026-10-06', 'cyclops', 'buff', 'Ricochet Force', 'Cooldown reduction per Optic Blast hit 0.25s → 0.3s'],
+  ['2026-10-06', 'cyclops', 'buff', 'Ruby Rage (ultimate)', 'Energy cost 3700 → 3400'],
+  ['2026-10-06', 'cyclops+gambit', 'change', 'Team-up: Kinetic Kin', 'Duration 6s → 8s'],
+  ['2026-10-06', 'devil-dinosaur', 'nerf', 'Base health', 'Base health 850 → 825'],
+  ['2026-10-06', 'gambit', 'buff', 'Healing Hearts / Breaking Spades', 'Charge time per stack 8s → 7s'],
+  ['2026-10-06', 'gambit', 'nerf', 'Ragin’ Royal Flush (ultimate)', 'Range for finding targets 40m → 30m; extra jump boost for him and his allies 500 → 300'],
+  ['2026-10-06', 'gambit+jubilee', 'change', 'Team-up: Sparkling Staff', 'Duration 1.5s → 2s'],
+  ['2026-10-06', 'gorr', 'nerf', 'Shadow Scythe', 'Damage 55 + 2% of the target’s max health → 50 + 2%; shockwave damage 60 → 55'],
+  ['2026-10-06', 'gorr', 'nerf', 'Twilight of the Gods (ultimate)', 'Duration 12s → 10s'],
+  ['2026-10-06', 'gorr', 'mixed', 'Living Abyss', 'Cooldown 15s → 12s; movement speed during the surge 13 → 10 m/s'],
+  ['2026-10-06', 'gorr', 'change', 'Shadow Harvest', 'Added a custom targeting sensitivity setting for Shadow Harvest'],
+  ['2026-10-06', 'hawkeye', 'buff', 'Piercing Arrow', 'Projectile speed 130–195 → 140–210 m/s'],
+  ['2026-10-06', 'hawkeye', 'buff', 'Crescent Slash', 'Slightly shorter recovery after the slash (no value given)'],
+  ['2026-10-06', 'hawkeye', 'buff', 'Hypersonic Arrow', 'Width of the first hit 3m → 5m'],
+  ['2026-10-06', 'hawkeye+psylocke', 'change', 'Team-up: Senbonzakura Strike', 'Psionic Arrow single-shot damage 32 → 33'],
+  ['2026-10-06', 'hawkeye+cloak-and-dagger', 'change', 'Team-up: Moonlit Slash', 'NEW: Hawkeye heals himself for as much as Moonlit Slash heals'],
+  ['2026-10-06', 'hulk', 'buff', 'Gamma Ray Gun (Banner form)', 'Projectile speed 80 → 120 m/s'],
+  ['2026-10-06', 'hulk', 'buff', 'Gamma Grenade (Banner form)', 'Gamma energy gained when the grenade hits himself 50 → 100'],
+  ['2026-10-06', 'hulk+wolverine', 'change', 'Team-up: Gamma Fastball', 'Attack and movement speed boosts in the furious state 20% → 25%; health threshold for Unstoppable 300 → 400; Unstoppable cooldown 60s → 45s'],
+  ['2026-10-06', 'iron-man', 'mixed', 'Micro-Missile Barrage', 'Reworked: missiles now lock on to nearby enemies on release, up to 5 per target; damage per missile 20 → 10; projectile speed 15 → 60 m/s'],
+  ['2026-10-06', 'iron-man', 'mixed', 'Micro-Missile Barrage (Armor Overdrive)', 'Reworked: during Armor Overdrive the missiles lock on to enemies in front of him, up to 5 per target; damage per missile 15 → 10'],
+  ['2026-10-06', 'iron-man+thor', 'change', 'Team-up: Thunder Overdrive', 'Unibeam outer ring damage 70/s → 80/s; with the Thunder Overdrive boost 85/s → 90/s'],
+  ['2026-10-06', 'jubilee', 'buff', 'Sparking Sprint', 'NEW: heals herself 25/s during Sparking Sprint'],
+  ['2026-10-06', 'jubilee', 'nerf', 'Dazzling Detonation', 'Blind duration 1.5s → 0.8s'],
+  ['2026-10-06', 'jubilee', 'buff', 'Firework Finale (ultimate)', 'Healing from the firework field 150/s → 180/s'],
+  ['2026-10-06', 'jubilee+blade', 'change', 'Team-up: Vampiric Kin', 'NEW Base Effect: heals nearby allies 15/s for 6s while Vampiric Kin lasts'],
+  ['2026-10-06', 'magneto+emma-frost', 'change', 'Team-up: Magnetic Resonance', 'Damage dealt by the magnetic copy 45% → 50%; maximum duration 5s → 6s'],
+  ['2026-10-06', 'phoenix', 'buff', 'Cosmic Flames', 'Single-shot damage 60 → 65'],
+  ['2026-10-06', 'phoenix', 'mixed', 'Sparks (Cosmic Flames)', 'Detonation damage 40 → 45 and explosion damage 15 → 20; the self-heal on detonation is replaced by 5 Bonus Health for 4s, stacking up to 25'],
+  ['2026-10-06', 'phoenix', 'buff', 'Endsong Inferno (ultimate)', 'Sparks added by the explosion field and shockwave 1 → 2'],
+  ['2026-10-06', 'phoenix+hela', 'change', 'Team-up: Circle of Life', 'Cooldown 12s → 10s'],
+  ['2026-10-06', 'scarlet-witch', 'nerf', 'Chthonian Burst', 'Spell field damage per shot 40 → 35'],
+  ['2026-10-06', 'the-thing+invisible-woman', 'change', 'Team-up: Unbreakable Forces', 'Cooldown 20s → 15s; Enhanced Effect: damage he must take to trigger the healing pulse 150 → 125'],
+  ['2026-10-06', 'winter-soldier', 'fix', 'Trooper’s Fist / Bionic Hook', 'More responsive on high-latency connections'],
 ];
 
 // ---------------------------------------------------------------------------
