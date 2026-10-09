@@ -363,9 +363,10 @@
   .role-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--surface-2); color: var(--ink); box-shadow: inset 0 -3px 0 var(--accent); }
   @media (max-width: 349px) { .role-btn { font-size: 12px; letter-spacing: -.01em; } }
   .role-note { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
-  .mine-btn .ic { flex: none; font-size: 18px; color: var(--ink-3); }
-  .mine-btn.on .ic { color: var(--accent); }
-  .mine-names { font-size: 14px; font-weight: 600; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .mine-btn .ic, .notmine-btn .ic { flex: none; font-size: 18px; color: var(--ink-3); }
+  .mine-btn.on-list .ic { color: var(--accent); }
+  .notmine-btn.on-list .ic { color: var(--ink-2); }
+  .mine-names { font-size: 13px; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .duo-box { margin-top: 10px; display: grid; gap: 7px; }
   .duo-label { font-size: 13px; color: var(--ink-2); }
   .duo-row { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -396,6 +397,8 @@
   .pick-role.strategist { color: var(--strategist); }
   .pick-mine { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--accent); }
   .pick-mine .ic { font-size: 11px; }
+  .pick-mine.notmine, .mine-tag.notmine, .icon-btn.notmine[aria-pressed="true"] { color: var(--ink-2); }
+  .your-heroes { display: grid; gap: 8px; }
   .pick-fills { font-size: 12.5px; font-weight: 600; color: var(--conf-data); }
   .row-between { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
   .link { padding: 4px 0; color: var(--accent); font-size: 14px; font-weight: 600; }
@@ -523,7 +526,8 @@
   .dh-title { flex: 1; min-width: 0; }
   .dh-name { margin-bottom: 5px; font: 800 26px/1.02 var(--font-display); letter-spacing: .02em; text-transform: uppercase; text-wrap: balance; }
   .dh-role { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-  .dh-btns { display: flex; gap: 8px; }
+  .dh-btns { display: flex; gap: 6px; }
+  .sheet-head .icon-btn { width: 34px; height: 34px; }
   .icon-btn.star[aria-pressed="true"] { color: var(--accent); }
   .star-note { margin-top: 6px; font-size: 12.5px; color: var(--ink-2); }
   .icon-btn { width: 38px; height: 38px; flex: none; display: grid; place-items: center; border-radius: 50%; background: var(--surface-2); font-size: 18px; }
@@ -541,7 +545,22 @@
     font-size: 11.5px;
     text-align: center;
   }
-  .tier-cell.current { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); color: var(--ink); }
+  .tier-grid { margin-top: 4px; }
+  .tier-cell { position: relative; }
+  .tier-cell.current { color: var(--ink); }
+  .you-tag {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font: 700 10px/1.3 var(--font-display);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
   .notes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 6px; font-size: 13.5px; color: var(--ink-2); }
   .notes li { display: flex; gap: 8px; }
   .notes li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: .5em; border-radius: 50%; background: var(--ink-3); }
@@ -962,6 +981,19 @@
     state.mine = list;
     store.set('myHeroes', JSON.stringify(list));
   }
+  // Heroes you marked Not for me, remembered the same way. Never also starred.
+  function loadNotMine(mine) {
+    try {
+      const list = JSON.parse(store.get('notMine', '[]'));
+      return Array.isArray(list) ? list.filter((id) => typeof id === 'string' && IDX[id] && !mine.includes(id)) : [];
+    } catch {
+      return [];
+    }
+  }
+  function saveNotMine(list) {
+    state.notMine = list;
+    store.set('notMine', JSON.stringify(list));
+  }
 
   const state = {
     tab: oneOf(store.get('tab', 'tiers'), TABS.map((t) => t[0]), 'tiers'),
@@ -970,6 +1002,7 @@
     role: oneOf(store.get('role', 'duelist'), DRAFT_ROLES, 'duelist'),
     pad: oneOf(store.get('pad', 'xbox'), PAD_STYLES, 'xbox'),
     mine: loadMine(),
+    notMine: [],
     // Shown on a hero page when every My heroes slot is taken.
     starNote: false,
     roleFilter: 'all',
@@ -983,6 +1016,7 @@
     lookup: '',
     legend: false,
   };
+  state.notMine = loadNotMine(state.mine);
 
   const ICON = {
     vanguard: '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l8 3v6c0 5.2-3.4 9.4-8 11-4.6-1.6-8-5.8-8-11V5l8-3z"/></svg>',
@@ -1004,6 +1038,8 @@
     flex: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/></svg>',
     star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.6l2.47 6.6 7.04.31-5.52 4.39 1.89 6.79L12 16.8l-5.88 3.89 1.89-6.79-5.52-4.39 7.04-.31z"/></svg>',
     starred: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 2.6l2.47 6.6 7.04.31-5.52 4.39 1.89 6.79L12 16.8l-5.88 3.89 1.89-6.79-5.52-4.39 7.04-.31z"/></svg>',
+    notmine: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 14.5l-3.6 6.6c-.3.6-1 .9-1.6.7-1-.3-1.6-1.3-1.4-2.3l.6-3.5H5.2c-1.3 0-2.3-1.2-2-2.5l1.4-7.2C4.8 4.4 5.7 3.6 6.8 3.6H16z"/><path d="M18 3.6h3v10.9h-3z"/></svg>',
+    notmineOn: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M16 14.5l-3.6 6.6c-.3.6-1 .9-1.6.7-1-.3-1.6-1.3-1.4-2.3l.6-3.5H5.2c-1.3 0-2.3-1.2-2-2.5l1.4-7.2C4.8 4.4 5.7 3.6 6.8 3.6H16z"/><path d="M18 3.6h3v10.9h-3z"/></svg>',
   };
 
   // Tiny element builder. `html` is used only for the trusted icon strings above.
@@ -1371,25 +1407,56 @@
     );
     if (flex) wrap.append(h('p', { class: 'role-note' }, 'Picks from every role, for when you’ll play anything.'));
 
-    const mineHeroes = state.mine
-      .map((id) => IDX[id])
-      .filter(Boolean)
-      .sort((a, b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role) || a.name.localeCompare(b.name));
-    wrap.append(sectionHead('My heroes', { info: 'match', infoLabel: 'What My heroes means' }));
+    const byRoleThenName = (ids) =>
+      ids
+        .map((id) => IDX[id])
+        .filter(Boolean)
+        .sort((a, b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role) || a.name.localeCompare(b.name));
+    const mineHeroes = byRoleThenName(state.mine);
+    const notMineHeroes = byRoleThenName(state.notMine);
+    wrap.append(sectionHead('Your heroes', { info: 'match', infoLabel: 'What My heroes and Not for me mean' }));
     wrap.append(
       h(
-        'button',
-        {
-          type: 'button',
-          class: 'map-btn mine-btn' + (mineHeroes.length ? ' on-list' : ''),
-          'aria-label': mineHeroes.length ? `My heroes: ${names(mineHeroes)}. Edit your heroes` : 'Add the heroes you play well',
-          onClick: () => openPicker('mine'),
-        },
-        icon(mineHeroes.length ? 'starred' : 'star'),
-        mineHeroes.length
-          ? h('span', { class: 'map-btn-body' }, h('span', { class: 'mine-names' }, names(mineHeroes)))
-          : h('span', { class: 'map-btn-body' }, h('span', { class: 'map-name' }, 'None yet'), h('span', { class: 'map-meta' }, 'Optional. Star heroes you play well and they rank higher in your picks.')),
-        h('span', { class: 'link' }, mineHeroes.length ? 'Edit' : 'Add'),
+        'div',
+        { class: 'your-heroes' },
+        h(
+          'button',
+          {
+            type: 'button',
+            class: 'map-btn mine-btn' + (mineHeroes.length ? ' on-list' : ''),
+            'aria-label': mineHeroes.length ? `My heroes: ${names(mineHeroes)}. Edit your heroes` : 'Add the heroes you play well',
+            onClick: () => openPicker('mine'),
+          },
+          icon(mineHeroes.length ? 'starred' : 'star'),
+          h(
+            'span',
+            { class: 'map-btn-body' },
+            h('span', { class: 'map-name' }, 'My heroes'),
+            mineHeroes.length
+              ? h('span', { class: 'mine-names' }, names(mineHeroes))
+              : h('span', { class: 'map-meta' }, 'Optional. Star heroes you play well and they rank higher in your picks.'),
+          ),
+          h('span', { class: 'link' }, mineHeroes.length ? 'Edit' : 'Add'),
+        ),
+        h(
+          'button',
+          {
+            type: 'button',
+            class: 'map-btn notmine-btn' + (notMineHeroes.length ? ' on-list' : ''),
+            'aria-label': notMineHeroes.length ? `Not for me: ${names(notMineHeroes)}. Edit the heroes that aren’t for you` : 'Add heroes that aren’t for you',
+            onClick: () => openPicker('notMine'),
+          },
+          icon(notMineHeroes.length ? 'notmineOn' : 'notmine'),
+          h(
+            'span',
+            { class: 'map-btn-body' },
+            h('span', { class: 'map-name' }, 'Not for me'),
+            notMineHeroes.length
+              ? h('span', { class: 'mine-names' }, names(notMineHeroes))
+              : h('span', { class: 'map-meta' }, 'Optional. Heroes you don’t play well rank lower, but a strong counter still shows.'),
+          ),
+          h('span', { class: 'link' }, notMineHeroes.length ? 'Edit' : 'Add'),
+        ),
       ),
     );
 
@@ -1504,7 +1571,7 @@
     if (m.example) wrap.append(h('p', { class: 'example-note' }, 'Example match. Tap a hero to remove it, or New match to start your own.'));
 
     const ctx = map ? { map, side: m.side } : null;
-    const opts = { map: ctx, banned, allies: m.allies, teamUps: TEAM_UPS, mine: state.mine };
+    const opts = { map: ctx, banned, allies: m.allies, teamUps: TEAM_UPS, mine: state.mine, notMine: state.notMine };
     const { picks, matchups } = draft(DATA, IDX, state.role, m.enemies, state.bracket, state.platform, opts);
 
     if (showPicks) {
@@ -1530,6 +1597,7 @@
                   h('span', { class: 'pick-head' }, h('span', { class: 'pick-name' }, p.hero.name), flex ? h('span', { class: `pick-role ${p.hero.role}` }, ROLE_LABEL[p.hero.role]) : null),
                   h('span', { class: 'pick-why' }, pickReason(p)),
                   p.comfort ? h('span', { class: 'pick-mine' }, icon('starred'), 'One of your heroes') : null,
+                  p.notMine ? h('span', { class: 'pick-mine notmine' }, icon('notmineOn'), 'Marked Not for me, but still a strong pick here') : null,
                   p.fillsRole ? h('span', { class: 'pick-fills' }, `Your team has no ${ROLE_LABEL[p.fillsRole]} yet`) : null,
                   p.teamUps.map((t) => h('span', { class: 'pick-teamup' }, teamUpLabel(t))),
                   mapLine ? h('span', { class: 'pick-map ' + (p.map.score > 0 ? 'good' : 'bad') }, mapLine) : null,
@@ -1625,6 +1693,7 @@
           h('span', { class: 'duo-pick-label' }, label),
           h('span', { class: 'pick-head' }, h('span', { class: 'pick-name' }, s.hero.name), h('span', { class: `pick-role ${s.hero.role}` }, ROLE_LABEL[s.hero.role])),
           you && s.comfort ? h('span', { class: 'pick-mine' }, icon('starred'), 'One of your heroes') : null,
+          you && s.notMine ? h('span', { class: 'pick-mine notmine' }, icon('notmineOn'), 'Marked Not for me, but still a strong pick') : null,
         ),
         tierChip(s.tier, 28),
       );
@@ -1680,7 +1749,9 @@
       case 'protect':
         return { title: 'The hero you want to play', selected: m.protectId ? [m.protectId] : [], max: 1, single: true, unavailable: [...banned, ...m.allies], tone: 'ally', initialRole: state.role === 'flex' ? null : state.role };
       case 'mine':
-        return { title: 'My heroes', selected: state.mine, max: MAX_MY_HEROES, unavailable: [], tone: 'ally' };
+        return { title: 'My heroes', selected: state.mine, max: MAX_MY_HEROES, unavailable: state.notMine, blockedNote: 'Greyed-out heroes are marked Not for me.', tone: 'ally' };
+      case 'notMine':
+        return { title: 'Not for me', selected: state.notMine, max: DATA.heroes.length, unavailable: state.mine, blockedNote: 'Greyed-out heroes are starred as yours.', showCount: false };
       default:
         return { title: '', selected: [], max: 0, unavailable: [] };
     }
@@ -1714,7 +1785,7 @@
   function renderPickerList() {
     const cfg = pickerConfig();
     $('picker-filters').replaceChildren(
-      h('h2', { class: 'eyebrow', style: 'margin:12px 0 0' }, cfg.single ? cfg.title : `${cfg.title} · ${cfg.selected.length}/${cfg.max}`),
+      h('h2', { class: 'eyebrow', style: 'margin:12px 0 0' }, cfg.single || cfg.showCount === false ? cfg.title : `${cfg.title} · ${cfg.selected.length}/${cfg.max}`),
       roleFilters(state.pickerRole, (value) => {
         state.pickerRole = value;
         renderPickerList();
@@ -1725,7 +1796,7 @@
       .filter((x) => (state.pickerRole === 'all' || x.role === state.pickerRole) && (!q || x.name.toLowerCase().includes(q)))
       .sort((a, b) => a.name.localeCompare(b.name) || ROLES.indexOf(a.role) - ROLES.indexOf(b.role));
     const full = !cfg.single && cfg.selected.length >= cfg.max;
-    $('picker-count').textContent = cfg.unavailable.length ? 'Greyed-out heroes are banned or already picked.' : '';
+    $('picker-count').textContent = cfg.unavailable.length ? cfg.blockedNote || 'Greyed-out heroes are banned or already picked.' : '';
     const list = $('picker-list');
     const top = list.scrollTop;
     list.replaceChildren(
@@ -1765,6 +1836,9 @@
         return;
       case 'mine':
         saveMine(toggleIn(state.mine, id, MAX_MY_HEROES));
+        break;
+      case 'notMine':
+        saveNotMine(toggleIn(state.notMine, id, DATA.heroes.length));
         break;
     }
     renderPickerList();
@@ -2091,10 +2165,22 @@
       state.starNote = false;
     } else if (state.mine.length < MAX_MY_HEROES) {
       saveMine([...state.mine, id]);
+      if (state.notMine.includes(id)) saveNotMine(state.notMine.filter((x) => x !== id));
       state.starNote = false;
     } else {
       state.starNote = true;
     }
+    renderDetail(true);
+    renderView(false);
+  }
+
+  function toggleNotMine(id) {
+    if (state.notMine.includes(id)) saveNotMine(state.notMine.filter((x) => x !== id));
+    else {
+      saveNotMine([...state.notMine, id]);
+      if (state.mine.includes(id)) saveMine(state.mine.filter((x) => x !== id));
+    }
+    state.starNote = false;
     renderDetail(true);
     renderView(false);
   }
@@ -2120,6 +2206,7 @@
     const strong = sortHeroes(goodAgainst(DATA, hero.id), state.bracket, state.platform);
     const hasAbilities = !!kit || !!(tips && tips.quirks.length) || ups.own.length > 0;
     const starred = state.mine.includes(hero.id);
+    const avoided = state.notMine.includes(hero.id);
     const tabs = HERO_TABS.filter((k) => (k !== 'abilities' || hasAbilities) && (k !== 'history' || !!history));
     const active = tabs.includes(top.tab) ? top.tab : 'against';
     const body = h('div', { class: 'sheet-body' });
@@ -2129,7 +2216,18 @@
       h(
         'div',
         { class: 'tier-grid' },
-        DATA.brackets.map((b) => h('div', { class: 'tier-cell' + (b.id === state.bracket ? ' current' : '') }, tierChip(tierFor(hero, b.id, state.platform), 36), h('span', null, b.short))),
+        // Your rank gets a small label rather than a highlight, so the tiles don't read as buttons.
+        DATA.brackets.map((b) => {
+          const current = b.id === state.bracket;
+          const tier = tierFor(hero, b.id, state.platform);
+          return h(
+            'div',
+            { class: 'tier-cell' + (current ? ' current' : ''), role: 'img', 'aria-label': `${b.label}: ${tier} tier${current ? ', your rank' : ''}` },
+            current ? h('span', { class: 'you-tag', 'aria-hidden': 'true' }, 'You') : null,
+            tierChip(tier, 36),
+            h('span', null, b.short),
+          );
+        }),
       ),
     );
     body.append(
@@ -2300,12 +2398,23 @@
           'div',
           { class: 'dh-title' },
           h('h1', { class: 'dh-name', id: 'detail-title' }, hero.name),
-          h('div', { class: 'dh-role' }, roleTag(hero.role), hero.isNew ? h('span', { class: 'new' }, 'New this season') : null, starred ? h('span', { class: 'mine-tag' }, 'My hero') : null),
+          h('div', { class: 'dh-role' }, roleTag(hero.role), hero.isNew ? h('span', { class: 'new' }, 'New this season') : null, starred ? h('span', { class: 'mine-tag' }, 'My hero') : null, avoided ? h('span', { class: 'mine-tag notmine' }, 'Not for me') : null),
           state.starNote ? h('p', { class: 'star-note' }, `You’ve starred ${MAX_MY_HEROES} heroes. Unstar one to add another.`) : null,
         ),
         h(
           'div',
           { class: 'dh-btns' },
+          h(
+            'button',
+            {
+              type: 'button',
+              class: 'icon-btn notmine',
+              'aria-pressed': String(avoided),
+              'aria-label': avoided ? `Unmark ${hero.name} as not for you` : `Mark ${hero.name} as not for you`,
+              onClick: () => toggleNotMine(hero.id),
+            },
+            icon(avoided ? 'notmineOn' : 'notmine'),
+          ),
           h(
             'button',
             {

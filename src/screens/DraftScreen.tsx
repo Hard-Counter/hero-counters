@@ -75,7 +75,7 @@ const EXAMPLE: Pick<MatchState, 'bans' | 'allies' | 'duoId' | 'enemies'> = {
   enemies: ['peni-parker', 'devil-dinosaur', 'gorr', 'spider-man', 'mantis', 'ultron'],
 };
 
-type PickerTarget = 'ours' | 'theirs' | 'allies' | 'enemies' | 'protect' | 'mine';
+type PickerTarget = 'ours' | 'theirs' | 'allies' | 'enemies' | 'protect' | 'mine' | 'notMine';
 
 const names = (list: { name: string }[]) => list.map((h) => h.name).join(', ');
 
@@ -92,6 +92,12 @@ function pickReason(p: Suggestion): string {
 const toggleIn = (list: string[], id: string, max: number) =>
   list.includes(id) ? list.filter((x) => x !== id) : list.length < max ? [...list, id] : list;
 
+const byRoleThenName = (ids: readonly string[], idx: HeroIndex) =>
+  ids
+    .map((id) => idx[id])
+    .filter(Boolean)
+    .sort((a, b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role) || a.name.localeCompare(b.name));
+
 export default function DraftScreen({
   data,
   idx,
@@ -103,6 +109,8 @@ export default function DraftScreen({
   setMatch,
   mine,
   setMine,
+  notMine,
+  setNotMine,
   onOpen,
 }: {
   data: Dataset;
@@ -116,6 +124,9 @@ export default function DraftScreen({
   /** Heroes you starred as ones you play well. */
   mine: string[];
   setMine: (ids: string[]) => void;
+  /** Heroes you marked Not for me. Never also in `mine`. */
+  notMine: string[];
+  setNotMine: (ids: string[]) => void;
   /** Opens a hero page on the tab that fits: Play as for your picks, Against for enemies. */
   onOpen: (heroId: string, tab?: HeroTab) => void;
 }) {
@@ -138,8 +149,8 @@ export default function DraftScreen({
   const duoId = match.duoId && match.allies.includes(match.duoId) ? match.duoId : null;
 
   const opts = useMemo(
-    () => ({ map: mapCtx, banned, allies: match.allies, teamUps, mine }),
-    [mapCtx, banned, match.allies, teamUps, mine],
+    () => ({ map: mapCtx, banned, allies: match.allies, teamUps, mine, notMine }),
+    [mapCtx, banned, match.allies, teamUps, mine, notMine],
   );
   const result = useMemo(
     () => draft(data, idx, myRole, match.enemies, bracket, platform, opts),
@@ -149,14 +160,8 @@ export default function DraftScreen({
     () => duoSwap(data, idx, myRole, duoId, match.enemies, bracket, platform, opts),
     [data, idx, myRole, duoId, match.enemies, bracket, platform, opts],
   );
-  const mineHeroes = useMemo(
-    () =>
-      mine
-        .map((id) => idx[id])
-        .filter(Boolean)
-        .sort((a, b) => ROLES.indexOf(a.role) - ROLES.indexOf(b.role) || a.name.localeCompare(b.name)),
-    [mine, idx],
-  );
+  const mineHeroes = useMemo(() => byRoleThenName(mine, idx), [mine, idx]);
+  const notMineHeroes = useMemo(() => byRoleThenName(notMine, idx), [notMine, idx]);
 
   const protectHero = match.protectId ? idx[match.protectId] : undefined;
   const banIdeas = useMemo(
@@ -224,6 +229,9 @@ export default function DraftScreen({
       case 'mine':
         setMine(toggleIn(mine, id, MAX_MY_HEROES));
         break;
+      case 'notMine':
+        setNotMine(toggleIn(notMine, id, data.heroes.length));
+        break;
     }
   };
 
@@ -248,7 +256,23 @@ export default function DraftScreen({
           tone: 'ally' as const,
         };
       case 'mine':
-        return { title: 'My heroes', selected: mine, max: MAX_MY_HEROES, tone: 'ally' as const };
+        return {
+          title: 'My heroes',
+          selected: mine,
+          max: MAX_MY_HEROES,
+          unavailable: notMine,
+          blockedNote: 'Greyed-out heroes are marked Not for me.',
+          tone: 'ally' as const,
+        };
+      case 'notMine':
+        return {
+          title: 'Not for me',
+          selected: notMine,
+          max: data.heroes.length,
+          unavailable: mine,
+          blockedNote: 'Greyed-out heroes are starred as yours.',
+          showCount: false,
+        };
       default:
         return { title: '', selected: [], max: 0 };
     }
@@ -342,32 +366,59 @@ export default function DraftScreen({
         </View>
         {flex ? <Text style={st.roleNote}>Picks from every role, for when you’ll play anything.</Text> : null}
 
-        <SectionHead onInfo={() => setInfo('match')} infoLabel="What My heroes means">
-          My heroes
+        <SectionHead onInfo={() => setInfo('match')} infoLabel="What My heroes and Not for me mean">
+          Your heroes
         </SectionHead>
-        <Pressable
-          onPress={() => setPicker('mine')}
-          accessibilityRole="button"
-          accessibilityLabel={
-            mineHeroes.length ? `My heroes: ${names(mineHeroes)}. Edit your heroes` : 'Add the heroes you play well'
-          }
-          style={({ pressed }) => [st.mapBtn, pressed && { opacity: 0.8 }]}
-        >
-          <Icon name={mineHeroes.length ? 'starred' : 'star'} size={18} color={mineHeroes.length ? t.accent : t.ink3} />
-          <View style={st.flex}>
-            {mineHeroes.length ? (
-              <Text style={st.mineNames} numberOfLines={2}>
-                {names(mineHeroes)}
-              </Text>
-            ) : (
-              <>
-                <Text style={st.mapName}>None yet</Text>
+        <View style={st.yours}>
+          <Pressable
+            onPress={() => setPicker('mine')}
+            accessibilityRole="button"
+            accessibilityLabel={
+              mineHeroes.length ? `My heroes: ${names(mineHeroes)}. Edit your heroes` : 'Add the heroes you play well'
+            }
+            style={({ pressed }) => [st.mapBtn, pressed && { opacity: 0.8 }]}
+          >
+            <Icon name={mineHeroes.length ? 'starred' : 'star'} size={18} color={mineHeroes.length ? t.accent : t.ink3} />
+            <View style={st.flex}>
+              <Text style={st.mapName}>My heroes</Text>
+              {mineHeroes.length ? (
+                <Text style={st.mineNames} numberOfLines={2}>
+                  {names(mineHeroes)}
+                </Text>
+              ) : (
                 <Text style={st.mapMeta}>Optional. Star heroes you play well and they rank higher in your picks.</Text>
-              </>
-            )}
-          </View>
-          <Text style={st.link}>{mineHeroes.length ? 'Edit' : 'Add'}</Text>
-        </Pressable>
+              )}
+            </View>
+            <Text style={st.link}>{mineHeroes.length ? 'Edit' : 'Add'}</Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setPicker('notMine')}
+            accessibilityRole="button"
+            accessibilityLabel={
+              notMineHeroes.length
+                ? `Not for me: ${names(notMineHeroes)}. Edit the heroes that aren’t for you`
+                : 'Add heroes that aren’t for you'
+            }
+            style={({ pressed }) => [st.mapBtn, pressed && { opacity: 0.8 }]}
+          >
+            <Icon
+              name={notMineHeroes.length ? 'notmineOn' : 'notmine'}
+              size={18}
+              color={notMineHeroes.length ? t.ink2 : t.ink3}
+            />
+            <View style={st.flex}>
+              <Text style={st.mapName}>Not for me</Text>
+              {notMineHeroes.length ? (
+                <Text style={st.mineNames} numberOfLines={2}>
+                  {names(notMineHeroes)}
+                </Text>
+              ) : (
+                <Text style={st.mapMeta}>Optional. Heroes you don’t play well rank lower, but a strong counter still shows.</Text>
+              )}
+            </View>
+            <Text style={st.link}>{notMineHeroes.length ? 'Edit' : 'Add'}</Text>
+          </Pressable>
+        </View>
 
         {maps.length > 0 ? (
           <>
@@ -590,6 +641,12 @@ export default function DraftScreen({
                         <View style={st.noteRow}>
                           <Icon name="starred" size={11} color={t.accent} />
                           <Text style={[st.pickNote, { color: t.accent }]}>One of your heroes</Text>
+                        </View>
+                      ) : null}
+                      {p.notMine ? (
+                        <View style={st.noteRow}>
+                          <Icon name="notmineOn" size={11} color={t.ink2} />
+                          <Text style={[st.pickNote, { color: t.ink2 }]}>Marked Not for me, but still a strong pick here</Text>
                         </View>
                       ) : null}
                       {p.fillsRole ? (
@@ -822,6 +879,12 @@ function DuoCard({ swap, onOpen }: { swap: DuoSwap; onOpen: (heroId: string, tab
                 <Text style={[st.pickNote, { color: t.accent }]}>One of your heroes</Text>
               </View>
             ) : null}
+            {key === 'you' && s.notMine ? (
+              <View style={st.noteRow}>
+                <Icon name="notmineOn" size={11} color={t.ink2} />
+                <Text style={[st.pickNote, { color: t.ink2 }]}>Marked Not for me, but still a strong pick</Text>
+              </View>
+            ) : null}
           </View>
           <TierBadge tier={s.tier} size={28} />
         </Pressable>
@@ -934,7 +997,8 @@ const makeStyles = (t: Theme) =>
     roleText: { color: t.ink2, fontFamily: FONT.bodySemi, fontSize: 13 },
     roleTextNarrow: { fontSize: 12, letterSpacing: -0.1 },
     roleNote: { marginTop: 8, color: t.ink3, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
-    mineNames: { color: t.ink, fontFamily: FONT.bodySemi, fontSize: 14, lineHeight: 19 },
+    yours: { gap: 8 },
+    mineNames: { color: t.ink2, fontFamily: FONT.body, fontSize: 13, lineHeight: 18 },
     link: { color: t.accent, fontFamily: FONT.bodySemi, fontSize: 14 },
     mapBtn: {
       flexDirection: 'row',

@@ -21,6 +21,8 @@ export default function HeroPicker({
   unavailable,
   initialRole = 'all',
   tone = 'enemy',
+  showCount = true,
+  blockedNote = 'Greyed-out heroes are banned or already picked.',
   onToggle,
   onClose,
 }: {
@@ -35,6 +37,10 @@ export default function HeroPicker({
   initialRole?: RoleFilterValue;
   /** Enemy picks and bans show red; your team shows in the accent color. */
   tone?: 'enemy' | 'ally';
+  /** Show "3/12" next to the title. Off for lists without a real limit. */
+  showCount?: boolean;
+  /** Says why some heroes are greyed out. */
+  blockedNote?: string;
   onToggle: (heroId: string) => void;
   onClose: () => void;
 }) {
@@ -91,10 +97,10 @@ export default function HeroPicker({
       <View style={st.controls}>
         <Text style={st.title} accessibilityRole="header">
           {title}
-          {single ? '' : ` · ${selected.length}/${max}`}
+          {single || !showCount ? '' : ` · ${selected.length}/${max}`}
         </Text>
         <RoleFilter value={role} onChange={setRole} />
-        {blocked.length ? <Text style={st.count}>Greyed-out heroes are banned or already picked.</Text> : null}
+        {blocked.length ? <Text style={st.count}>{blockedNote}</Text> : null}
       </View>
       <ScrollView contentContainerStyle={st.list} keyboardShouldPersistTaps="handled">
         {heroes.length === 0 ? <Text style={st.empty}>No hero matches “{query}”.</Text> : null}

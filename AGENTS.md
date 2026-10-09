@@ -25,8 +25,8 @@ Run lint and typecheck before declaring any code task done.
 ## Project layout
 
 - No Expo Router. `App.tsx` holds the shell and a four-tab bar (Tiers, Draft, Comps, About); screens live in `src/screens/`.
-- `src/logic.ts` holds tier, counter and draft logic, shared with the web preview (`scripts/build-preview.mjs`). The draft helper's role can be Flex (`DraftRole`), starred heroes (My heroes, capped at `MAX_MY_HEROES`) get `COMFORT_BONUS`, and `duoSwap` suggests a pair of picks for you and a teammate who'll switch.
-- Your role and My heroes are remembered on the device (`usePersisted`, `usePersistedList` in `src/usePersisted.ts`). The match itself (map, bans, teams, duo) isn't.
+- `src/logic.ts` holds tier, counter and draft logic, shared with the web preview (`scripts/build-preview.mjs`). The draft helper's role can be Flex (`DraftRole`), starred heroes (My heroes, capped at `MAX_MY_HEROES`) get `COMFORT_BONUS`, heroes marked Not for me lose `NOT_FOR_ME_PENALTY` (never enough to hide a listed counter, and a hero is never in both lists), and `duoSwap` suggests a pair of picks for you and a teammate who'll switch.
+- Your role, My heroes and Not for me are remembered on the device (`usePersisted`, `usePersistedList` in `src/usePersisted.ts`). The match itself (map, bans, teams, duo) isn't.
 - `preview/template.html` mirrors the app's screens in plain DOM code. Keep it in step when screens change.
 - `.web.ts(x)` files are the web versions of platform-specific modules (ads, color scheme).
 - Ads: `react-native-google-mobile-ads` is loaded lazily in `src/ads/consent.ts` so the app still opens in Expo Go.

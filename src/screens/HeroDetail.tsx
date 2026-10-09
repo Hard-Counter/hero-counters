@@ -71,6 +71,8 @@ export default function HeroDetail({
   starred,
   starFull,
   onStar,
+  notMine,
+  onNotMine,
   onTab,
   onOpen,
   onBack,
@@ -94,6 +96,9 @@ export default function HeroDetail({
   /** You've starred as many heroes as you can. */
   starFull: boolean;
   onStar: (heroId: string) => void;
+  /** You marked the hero Not for me. */
+  notMine: boolean;
+  onNotMine: (heroId: string) => void;
   onTab: (tab: HeroTab) => void;
   onOpen: (heroId: string, tab: HeroTab) => void;
   onBack: () => void;
@@ -156,6 +161,12 @@ export default function HeroDetail({
     onStar(hero.id);
   };
 
+  const toggleNotMine = () => {
+    if (!hero) return;
+    setStarNote(false);
+    onNotMine(hero.id);
+  };
+
   const hasAbilities = !!kit || !!tips?.quirks.length || teamUps.own.length > 0;
   const tabs = HERO_TABS.filter((k) => (k !== 'abilities' || hasAbilities) && (k !== 'history' || !!history));
   const active: HeroTab = tabs.includes(tab) ? tab : 'against';
@@ -206,7 +217,7 @@ export default function HeroDetail({
                 accessibilityRole="button"
                 accessibilityLabel={`Back to ${backTo}`}
                 hitSlop={10}
-                style={st.round}
+                style={st.headBtn}
               >
                 <Icon name="back" size={18} color={t.ink} />
               </Pressable>
@@ -218,6 +229,7 @@ export default function HeroDetail({
                 <RoleTag role={hero.role} />
                 {hero.isNew ? <Text style={st.newText}>NEW THIS SEASON</Text> : null}
                 {starred ? <Text style={st.newText}>MY HERO</Text> : null}
+                {notMine ? <Text style={[st.newText, { color: t.ink2 }]}>NOT FOR ME</Text> : null}
               </View>
               {starNote ? (
                 <Text style={st.starNote}>
@@ -227,16 +239,26 @@ export default function HeroDetail({
             </View>
             <View style={st.headBtns}>
               <Pressable
+                onPress={toggleNotMine}
+                accessibilityRole="button"
+                accessibilityLabel={notMine ? `Unmark ${hero.name} as not for you` : `Mark ${hero.name} as not for you`}
+                accessibilityState={{ selected: notMine }}
+                hitSlop={8}
+                style={st.headBtn}
+              >
+                <Icon name={notMine ? 'notmineOn' : 'notmine'} size={18} color={notMine ? t.ink2 : t.ink} />
+              </Pressable>
+              <Pressable
                 onPress={toggleStar}
                 accessibilityRole="button"
                 accessibilityLabel={starred ? `Remove ${hero.name} from My heroes` : `Add ${hero.name} to My heroes`}
                 accessibilityState={{ selected: starred }}
-                hitSlop={6}
-                style={st.round}
+                hitSlop={8}
+                style={st.headBtn}
               >
                 <Icon name={starred ? 'starred' : 'star'} size={19} color={starred ? t.accent : t.ink} />
               </Pressable>
-              <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close" hitSlop={10} style={st.round}>
+              <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close" hitSlop={10} style={st.headBtn}>
                 <Icon name="close" size={18} color={t.ink} />
               </Pressable>
             </View>
@@ -264,13 +286,27 @@ export default function HeroDetail({
                 <SectionHead onInfo={() => setInfo('tiers')} infoLabel="What tiers mean">
                   Tier by rank · {platform === 'pc' ? 'PC' : 'Console'}
                 </SectionHead>
+                {/* Your rank gets a small label rather than a highlight, so the tiles don't read as buttons. */}
                 <View style={st.tierGrid}>
                   {data.brackets.map((b) => {
                     const current = b.id === bracket;
+                    const tier = tierFor(hero, b.id, platform);
                     return (
-                      <View key={b.id} style={[st.tierCell, current && st.tierCellOn]}>
-                        <TierBadge tier={tierFor(hero, b.id, platform)} size={36} />
+                      <View
+                        key={b.id}
+                        style={st.tierCell}
+                        accessible
+                        accessibilityLabel={`${b.label}: ${tier} tier${current ? ', your rank' : ''}`}
+                      >
+                        <TierBadge tier={tier} size={36} />
                         <Text style={[st.tierLabel, current && { color: t.ink }]}>{b.short}</Text>
+                        {current ? (
+                          <View style={st.youWrap} pointerEvents="none">
+                            <View style={st.youTag}>
+                              <Text style={st.youText}>YOU</Text>
+                            </View>
+                          </View>
+                        ) : null}
                       </View>
                     );
                   })}
@@ -786,7 +822,7 @@ const makeStyles = (t: Theme) =>
       borderBottomColor: t.line,
     },
     headText: { flex: 1, minWidth: 0 },
-    headBtns: { flexDirection: 'row', gap: 8 },
+    headBtns: { flexDirection: 'row', gap: 6 },
     name: {
       marginBottom: 5,
       color: t.ink,
@@ -799,10 +835,10 @@ const makeStyles = (t: Theme) =>
     roleRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 },
     newText: { color: t.accent, fontFamily: FONT.displayBold, fontSize: 11, letterSpacing: 1 },
     starNote: { marginTop: 6, color: t.ink2, fontFamily: FONT.body, fontSize: 12.5, lineHeight: 17 },
-    round: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: t.surface2 },
+    headBtn: { width: 34, height: 34, borderRadius: 17, alignItems: 'center', justifyContent: 'center', backgroundColor: t.surface2 },
     body: { paddingTop: 4, paddingBottom: 28 },
     pad: { paddingHorizontal: 16 },
-    tierGrid: { flexDirection: 'row', gap: 6 },
+    tierGrid: { flexDirection: 'row', gap: 6, marginTop: 4 },
     tierCell: {
       flex: 1,
       alignItems: 'center',
@@ -815,7 +851,9 @@ const makeStyles = (t: Theme) =>
       borderColor: t.line,
       backgroundColor: t.surface,
     },
-    tierCellOn: { borderColor: t.accent, borderWidth: 2 },
+    youWrap: { position: 'absolute', top: -8, left: 0, right: 0, alignItems: 'center' },
+    youTag: { paddingHorizontal: 6, paddingVertical: 1, borderRadius: 999, backgroundColor: t.accent },
+    youText: { color: t.onAccent, fontFamily: FONT.displayBold, fontSize: 10, letterSpacing: 1 },
     tierLabel: { color: t.ink2, fontFamily: FONT.body, fontSize: 11.5, textAlign: 'center' },
     notes: { marginTop: 12, marginBottom: 14, gap: 6 },
     note: { flexDirection: 'row', gap: 8 },

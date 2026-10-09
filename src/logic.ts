@@ -304,8 +304,10 @@ export function teamUpLabel(m: TeamUpMatch): string {
 // so completing one is a small tie-breaker.
 const TEAMUP_BONUS = 0.15;
 const TEAMUP_MAX = 0.3;
-// A hero you're comfortable on is worth about a tier and a half.
+// A hero you're comfortable on is worth about a tier and a half, and one you've marked
+// Not for me loses as much. A listed counter is worth several tiers, so it still wins.
 const COMFORT_BONUS = 0.75;
+const NOT_FOR_ME_PENALTY = COMFORT_BONUS;
 // Flex: filling a role nobody on your team plays yet, or stacking a fourth of one role.
 const ROLE_GAP_BONUS = 0.75;
 const ROLE_STACK_PENALTY = 0.5;
@@ -333,6 +335,8 @@ export interface Suggestion {
   teamUps: TeamUpMatch[];
   /** One of the heroes you starred as yours. */
   comfort: boolean;
+  /** One of the heroes you marked Not for me. It still shows when it's a strong enough pick. */
+  notMine: boolean;
   /** Flex: the pick fills a role your team doesn't have yet. */
   fillsRole?: RoleId;
 }
@@ -361,6 +365,8 @@ export interface DraftOptions {
   teamUps?: readonly TeamUp[];
   /** Heroes you starred as yours. They get a boost. */
   mine?: readonly string[];
+  /** Heroes you marked Not for me. They rank lower. */
+  notMine?: readonly string[];
 }
 
 interface Scored {
@@ -388,6 +394,7 @@ function scoreHeroes(
   const allyList = (opts.allies ?? []).filter((id) => !!idx[id]);
   const allies = new Set(allyList);
   const mine = new Set(opts.mine ?? []);
+  const notMine = new Set((opts.notMine ?? []).filter((id) => !mine.has(id)));
   const teamUps = opts.teamUps ?? [];
 
   const rows = new Map<string, Suggestion>();
@@ -399,15 +406,17 @@ function scoreHeroes(
     const ups = teamUpsWith(h.id, allyList, teamUps, idx);
     const bonus = Math.min(TEAMUP_MAX, ups.length * TEAMUP_BONUS);
     const comfort = mine.has(h.id);
+    const avoid = notMine.has(h.id);
     rows.set(h.id, {
       hero: h,
-      score: TIER_SCORE[tier] + fit.score + bonus + (comfort ? COMFORT_BONUS : 0),
+      score: TIER_SCORE[tier] + fit.score + bonus + (comfort ? COMFORT_BONUS : 0) - (avoid ? NOT_FOR_ME_PENALTY : 0),
       tier,
       beats: [],
       edges: [],
       map: fit,
       teamUps: ups,
       comfort,
+      notMine: avoid,
     });
     credits.set(h.id, new Map());
   }
@@ -558,7 +567,9 @@ export function duoSwap(
   const own = (row: Suggestion, forDuo: boolean) => {
     let v = row.score;
     for (const pts of credits.get(row.hero.id)?.values() ?? []) v -= pts;
-    if (forDuo && row.comfort) v -= COMFORT_BONUS; // your starred heroes are yours, not your duo's
+    // Your starred and Not for me heroes are yours, not your duo's.
+    if (forDuo && row.comfort) v -= COMFORT_BONUS;
+    if (forDuo && row.notMine) v += NOT_FOR_ME_PENALTY;
     return v;
   };
   const pairValue = (a: Suggestion, b: Suggestion) => {
@@ -1124,6 +1135,10 @@ export const GLOSSARY: GlossaryGroup[] = [
       {
         term: 'My heroes',
         text: `Up to ${MAX_MY_HEROES} heroes you star as ones you play well. The draft helper ranks them about a tier and a half higher. Counters still count more.`,
+      },
+      {
+        term: 'Not for me',
+        text: 'Heroes you mark as ones you don’t play well. The draft helper ranks them about a tier and a half lower, but a strong counter can still make your picks, marked so you know.',
       },
       {
         term: 'Duo swap',

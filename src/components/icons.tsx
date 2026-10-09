@@ -19,7 +19,14 @@ export type IconName =
   | 'mixed'
   | 'flex'
   | 'star'
-  | 'starred';
+  | 'starred'
+  | 'notmine'
+  | 'notmineOn';
+
+// A thumbs-down: the hand with its thumb pointing down, and a separate cuff on the right.
+const THUMB_DOWN =
+  'M16 14.5l-3.6 6.6c-.3.6-1 .9-1.6.7-1-.3-1.6-1.3-1.4-2.3l.6-3.5H5.2c-1.3 0-2.3-1.2-2-2.5l1.4-7.2C4.8 4.4 5.7 3.6 6.8 3.6H16z';
+const THUMB_CUFF = 'M18 3.6h3v10.9h-3z';
 
 /** Original role and interface icons (no game artwork). */
 export function Icon({ name, size = 16, color }: { name: IconName; size?: number; color: string }) {
@@ -151,6 +158,20 @@ export function Icon({ name, size = 16, color }: { name: IconName; size?: number
       return (
         <Svg width={size} height={size} viewBox="0 0 24 24">
           <Path fill={color} stroke={color} strokeWidth={1.8} strokeLinejoin="round" d="M12 2.6l2.47 6.6 7.04.31-5.52 4.39 1.89 6.79L12 16.8l-5.88 3.89 1.89-6.79-5.52-4.39 7.04-.31z" />
+        </Svg>
+      );
+    case 'notmine':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d={THUMB_DOWN} {...stroke} strokeWidth={1.8} strokeLinejoin="round" />
+          <Path d={THUMB_CUFF} {...stroke} strokeWidth={1.8} strokeLinejoin="round" />
+        </Svg>
+      );
+    case 'notmineOn':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path d={THUMB_DOWN} fill={color} stroke={color} strokeWidth={1.8} strokeLinejoin="round" />
+          <Path d={THUMB_CUFF} fill={color} stroke={color} strokeWidth={1.8} strokeLinejoin="round" />
         </Svg>
       );
   }

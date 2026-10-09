@@ -70,12 +70,28 @@ function Root() {
   // Heroes you starred as ones you're good at. The draft helper ranks them higher.
   const [starred, setStarred] = usePersistedList('myHeroes');
   const mine = useMemo(() => starred.filter((id) => !!idx[id]), [starred, idx]);
+  // Heroes you marked Not for me. The draft helper ranks them lower. A hero is never in both lists.
+  const [avoided, setAvoided] = usePersistedList('notMine');
+  const notMine = useMemo(() => avoided.filter((id) => !!idx[id] && !mine.includes(id)), [avoided, idx, mine]);
   const toggleMine = useCallback(
     (id: string) => {
       if (starred.includes(id)) setStarred(starred.filter((x) => x !== id));
-      else if (mine.length < MAX_MY_HEROES) setStarred([...mine, id]);
+      else if (mine.length < MAX_MY_HEROES) {
+        setStarred([...mine, id]);
+        if (avoided.includes(id)) setAvoided(avoided.filter((x) => x !== id));
+      }
     },
-    [starred, mine, setStarred],
+    [starred, mine, setStarred, avoided, setAvoided],
+  );
+  const toggleNotMine = useCallback(
+    (id: string) => {
+      if (notMine.includes(id)) setAvoided(notMine.filter((x) => x !== id));
+      else {
+        setAvoided([...notMine, id]);
+        if (starred.includes(id)) setStarred(starred.filter((x) => x !== id));
+      }
+    },
+    [notMine, setAvoided, starred, setStarred],
   );
   // Bans, teams and the map change every match, so they aren't remembered between launches.
   const [match, setMatch] = useState<MatchState>(EMPTY_MATCH);
@@ -154,6 +170,8 @@ function Root() {
             setMatch={setMatch}
             mine={mine}
             setMine={setStarred}
+            notMine={notMine}
+            setNotMine={setAvoided}
             onOpen={openDetail}
           />
         ) : null}
@@ -199,6 +217,8 @@ function Root() {
         starred={!!detail && mine.includes(detail.id)}
         starFull={mine.length >= MAX_MY_HEROES}
         onStar={toggleMine}
+        notMine={!!detail && notMine.includes(detail.id)}
+        onNotMine={toggleNotMine}
         onOpen={pushDetail}
         onBack={popDetail}
         onClose={closeDetail}

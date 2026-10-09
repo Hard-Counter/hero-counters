@@ -13,7 +13,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 14;
+const REVISION = 15;
 
 const META = {
   season: "Season 10: Butcher's Blasphemy",
@@ -57,7 +57,7 @@ const METHODOLOGY = [
   'Data-backed counters are supported by public matchup data. Kit-based counters come from how the heroes’ abilities interact. Consensus picks come from community play.',
   'Bans happen at Gold III and above: each team bans three heroes, and a banned hero can’t be picked by either team. Heroes marked as often banned may not be available.',
   'The draft helper leaves out banned heroes and heroes your teammates already picked. Since Season 9 each hero picks one of two team-up abilities that works alone and gets stronger with a named partner, so the helper only gives a small nudge to picks that power up a team-up with your team.',
-  'Heroes you star as yours rank about a tier and a half higher in the draft helper, because a hero you play well often beats a slightly stronger one you don’t. Flex looks at every role and favors one your team is missing. A duo swap is only suggested when the new pair counters the enemy team clearly better than your best pick next to your duo’s current hero.',
+  'Heroes you star as yours rank about a tier and a half higher in the draft helper, because a hero you play well often beats a slightly stronger one you don’t, and heroes you mark Not for me rank about as much lower. A strong counter still makes your picks either way. Flex looks at every role and favors one your team is missing. A duo swap is only suggested when the new pair counters the enemy team clearly better than your best pick next to your duo’s current hero.',
   'Picking a map in the draft helper nudges close calls toward heroes whose play style suits its layout, mode and side. A real counter always outweighs the map.',
   'Hero tips are our own advice, written from official patch notes and current guides. Each quirk shows the date it was last checked.',
   'Ability breakdowns are written in our own words from the current in-game kits and checked against every balance post and patch note since launch. Each hero shows when their kit was last checked.',
@@ -76,12 +76,12 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
+  'Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.',
   'Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.',
   'Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).',
   'Weekly review, Oct 3: no tier or counter changes.',
   'Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage.',
   'Hero pages have a History tab: buffs and nerfs by season and every change since launch. Arrows on the tier list mark heroes buffed or nerfed this season. Checked in game: Hela can’t be damaged in crow form, and Ultron can’t be rooted or stunned during his ultimate. The app is now called Hard Counter.',
-  'Hero pages now have Against, Play as and Abilities tabs. Abilities explain what every hero’s moves do, checked against all patches since launch. Team-ups follow the Season 9 system (two per hero, stronger with a partner). Fixed Peni Parker’s snare and Magneto’s shield tips.',
 ];
 
 // ---------------------------------------------------------------------------
