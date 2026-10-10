@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "revision": 16,
+  "revision": 17,
   "season": "Season 10.5: Butcher's Blasphemy",
   "seasonShort": "Season 10.5",
   "patch": "Season 10.5 update, Oct 9 (balance post Oct 6)",
-  "updated": "2026-10-09",
-  "nextReview": "2026-10-10",
+  "updated": "2026-10-10",
+  "nextReview": "2026-10-17",
   "brackets": [
     {
       "id": "bronze_gold",
@@ -52,12 +52,12 @@
     "Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match."
   ],
   "changelog": [
+    "Weekly review, Oct 10: no tier or counter changes.",
     "Season 10.5 update: Iron Man’s missiles now lock on, Phoenix and Cyclops hit harder, Jubilee heals herself while sprinting, and Gorr, Scarlet Witch and Devil Dinosaur were trimmed. Tiers hold for now until results from the new patch come in.",
     "Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.",
     "Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.",
     "Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).",
-    "Weekly review, Oct 3: no tier or counter changes.",
-    "Draft helper: choose Flex to see the best picks from every role, star the heroes you play well so they rank higher, and mark a duo partner to see whether swapping heroes together would counter the enemy team better. Corrected Ultron: roots and stuns don’t work during his ultimate, but he still takes damage."
+    "Weekly review, Oct 3: no tier or counter changes."
   ],
   "heroes": [
     {
