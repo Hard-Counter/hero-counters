@@ -13,14 +13,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 17;
+const REVISION = 18;
 
 const META = {
   season: "Season 10.5: Butcher's Blasphemy",
   seasonShort: 'Season 10.5',
-  patch: 'Season 10.5 update, Oct 9 (balance post Oct 6)',
-  updated: '2026-10-10',
-  nextReview: '2026-10-17',
+  patch: 'Oct 15 update (Season 10.5 update Oct 9, balance post Oct 6)',
+  updated: '2026-10-17',
+  nextReview: '2026-10-24',
 };
 
 // Season start dates for the patch history in HISTORY. Add each new season and
@@ -76,7 +76,7 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
-  'Weekly review, Oct 10: no tier or counter changes.',
+  'Weekly review, Oct 17: no tier or counter changes.',
   'Season 10.5 update: Iron Man’s missiles now lock on, Phoenix and Cyclops hit harder, Jubilee heals herself while sprinting, and Gorr, Scarlet Witch and Devil Dinosaur were trimmed. Tiers hold for now until results from the new patch come in.',
   'Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.',
   'Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.',
@@ -4023,6 +4023,7 @@ const HISTORY = [
   ['2026-10-06', 'scarlet-witch', 'nerf', 'Chthonian Burst', 'Spell field damage per shot 40 → 35'],
   ['2026-10-06', 'the-thing+invisible-woman', 'change', 'Team-up: Unbreakable Forces', 'Cooldown 20s → 15s; Enhanced Effect: damage he must take to trigger the healing pulse 150 → 125'],
   ['2026-10-06', 'winter-soldier', 'fix', 'Trooper’s Fist / Bionic Hook', 'More responsive on high-latency connections'],
+  ['2026-10-15', 'black-widow', 'fix', 'Widow’s Bite Slam', 'Fixed: a small chance of being launched an absurdly long distance when using the slam to move'],
 ];
 
 // ---------------------------------------------------------------------------
