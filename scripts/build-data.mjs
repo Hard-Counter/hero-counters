@@ -13,14 +13,14 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const REVISION = 20;
+const REVISION = 21;
 
 const META = {
   season: "Season 10.5: Butcher's Blasphemy",
   seasonShort: 'Season 10.5',
-  patch: 'Oct 29 update (Season 10.5 update Oct 9, balance post Oct 6)',
-  updated: '2026-10-31',
-  nextReview: '2026-11-07',
+  patch: 'Nov 5 update (Season 10.5 update Oct 9, balance post Oct 6)',
+  updated: '2026-11-07',
+  nextReview: '2026-11-13',
 };
 
 // Season start dates for the patch history in HISTORY. Add each new season and
@@ -76,7 +76,7 @@ const SEASON_NOTES = [
 ];
 
 const CHANGELOG = [
-  'Weekly review, Oct 31: no tier or counter changes.',
+  'Weekly review, Nov 7: no tier or counter changes.',
   'Season 10.5 update: Iron Man’s missiles now lock on, Phoenix and Cyclops hit harder, Jubilee heals herself while sprinting, and Gorr, Scarlet Witch and Devil Dinosaur were trimmed. Tiers hold for now until results from the new patch come in.',
   'Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.',
   'Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.',
@@ -4026,6 +4026,8 @@ const HISTORY = [
   ['2026-10-15', 'black-widow', 'fix', 'Widow’s Bite Slam', 'Fixed: a small chance of being launched an absurdly long distance when using the slam to move'],
   ['2026-10-22', 'black-widow', 'fix', 'Widow’s Bite Slam', 'Fixed: the slam could send her in the wrong direction'],
   ['2026-10-22', 'black-cat', 'fix', 'Fortune’s Favor / wall portal', 'Fixed a problem with her wall portal after Fortune’s Favor'],
+  ['2026-11-05', 'moon-knight+elsa-bloodstone', 'fix', 'Team-up: Blood Moon', 'Fixed: the talons could fail to damage Doctor Strange while he was blocking or hitting other shields'],
+  ['2026-11-05', 'captain-america+winter-soldier', 'fix', 'Team-up: Stars Aligned', 'Fixed: Captain America’s landing spot could drift off the field, so he sometimes missed the intended buffs'],
 ];
 
 // ---------------------------------------------------------------------------
