@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "revision": 21,
-  "season": "Season 10.5: Butcher's Blasphemy",
-  "seasonShort": "Season 10.5",
-  "patch": "Nov 5 update (Season 10.5 update Oct 9, balance post Oct 6)",
-  "updated": "2026-11-07",
-  "nextReview": "2026-11-13",
+  "revision": 22,
+  "season": "Season 11: Doomsday",
+  "seasonShort": "Season 11",
+  "patch": "Nov 19 update (Season 11 update Nov 13, balance post Nov 10)",
+  "updated": "2026-11-21",
+  "nextReview": "2026-11-28",
   "brackets": [
     {
       "id": "bronze_gold",
@@ -45,19 +45,19 @@
     "The meta shifts with every patch. The data is reviewed weekly and after each balance update."
   ],
   "seasonNotes": [
-    "Season 10.5 began October 9. Ranks carry over from the first half of the season, and the ranked map pool is unchanged.",
-    "Iron Man’s Micro-Missile Barrage now locks on to enemies by itself, and Phoenix’s Sparks give her bonus health instead of healing.",
-    "Gorr the God Butcher (Duelist) joined in Season 10. Season 10.5 trimmed his damage and shortened his ultimate.",
-    "Every Strategist has charged their ultimate more slowly since Season 10.",
+    "Season 11: Doomsday began November 13 and runs to December 11. The ranked map pool is unchanged.",
+    "Nightcrawler (Strategist) joined in Season 11. He heals with exploding grenades and teleports to allies, and can carry the whole team to a new spot with his ultimate.",
+    "Season 11 trimmed Strategist sustain: Mantis’s sleep is much shorter, and Rocket Raccoon, Ultron, Jubilee and White Fox give less healing or protection.",
+    "Devil Dinosaur, Wolverine, Emma Frost and Peni Parker were nerfed. Angela, Black Cat and Black Widow were buffed, and Squirrel Girl and Human Torch were reworked.",
     "Ranked bans at Gold III and above alternate 1-2-2-1, removing six heroes per match."
   ],
   "changelog": [
+    "Season 11: Nightcrawler joins as a Strategist. Devil Dinosaur, Mantis, Wolverine, Emma Frost and Gambit drop after nerfs; Angela, Black Cat, Squirrel Girl and Black Widow rise after buffs and reworks.",
     "Weekly review, Nov 7: no tier or counter changes.",
     "Season 10.5 update: Iron Man’s missiles now lock on, Phoenix and Cyclops hit harder, Jubilee heals herself while sprinting, and Gorr, Scarlet Witch and Devil Dinosaur were trimmed. Tiers hold for now until results from the new patch come in.",
     "Draft helper: mark heroes Not for me and they rank lower in your picks. A strong counter can still show up, marked so you know.",
     "Scarlet Witch now shows her controller buttons too, so every hero has them on console. Deadpool’s difficulty is our own estimate of five stars, because the game gives him zero.",
-    "Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation).",
-    "Weekly review, Oct 3: no tier or counter changes."
+    "Hero pages now show the game’s difficulty rating and say when each hero shines, so a low-tier hero who suits the match stands out. Every ability now shows its default key on PC, or its controller button on console (Xbox or PlayStation)."
   ],
   "heroes": [
     {
@@ -68,11 +68,11 @@
       "tiers": {
         "bronze_gold": "S",
         "plat_diamond": "S",
-        "gm_celestial": "S",
+        "gm_celestial": "A",
         "eternity_oaa": "A"
       },
       "banRisk": "high",
-      "patchNote": "Buffed in Season 10: faster fire rate.",
+      "patchNote": "Nerfed slightly in Season 11: weaker web explosions and slower mines. Still a top Vanguard.",
       "styles": [
         "area"
       ],
@@ -124,19 +124,19 @@
         "quirks": [
           {
             "text": "Guides from before August 2026 say her snare roots on the first hit. Now the first hit slows and marks, and only a second hit while marked roots.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-11-21"
           },
           {
             "text": "Her snare’s cooldown used to start the moment it was cast, so it came back early. The Sept 11 patch fixed that, so it now takes its full cooldown.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-11-21"
           },
           {
             "text": "Her snare can’t root Ultron during his ultimate, but the hit still marks him. Land a second hit right after his ultimate ends, while the mark lasts, to root him.",
-            "asOf": "2026-10-02"
+            "asOf": "2026-11-21"
           },
           {
             "text": "Webs laid during her mech ultimate disappear when it ends.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-11-21"
           }
         ]
       },
@@ -225,12 +225,12 @@
       "abbr": "DD",
       "tiers": {
         "bronze_gold": "A",
-        "plat_diamond": "S",
-        "gm_celestial": "S",
-        "eternity_oaa": "S"
+        "plat_diamond": "A",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
       },
-      "banRisk": "high",
-      "patchNote": "Season 10 buffed his bleed, and Season 10.5 trimmed his health slightly. The most-banned hero at Gold III and above.",
+      "banRisk": "medium",
+      "patchNote": "Nerfed in Season 11: Buddy Barrier is shorter, weaker and no longer slows, his grab holds for less time and his bleeds give less bonus health.",
       "styles": [
         "brawl"
       ],
@@ -272,14 +272,14 @@
           "Bleed a target with your bite or beam, then pounce to grab and throw them toward your team.",
           "Keep the beam on targets. Since Season 10 each hit adds a full second of bleed, and bleed hits harder.",
           "Pull enemies back to your team rather than diving their backline alone.",
-          "Save Buddy Barrier for enemy ultimates and burst.",
+          "Save Buddy Barrier for enemy ultimates and burst. Since Season 11 it lasts a shorter time and no longer slows, so time it to the hit.",
           "You gain less ultimate charge from taking damage than most tanks, so build it by dealing damage.",
           "Team up with The Punisher. Season 10 gave that team-up faster projectiles."
         ],
         "quirks": [
           {
             "text": "He takes reduced damage from critical hits, so headshots do less to him than usual.",
-            "asOf": "2026-10-09"
+            "asOf": "2026-11-21"
           }
         ]
       },
@@ -288,7 +288,7 @@
         "why": "Very tough, and gains bonus health from his bleeds and bites. Pressure his backline, and burst him only after his barrier and Frenzied Feast are used."
       },
       "kit": {
-        "checked": "2026-10-09",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Primal Bite",
@@ -311,7 +311,7 @@
           {
             "name": "Buddy Barrier",
             "kind": "ability",
-            "text": "A heart-shaped generator raises a dome shield around him that blocks damage. Enemies inside the dome are slowed.",
+            "text": "A heart-shaped generator raises a short-lived dome shield around him that blocks damage.",
             "keys": {
               "pc": "e",
               "console": "x"
@@ -846,7 +846,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in Season 10.",
+      "patchNote": "Mixed changes in Season 11: harder-hitting punches, but Defensive Stance absorbs in a smaller radius, and her team-up with Gambit was trimmed.",
       "styles": [
         "brawl"
       ],
@@ -963,7 +963,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in Season 10.",
+      "patchNote": "Nerfed in Season 11: a weaker shield that recovers more slowly.",
       "styles": [
         "area"
       ],
@@ -1204,9 +1204,10 @@
         "bronze_gold": "B",
         "plat_diamond": "B",
         "gm_celestial": "B",
-        "eternity_oaa": "B"
+        "eternity_oaa": "C"
       },
       "banRisk": "low",
+      "patchNote": "Nerfed in Season 11: Symbiotic Resilience gives less bonus health.",
       "styles": [
         "dive"
       ],
@@ -1311,11 +1312,11 @@
       "tiers": {
         "bronze_gold": "B",
         "plat_diamond": "B",
-        "gm_celestial": "C",
-        "eternity_oaa": "C"
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed in Season 10.",
+      "patchNote": "Buffed in Season 11: harder-hitting axes, and Divine Judgement’s speed and bonus health now last a few seconds after she leaves the zone.",
       "styles": [
         "dive",
         "flyer"
@@ -1345,7 +1346,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Spear of Ichors",
@@ -1386,7 +1387,7 @@
           {
             "name": "Divine Judgement",
             "kind": "ability",
-            "text": "Dives to the ground, switches to axes and creates a zone where she gets speed and bonus health.",
+            "text": "Dives to the ground, switches to axes and creates a zone where she gets speed and bonus health. The buffs last a few seconds after she leaves the zone.",
             "keys": {
               "pc": "e",
               "console": "lb"
@@ -1533,11 +1534,11 @@
       "tiers": {
         "bronze_gold": "C",
         "plat_diamond": "C",
-        "gm_celestial": "B",
+        "gm_celestial": "C",
         "eternity_oaa": "B"
       },
       "banRisk": "medium",
-      "patchNote": "Buffed in Season 10.",
+      "patchNote": "Nerfed in Season 11: a weaker, slower-recovering barrier, and Psychic Spear’s extraction hits low-health heroes harder but tanks less.",
       "styles": [
         "brawl"
       ],
@@ -1655,6 +1656,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
+      "patchNote": "Mixed changes in Season 11: Ironwood Wall has less health, and Thornlash Wall hits harder once awakened.",
       "styles": [
         "area"
       ],
@@ -1759,7 +1761,7 @@
         "eternity_oaa": "D"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in all three roles in Season 10.",
+      "patchNote": "Season 11 changed his ultimate: The Big Test no longer gives allies bonus health, but gives him more.",
       "variant": true,
       "difficulty": 5,
       "difficultyNote": "Our estimate. The game gives Deadpool zero stars.",
@@ -1787,7 +1789,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-03",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Dual Desert Eagles",
@@ -1883,7 +1885,7 @@
           {
             "name": "The Big Test",
             "kind": "ultimate",
-            "text": "With katanas: starts a timed challenge that gives him speed, healing, extra dashes and extra health for nearby allies. Completing it strengthens the buffs.",
+            "text": "With katanas: starts a timed challenge that gives him speed, healing, extra dashes and bonus health. Completing it strengthens the buffs.",
             "keys": {
               "pc": "q",
               "console": "ls+rs"
@@ -2298,10 +2300,9 @@
       "shines": "Shines against teams that bunch up in front of her: one Scarlet Hex marks them all for her Chaos Control.",
       "counters": {
         "overall": {
-          "hero": "squirrel-girl",
-          "confidence": "data",
-          "reason": "Wins this matchup consistently in public data.",
-          "note": "Squirrel Girl wins the duel but is weak overall. Consider Doctor Strange’s shield instead."
+          "hero": "doctor-strange",
+          "confidence": "kit",
+          "reason": "His big shield soaks her damage while your team closes in."
         },
         "vanguard": {
           "hero": "doctor-strange",
@@ -2309,10 +2310,9 @@
           "reason": "His big shield soaks her damage while your team closes in."
         },
         "duelist": {
-          "hero": "squirrel-girl",
-          "confidence": "data",
-          "reason": "Wins this matchup consistently in public data.",
-          "note": "Niche pick: Squirrel Girl is weak overall."
+          "hero": "black-panther",
+          "confidence": "kit",
+          "reason": "Dash combo bursts her down before her beam can melt him."
         },
         "strategist": {
           "hero": "invisible-woman",
@@ -3486,10 +3486,11 @@
       "tiers": {
         "bronze_gold": "B",
         "plat_diamond": "B",
-        "gm_celestial": "C",
+        "gm_celestial": "B",
         "eternity_oaa": "C"
       },
       "banRisk": "low",
+      "patchNote": "Reworked in Season 11: Fire Cluster spreads in a fixed pattern instead of at random, so it lands more reliably.",
       "styles": [
         "flyer",
         "area"
@@ -3519,12 +3520,12 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Fire Cluster",
             "kind": "attack",
-            "text": "Fireballs that split apart as they fly.",
+            "text": "Fireballs that split into a fixed spread as they fly.",
             "keys": {
               "pc": "lmb",
               "console": "rt"
@@ -3585,12 +3586,12 @@
       "abbr": "WO",
       "tiers": {
         "bronze_gold": "C",
-        "plat_diamond": "B",
-        "gm_celestial": "B",
-        "eternity_oaa": "B"
+        "plat_diamond": "C",
+        "gm_celestial": "C",
+        "eternity_oaa": "C"
       },
-      "banRisk": "medium",
-      "patchNote": "Buffed in Season 10.",
+      "banRisk": "low",
+      "patchNote": "Nerfed in Season 11: Feral Leap comes back more slowly, and Last Stand does less damage per Rage.",
       "styles": [
         "brawl",
         "dive"
@@ -3687,12 +3688,12 @@
       "abbr": "EB",
       "tiers": {
         "bronze_gold": "C",
-        "plat_diamond": "B",
+        "plat_diamond": "C",
         "gm_celestial": "B",
         "eternity_oaa": "B"
       },
-      "banRisk": "high",
-      "patchNote": "Nerfed in Season 10.",
+      "banRisk": "medium",
+      "patchNote": "Nerfed in Season 11: her shotgun loses damage from closer range.",
       "difficulty": 3,
       "shines": "Shines against tanks and anyone leaning on shields or bonus health, which her seeking and elephant-gun rounds tear through.",
       "counters": {
@@ -3797,13 +3798,13 @@
       "role": "duelist",
       "abbr": "WS",
       "tiers": {
-        "bronze_gold": "B",
+        "bronze_gold": "C",
         "plat_diamond": "C",
         "gm_celestial": "C",
-        "eternity_oaa": "B"
+        "eternity_oaa": "C"
       },
       "banRisk": "medium",
-      "patchNote": "Nerfed in Season 10. Season 10.5 made his punch and hook more responsive on laggy connections.",
+      "patchNote": "Nerfed in Season 11: Roterstern loses damage from closer range.",
       "styles": [
         "brawl"
       ],
@@ -3894,12 +3895,12 @@
       "abbr": "BC",
       "tiers": {
         "bronze_gold": "B",
-        "plat_diamond": "C",
-        "gm_celestial": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed in Season 10: her dash lost its invincibility and her stealth leaves a trail.",
+      "patchNote": "Buffed in Season 11: Feline Fury builds more Fortune, and her team-up with Black Panther is much stronger.",
       "styles": [
         "dive"
       ],
@@ -4036,7 +4037,7 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in Season 10.",
+      "patchNote": "Buffed in Season 11: more ammo during his ultimate.",
       "styles": [
         "dive"
       ],
@@ -4121,7 +4122,7 @@
       "role": "duelist",
       "abbr": "BW",
       "tiers": {
-        "bronze_gold": "D",
+        "bronze_gold": "C",
         "plat_diamond": "C",
         "gm_celestial": "C",
         "eternity_oaa": "B"
@@ -4129,7 +4130,7 @@
       "banRisk": "low",
       "consoleShift": -1,
       "platformNote": "Aim-heavy rifle: noticeably weaker on controller.",
-      "patchNote": "Nerfed in Season 10.",
+      "patchNote": "Buffed in Season 11: Electro-Plasma Blast hits harder, and her team-up with Hawkeye reaches Focus sooner.",
       "styles": [
         "long-range"
       ],
@@ -4927,17 +4928,17 @@
       "role": "duelist",
       "abbr": "SG",
       "tiers": {
-        "bronze_gold": "F",
-        "plat_diamond": "F",
-        "gm_celestial": "F",
-        "eternity_oaa": "F"
+        "bronze_gold": "D",
+        "plat_diamond": "D",
+        "gm_celestial": "D",
+        "eternity_oaa": "D"
       },
       "banRisk": "low",
+      "patchNote": "Reworked in Season 11: acorns explode on impact instead of bouncing, and Squirrel Blockade fires faster and leaves an acorn rain, but traps for less time.",
       "styles": [
         "area"
       ],
       "difficulty": 1,
-      "shines": "Shines in tight spaces and chokepoints where bouncing acorns can’t miss, and against Scarlet Witch and White Fox.",
       "counters": {
         "overall": {
           "hero": "ultron",
@@ -4961,12 +4962,12 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Burst Acorn",
             "kind": "attack",
-            "text": "Throws acorns that bounce and explode.",
+            "text": "Throws acorns that explode on impact.",
             "keys": {
               "pc": "lmb",
               "console": "rt"
@@ -4975,7 +4976,7 @@
           {
             "name": "Squirrel Blockade",
             "kind": "ability",
-            "text": "Launches an acorn that summons squirrel guards around the first enemy hit, trapping them in place.",
+            "text": "Launches a fast acorn that summons squirrel guards around the first enemy hit, briefly trapping them, and rains acorns on the area around them.",
             "keys": {
               "pc": "rmb",
               "console": "lt"
@@ -4993,7 +4994,7 @@
           {
             "name": "Mammal Bond",
             "kind": "ability",
-            "text": "Reloads her acorns and, for a short time, lets her use one ability without waiting for its cooldown.",
+            "text": "Reloads her acorns and speeds up her attacks for a few seconds, and lets her use one ability without waiting for its cooldown.",
             "keys": {
               "pc": "e",
               "console": "rb"
@@ -5023,7 +5024,7 @@
         "eternity_oaa": "F"
       },
       "banRisk": "low",
-      "patchNote": "Mostly buffed in Season 10.5: more damage and more Sparks, though Sparks now give bonus health instead of healing her.",
+      "patchNote": "Nerfed in Season 11: Sparks deal less damage, and her ultimate’s shockwave adds fewer of them.",
       "difficulty": 3,
       "shines": "Shines against teams leaning on summons and shields, which her ultimate destroys, and against Devil Dinosaur.",
       "counters": {
@@ -5106,12 +5107,12 @@
       "abbr": "MN",
       "tiers": {
         "bronze_gold": "S",
-        "plat_diamond": "S",
-        "gm_celestial": "S",
-        "eternity_oaa": "S"
+        "plat_diamond": "A",
+        "gm_celestial": "A",
+        "eternity_oaa": "A"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed slightly in Season 10.",
+      "patchNote": "Nerfed in Season 11: Spore Slumber’s sleep is much shorter, and Allied Inspiration costs two Life Orbs.",
       "difficulty": 1,
       "shines": "Shines with a dive or brawl team she can boost, and against divers she can put to sleep.",
       "counters": {
@@ -5138,7 +5139,7 @@
       },
       "tips": {
         "against": [
-          "Bait out her sleep, Spore Slumber, before you dive her. It’s her only self-defense.",
+          "Bait out her sleep, Spore Slumber, before you dive her. It’s her only self-defense, and since Season 11 it wears off much sooner.",
           "If a teammate gets slept, shoot the Mantis illusion that appears near them to wake them early.",
           "Keep up steady pressure. Her heals and buffs spend Life Orbs, which refill more slowly since Season 10.",
           "During her ultimate, back off and re-engage when it ends, or take out Mantis herself.",
@@ -5146,15 +5147,15 @@
         ],
         "as": [
           "Land critical hits for extra Life Orbs. It matters more now that orbs refill more slowly.",
-          "Before fights, put Healing Flower on your frontline and Allied Inspiration on your best damage dealer.",
-          "Save your sleep for divers like Black Panther. Any damage wakes them, so reposition or line up one big hit.",
+          "Before fights, put Healing Flower on your frontline and Allied Inspiration on your best damage dealer. Since Season 11 Inspiration costs two Life Orbs.",
+          "Save your sleep for divers like Black Panther. Since Season 11 it lasts much less time, so reposition or have a teammate ready to hit them.",
           "Stay behind your tanks. Apart from your speed boost, you have no escape.",
           "Adam Warlock is your better team-up partner now. Star Blossom, the Star-Lord team-up, lost healing in Season 10."
         ],
         "quirks": [
           {
             "text": "Guides that say she makes a Life Orb every 3 seconds are out of date. Since Season 10 it’s every 4.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-11-21"
           }
         ]
       },
@@ -5163,12 +5164,12 @@
         "why": "A top healer who also boosts her team’s damage. Easy to kill once her sleep is baited out."
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Life Energy Blast",
             "kind": "attack",
-            "text": "Energy thorns. Critical hits give back a Life Orb.",
+            "text": "Energy thorns. Critical hits give back a Life Orb, and other hits give back part of one.",
             "keys": {
               "pc": "lmb",
               "console": "rt"
@@ -5239,6 +5240,7 @@
         "eternity_oaa": "S"
       },
       "banRisk": "low",
+      "patchNote": "Nerfed slightly in Season 11: Firewall gives allies less bonus health.",
       "styles": [
         "flyer"
       ],
@@ -5284,7 +5286,7 @@
         "quirks": [
           {
             "text": "Older guides say he can’t heal himself. Since Season 10, Firewall also heals him for a few seconds.",
-            "asOf": "2026-10-01"
+            "asOf": "2026-11-21"
           }
         ]
       },
@@ -5355,6 +5357,7 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
+      "patchNote": "Mixed changes in Season 11: less healing, but his gun reaches further and his dash gives bonus health.",
       "difficulty": 1,
       "shines": "Shines with a team that stays grouped, where bouncing heals reach everyone, and his revive beacon swings long fights.",
       "counters": {
@@ -5460,9 +5463,8 @@
         "eternity_oaa": "A"
       },
       "banRisk": "low",
-      "patchNote": "Mostly buffed in Season 10.5: she heals herself while sprinting and her ultimate heals more, but her blind is shorter.",
+      "patchNote": "Mixed changes in Season 11: Sparkle Mark no longer boosts allies’ healing, but her ultimate heals more.",
       "difficulty": 4,
-      "shines": "Shines when her team fights close together: her fireworks blind enemies, and her marks boost the team’s healing.",
       "counters": {
         "overall": {
           "hero": "black-panther",
@@ -5486,7 +5488,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-09",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Energy Plasmoids",
@@ -5527,7 +5529,7 @@
           {
             "name": "Sparkle Mark",
             "kind": "passive",
-            "text": "Dazzling Detonation and Firework Finale mark enemies. Her plasmoids set the marks off, damaging enemies and giving allies a healing boost and bonus health."
+            "text": "Dazzling Detonation and Firework Finale mark enemies. Her plasmoids set the marks off, damaging enemies and giving nearby allies bonus health."
           },
           {
             "name": "Firework Finale",
@@ -5549,11 +5551,11 @@
       "tiers": {
         "bronze_gold": "B",
         "plat_diamond": "B",
-        "gm_celestial": "A",
+        "gm_celestial": "B",
         "eternity_oaa": "A"
       },
-      "banRisk": "high",
-      "patchNote": "Mixed changes in Season 10.5: his decks charge faster, but his ultimate has a shorter reach and a smaller jump boost.",
+      "banRisk": "medium",
+      "patchNote": "Nerfed in Season 11: his cards spread wider, so he has to be closer, and his team-up with Rogue was trimmed.",
       "difficulty": 4,
       "shines": "Shines with a team that pushes together: his ultimate heals, speeds up and powers up every ally in sight, and his decks swap healing and damage.",
       "counters": {
@@ -5651,11 +5653,11 @@
       "tiers": {
         "bronze_gold": "C",
         "plat_diamond": "B",
-        "gm_celestial": "A",
+        "gm_celestial": "B",
         "eternity_oaa": "A"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in Season 10.",
+      "patchNote": "Nerfed in Season 11: Deception comes back more slowly, and his team-up with Mantis no longer boosts damage.",
       "difficulty": 4,
       "shines": "Shines with a practiced player at higher ranks: illusions double up his healing, and his ultimate turns him into any hero in the match.",
       "counters": {
@@ -5761,7 +5763,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "medium",
-      "patchNote": "Nerfed in Season 10.",
+      "patchNote": "Mixed changes in Season 11: Dagger Storm comes back more slowly and Terror Cape blinds for less time, but hits with Darkforce Cloak shorten Dagger Storm’s cooldown.",
       "difficulty": 3,
       "shines": "Shines when the team holds one spot: Dagger’s fields heal everyone inside, and Cloak can hide allies to escape a bad fight.",
       "counters": {
@@ -5876,7 +5878,7 @@
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "His team-up with Ultron heals more since Season 10.5.",
+      "patchNote": "Mixed changes in Season 11: Avatar Life Stream bounces more times but heals less up front.",
       "difficulty": 3,
       "shines": "Shines in a team that fights together: Soul Bond spreads damage across allies, and his ultimate revives several at once.",
       "counters": {
@@ -5974,11 +5976,11 @@
       "tiers": {
         "bronze_gold": "C",
         "plat_diamond": "C",
-        "gm_celestial": "B",
+        "gm_celestial": "C",
         "eternity_oaa": "B"
       },
       "banRisk": "low",
-      "patchNote": "Nerfed in Season 10.",
+      "patchNote": "Nerfed in Season 11: Veiled Step comes back more slowly and Psionic Vortex slows less at its center.",
       "difficulty": 4,
       "shines": "Shines against long-range and burst damage: her shields block it, and her ultimate hides the whole team.",
       "counters": {
@@ -6078,6 +6080,108 @@
       }
     },
     {
+      "id": "nightcrawler",
+      "name": "Nightcrawler",
+      "role": "strategist",
+      "abbr": "NI",
+      "tiers": {
+        "bronze_gold": "C",
+        "plat_diamond": "B",
+        "gm_celestial": "B",
+        "eternity_oaa": "B"
+      },
+      "banRisk": "low",
+      "patchNote": "New in Season 11. A teleporting healer with a close-range sword: our tier is a first estimate from his kit until results come in.",
+      "isNew": true,
+      "styles": [
+        "dive"
+      ],
+      "difficulty": 4,
+      "counters": {
+        "overall": {
+          "hero": "black-panther",
+          "confidence": "kit",
+          "reason": "Dash combo bursts his low health before he can teleport out."
+        },
+        "vanguard": {
+          "hero": "peni-parker",
+          "confidence": "kit",
+          "reason": "Webs and mines punish the spots he teleports into, and his short sword can’t reach her safely."
+        },
+        "duelist": {
+          "hero": "black-panther",
+          "confidence": "kit",
+          "reason": "Dash combo bursts his low health before he can teleport out."
+        },
+        "strategist": {
+          "hero": "mantis",
+          "confidence": "kit",
+          "reason": "Sleep stops him before he can teleport away or pull an ally out."
+        }
+      },
+      "kit": {
+        "checked": "2026-11-21",
+        "abilities": [
+          {
+            "name": "Forged Brimstone",
+            "kind": "attack",
+            "text": "Lobs three grenades one after another. Each explodes on impact, damaging enemies and healing allies in the blast. His main source of healing.",
+            "keys": {
+              "pc": "lmb"
+            }
+          },
+          {
+            "name": "Three-Sword Style",
+            "kind": "attack",
+            "text": "Rapid close-range sword thrusts that damage enemies. They don’t heal.",
+            "keys": {
+              "pc": "rmb"
+            }
+          },
+          {
+            "name": "Swift Intervention",
+            "kind": "ability",
+            "text": "Teleports to an ally, healing them at once, boosting the healing they receive and healing them over time. Two charges.",
+            "keys": {
+              "pc": "shift"
+            }
+          },
+          {
+            "name": "Smoke Shift",
+            "kind": "ability",
+            "text": "Leaves smoke where he stands and dashes forward in a spinning slash that damages and launches enemies and heals allies. Cast again to keep going, and the last cast returns him to the smoke.",
+            "keys": {
+              "pc": "e"
+            }
+          },
+          {
+            "name": "Tandem Teleport",
+            "kind": "ability",
+            "text": "Invites an ally to teleport. When they accept, he jumps to them and brings them back to where he started, healing them.",
+            "keys": {
+              "pc": "f"
+            }
+          },
+          {
+            "name": "Phasing Finale",
+            "kind": "ultimate",
+            "text": "Teleports nearby allies to a chosen spot, giving them bonus health, healing and a damage boost in a smoke zone. Cast again to teleport through enemies in the zone and pull them to him.",
+            "keys": {
+              "pc": "q"
+            }
+          },
+          {
+            "name": "Crawler Cling",
+            "kind": "passive",
+            "text": "Climbs walls.",
+            "keys": {
+              "pc": "space"
+            }
+          }
+        ]
+      }
+    },
+    {
       "id": "white-fox",
       "name": "White Fox",
       "role": "strategist",
@@ -6089,15 +6193,13 @@
         "eternity_oaa": "C"
       },
       "banRisk": "low",
-      "patchNote": "Buffed in Season 10.",
+      "patchNote": "Mixed changes in Season 11: Spectral Surge no longer makes allies invulnerable and her ultimate has less health, but she hits harder and pounces more often.",
       "difficulty": 3,
-      "shines": "Shines against dive heroes like Spider-Man: her fox charms them and makes allies briefly invulnerable.",
       "counters": {
         "overall": {
-          "hero": "squirrel-girl",
-          "confidence": "data",
-          "reason": "Wins this matchup consistently in public data.",
-          "note": "Squirrel Girl wins the duel but is weak overall. Venom’s dive is the practical answer."
+          "hero": "venom",
+          "confidence": "kit",
+          "reason": "Dive tank that reaches the backline."
         },
         "vanguard": {
           "hero": "venom",
@@ -6105,10 +6207,9 @@
           "reason": "Dive tank that reaches the backline."
         },
         "duelist": {
-          "hero": "squirrel-girl",
-          "confidence": "data",
-          "reason": "Wins this matchup consistently in public data.",
-          "note": "Niche pick: Squirrel Girl is weak overall."
+          "hero": "black-panther",
+          "confidence": "kit",
+          "reason": "Dash combo deletes backliners before they can react."
         },
         "strategist": {
           "hero": "ultron",
@@ -6117,7 +6218,7 @@
         }
       },
       "kit": {
-        "checked": "2026-10-01",
+        "checked": "2026-11-21",
         "abilities": [
           {
             "name": "Yeowoo Guseul",
@@ -6131,7 +6232,7 @@
           {
             "name": "Spectral Surge",
             "kind": "ability",
-            "text": "Spends a Spirit Tail to send a spectral fox forward that heals allies and makes them briefly invulnerable, and damages and charms enemies. Heals her too.",
+            "text": "Spends a Spirit Tail to send a spectral fox forward that heals allies and damages and charms enemies. Heals her too.",
             "keys": {
               "pc": "rmb",
               "console": "lt"
@@ -6185,7 +6286,7 @@
           {
             "name": "Kumiho Unleashed",
             "kind": "ultimate",
-            "text": "Becomes the full Nine-Tailed Fox with a large separate health pool, healing allies around her constantly, though others can’t heal her. Allies nearby are blessed when it starts.",
+            "text": "Becomes the full Nine-Tailed Fox with a large separate health pool, healing allies around her constantly, and allies can heal her too. Allies nearby are blessed when it starts.",
             "keys": {
               "pc": "q",
               "console": "ls+rs"
@@ -6221,9 +6322,10 @@
         "bronze_gold": "C",
         "plat_diamond": "C",
         "gm_celestial": "C",
-        "eternity_oaa": "C"
+        "eternity_oaa": "D"
       },
       "banRisk": "low",
+      "patchNote": "Mixed changes in Season 11: Absolute Zero freezes for much less time, and her team-up with White Fox no longer charms but heals and hits harder.",
       "difficulty": 2,
       "shines": "Shines in long fights that need steady healing, and her ultimate can flip to a damage boost to win a push.",
       "counters": {
@@ -7995,12 +8097,30 @@
       "bonus": "The cards slam together and explode for extra healing and damage."
     },
     {
+      "name": "Protective Siblings",
+      "heroes": [
+        "nightcrawler",
+        "rogue"
+      ],
+      "effect": "Draws on Rogue’s power for a burst that damages and heals nearby, then drives down from above to hit and slow enemies.",
+      "bonus": "The energy returns after the slam, damaging and healing in a wider area and pulling enemies toward him."
+    },
+    {
+      "name": "Demon Disciple",
+      "heroes": [
+        "nightcrawler",
+        "magik"
+      ],
+      "effect": "Each teleport leaves a spell field that damages enemies and heals allies.",
+      "bonus": "Each teleport also gives him bonus health."
+    },
+    {
       "name": "Vibrant Vitality",
       "heroes": [
         "loki",
         "mantis"
       ],
-      "effect": "Regeneration Domain also boosts allies’ damage, and its radius can expand.",
+      "effect": "Regeneration Domain’s radius can expand to cover more allies.",
       "bonus": "Placing it sends out a shockwave that damages and launches nearby enemies."
     },
     {
@@ -8090,7 +8210,7 @@
         "luna-snow",
         "white-fox"
       ],
-      "effect": "Sends a spirit fox forward that charms enemies and heals allies in its path.",
+      "effect": "Sends a spirit fox forward that damages enemies and heals allies in its path.",
       "bonus": "The fox comes back after reaching its max distance."
     },
     {
@@ -8153,13 +8273,13 @@
         "black-widow",
         "hawkeye"
       ],
-      "effect": "Rifle hits build Focus. At three stacks she enters a Focused state with stronger shots.",
+      "effect": "Rifle hits build Focus. At two stacks she enters a Focused state with stronger shots.",
       "bonus": "Critical hits keep her Focused until she misses one."
     }
   ],
   "history": {
-    "seasons": [["0","2024-12-06"],["1","2025-01-10"],["1.5","2025-02-21"],["2","2025-04-11"],["2.5","2025-05-30"],["3","2025-07-11"],["3.5","2025-08-08"],["4","2025-09-12"],["4.5","2025-10-10"],["5","2025-11-14"],["5.5","2025-12-12"],["6","2026-01-16"],["6.5","2026-02-13"],["7","2026-03-20"],["7.5","2026-04-17"],["8","2026-05-15"],["8.5","2026-06-12"],["9","2026-07-10"],["9.5","2026-08-07"],["10","2026-09-11"],["10.5","2026-10-09"]],
-    "added": {"invisible-woman":"2025-01-10","mister-fantastic":"2025-01-10","human-torch":"2025-02-21","the-thing":"2025-02-21","emma-frost":"2025-04-11","ultron":"2025-05-30","phoenix":"2025-07-11","blade":"2025-08-08","angela":"2025-09-12","daredevil":"2025-10-10","gambit":"2025-11-14","rogue":"2025-12-12","deadpool-vanguard":"2026-01-16","deadpool-duelist":"2026-01-16","deadpool-strategist":"2026-01-16","elsa-bloodstone":"2026-02-13","white-fox":"2026-03-20","black-cat":"2026-04-17","devil-dinosaur":"2026-05-15","cyclops":"2026-06-12","jubilee":"2026-07-10","the-hood":"2026-08-07","gorr":"2026-09-11"},
+    "seasons": [["0","2024-12-06"],["1","2025-01-10"],["1.5","2025-02-21"],["2","2025-04-11"],["2.5","2025-05-30"],["3","2025-07-11"],["3.5","2025-08-08"],["4","2025-09-12"],["4.5","2025-10-10"],["5","2025-11-14"],["5.5","2025-12-12"],["6","2026-01-16"],["6.5","2026-02-13"],["7","2026-03-20"],["7.5","2026-04-17"],["8","2026-05-15"],["8.5","2026-06-12"],["9","2026-07-10"],["9.5","2026-08-07"],["10","2026-09-11"],["10.5","2026-10-09"],["11","2026-11-13"]],
+    "added": {"invisible-woman":"2025-01-10","mister-fantastic":"2025-01-10","human-torch":"2025-02-21","the-thing":"2025-02-21","emma-frost":"2025-04-11","ultron":"2025-05-30","phoenix":"2025-07-11","blade":"2025-08-08","angela":"2025-09-12","daredevil":"2025-10-10","gambit":"2025-11-14","rogue":"2025-12-12","deadpool-vanguard":"2026-01-16","deadpool-duelist":"2026-01-16","deadpool-strategist":"2026-01-16","elsa-bloodstone":"2026-02-13","white-fox":"2026-03-20","black-cat":"2026-04-17","devil-dinosaur":"2026-05-15","cyclops":"2026-06-12","jubilee":"2026-07-10","the-hood":"2026-08-07","gorr":"2026-09-11","nightcrawler":"2026-11-13"},
     "changes": [
       ["2024-12-10",["black-widow"],"f","Electro-Plasma Explosion (Ultimate)","Fixed: in some situations her Ultimate energy did not recharge/accumulate as intended"],
       ["2024-12-10",["captain-america"],"f","Freedom Charge (Ultimate)","Fixed: in certain extreme situations the Ultimate did not end when it should have"],
@@ -9433,7 +9553,70 @@
       ["2026-10-22",["black-widow"],"f","Widow’s Bite Slam","Fixed: the slam could send her in the wrong direction"],
       ["2026-10-22",["black-cat"],"f","Fortune’s Favor / wall portal","Fixed a problem with her wall portal after Fortune’s Favor"],
       ["2026-11-05",["moon-knight","elsa-bloodstone"],"f","Team-up: Blood Moon","Fixed: the talons could fail to damage Doctor Strange while he was blocking or hitting other shields"],
-      ["2026-11-05",["captain-america","winter-soldier"],"f","Team-up: Stars Aligned","Fixed: Captain America’s landing spot could drift off the field, so he sometimes missed the intended buffs"]
+      ["2026-11-05",["captain-america","winter-soldier"],"f","Team-up: Stars Aligned","Fixed: Captain America’s landing spot could drift off the field, so he sometimes missed the intended buffs"],
+      ["2026-11-10",["angela"],"b","Axes of Ichors","Damage of the first three strikes 30 → 35"],
+      ["2026-11-10",["angela"],"b","Divine Judgement","The speed and bonus health now last 6s after she leaves the zone (Wingblade Ascent ends them early)"],
+      ["2026-11-10",["devil-dinosaur"],"n","Savage Predation","Hold time before the throw 0.8s → 0.6s"],
+      ["2026-11-10",["devil-dinosaur"],"n","Buddy Barrier","Duration 6s → 4s; shield 450 → 400; no longer slows enemies inside"],
+      ["2026-11-10",["devil-dinosaur"],"n","Apex Advantage","Bonus health from bleed damage 150% → 125%"],
+      ["2026-11-10",["emma-frost"],"n","Mind’s Aegis","Barrier health 400 → 350; recovery 80/s → 65/s"],
+      ["2026-11-10",["emma-frost"],"c","Psychic Spear","Sentience extraction damage 25% of max health → 60 + 10% of max health"],
+      ["2026-11-10",["doctor-strange"],"n","Shield of the Seraphim","Shield health 850 → 800; recovery 60/s → 50/s"],
+      ["2026-11-10",["groot"],"n","Ironwood Wall","Wall health 600 → 550"],
+      ["2026-11-10",["groot"],"b","Thornlash Wall (Flora Colossus)","Damage 60 → 65"],
+      ["2026-11-10",["venom"],"n","Symbiotic Resilience","Base bonus health 100 → 75; conversion of missing health 110% → 100% (595 → 525 at 300 health)"],
+      ["2026-11-10",["venom"],"b","Dark Predation","Slightly larger detection radius (no value given)"],
+      ["2026-11-10",["rogue"],"b","Power Surge Punch","Damage of the first and second strikes 35 → 40"],
+      ["2026-11-10",["rogue"],"m","Defensive Stance","Absorb radius 2m → 1.2m; damage-to-energy conversion 0.55 → 0.6"],
+      ["2026-11-10",["rogue","gambit"],"c","Team-up: Mr. & Mrs. X","Cooldown 30s → 15s; explosion damage 5 + 1% of max health → 3 + 1%; ally healing 15 → 10"],
+      ["2026-11-10",["black-cat"],"b","Feline Fury","Max Fortune per cast 50 → 75"],
+      ["2026-11-10",["black-cat","black-panther"],"c","Team-up: Feline Alliance","Fortune per hit 50 → 100 and cap 100 → 200; bonus health 25 → 50"],
+      ["2026-11-10",["black-widow"],"b","Electro-Plasma Blast","Damage 50–70 → 55–75"],
+      ["2026-11-10",["black-widow","hawkeye"],"c","Team-up: Allied Agents","Focused at 2 stacks instead of 3; gains bonus health equal to 50% of damage dealt while Focused, up to 75"],
+      ["2026-11-10",["star-lord"],"b","Galactic Legend (ultimate)","Element Guns ammo during the ultimate 40 → 50"],
+      ["2026-11-10",["phoenix"],"n","Sparks (Cosmic Flames)","Detonation damage 45 → 40; explosion damage 20 → 15"],
+      ["2026-11-10",["phoenix"],"n","Endsong Inferno (ultimate)","Sparks added by the shockwave 2 → 1"],
+      ["2026-11-10",["wolverine"],"n","Feral Leap","Cooldown 12s → 15s"],
+      ["2026-11-10",["wolverine"],"n","Last Stand (ultimate)","Bonus damage per Rage 0.3% → 0.2% of the target’s max health"],
+      ["2026-11-10",["elsa-bloodstone"],"n","Double-Barrel Blaster","Damage falloff now starts at 10m instead of 20m"],
+      ["2026-11-10",["human-torch"],"c","Fire Cluster","Reworked: the fireballs now split in a fixed pattern instead of a random spread"],
+      ["2026-11-10",["squirrel-girl"],"c","Burst Acorn","Reworked: acorns explode on impact instead of ricocheting; damage 110 → 95"],
+      ["2026-11-10",["squirrel-girl"],"c","Squirrel Blockade","Trap 1.3s → 0.8s; damage 50 → 25; projectile speed 20–60 → 60–90 m/s; NEW: a hit leaves a 5m acorn rain dealing 30/s for 2s"],
+      ["2026-11-10",["squirrel-girl"],"b","Mammal Bond","NEW: also gives +100% attack speed for 5s"],
+      ["2026-11-10",["peni-parker"],"n","Cyber-Web Cluster","Explosion damage 15 → 12"],
+      ["2026-11-10",["peni-parker"],"n","Arachno-Mine","Detonation delay 0.6s → 0.7s"],
+      ["2026-11-10",["gambit"],"n","Kinetic Cards","Outer card spread 2° → 3°, so landing every card takes a closer range"],
+      ["2026-11-10",["invisible-woman"],"n","Veiled Step","Cooldown 6s → 8s"],
+      ["2026-11-10",["invisible-woman"],"c","Psionic Vortex","Slow at the center 50% → 40%; slow at the edge 0% → 20%"],
+      ["2026-11-10",["ultron"],"n","Imperative: Firewall","Bonus health for allies 40 → 25"],
+      ["2026-11-10",["adam-warlock"],"c","Avatar Life Stream","Initial heal 95 → 55; bounces 2 → 4; total healing 285 → 275"],
+      ["2026-11-10",["adam-warlock","storm"],"c","Team-up: Cosmic Cyclone","Speed boost 67% → 100%; Enhanced Effect: damage boost for bonded allies 12% → 8%"],
+      ["2026-11-10",["cloak-and-dagger"],"n","Dagger Storm","Cooldown 12s → 15s; self-heal 50/s → 35/s"],
+      ["2026-11-10",["cloak-and-dagger"],"n","Terror Cape","Blind 1.5s → 1s"],
+      ["2026-11-10",["cloak-and-dagger"],"b","Darkforce Cloak","Damage 80/s → 85/s; each ally or enemy hit takes 0.6s off Dagger Storm’s cooldown"],
+      ["2026-11-10",["jubilee"],"n","Sparkle Mark","Detonations no longer give allies a 20% healing boost"],
+      ["2026-11-10",["jubilee"],"b","Firework Finale (ultimate)","Field healing 180/s → 190/s; outer plasmoid speed 20 → 25 m/s"],
+      ["2026-11-10",["loki"],"n","Deception","Cooldown 15s → 18s"],
+      ["2026-11-10",["loki","mantis"],"c","Team-up: Vibrant Vitality","Regeneration Domain no longer gives allies a damage boost"],
+      ["2026-11-10",["luna-snow"],"n","Absolute Zero","Freeze 2.7s → 1.5s"],
+      ["2026-11-10",["luna-snow","white-fox"],"c","Team-up: Atlas Bond","The spirit fox no longer charms; healing 70 → 80; damage 35 → 45"],
+      ["2026-11-10",["mantis"],"n","Spore Slumber","Sleep 3.5s → 1.5s"],
+      ["2026-11-10",["mantis"],"n","Allied Inspiration","Cost 1 → 2 Life Orbs"],
+      ["2026-11-10",["mantis"],"b","Life Energy Blast","NEW: non-critical hits give 0.3 Life Orbs"],
+      ["2026-11-10",["rocket-raccoon"],"n","Repair Mode","Ally healing 55 → 50"],
+      ["2026-11-10",["white-fox"],"n","Spirit Sanctuary","Barrier 200 → 100"],
+      ["2026-11-10",["white-fox"],"n","Spectral Surge","No longer makes allies invulnerable; charm radius 0.6m → 0.4m"],
+      ["2026-11-10",["white-fox"],"b","Fox Form Awakening","Base duration 7s → 8s; extra time per Spirit Tail 1s → 2s"],
+      ["2026-11-10",["white-fox"],"b","Claw Strike","Damage 35 → 40"],
+      ["2026-11-10",["white-fox"],"b","Predatory Pounce","Cooldown 6s → 4s"],
+      ["2026-11-10",["white-fox"],"m","Kumiho Unleashed (ultimate)","Max health 1200 → 1000; allies can now heal her during it"],
+      ["2026-11-10",["deadpool-vanguard"],"m","The Big Test (ultimate)","No longer gives nearby allies 50 bonus health; his own bonus health 300 → 400"],
+      ["2026-11-11",["the-thing","invisible-woman"],"f","Team-up: Unbreakable Forces","Fixed: the base bonus health could disappear when the effect ended"],
+      ["2026-11-11",["doctor-strange"],"f","Pentagram of Farallah","Fixed: moving toward his portal could rarely send heroes the opposite way"],
+      ["2026-11-11",["blade"],"f","Daywalker Dash","Fixed a stutter during the dash"],
+      ["2026-11-18",["black-cat"],"f","Turn of Fortune","Fixed: it sometimes failed to steal Fortune"],
+      ["2026-11-18",["mantis"],"f","Life Energy Blast","Hits on barriers and summons no longer make Life Orbs"],
+      ["2026-11-18",["nightcrawler"],"c","Tandem Teleport","NEW: optional setting to accept his teleport invites automatically"]
     ]
   }
 }
